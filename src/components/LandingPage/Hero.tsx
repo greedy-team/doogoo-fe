@@ -7,9 +7,8 @@ export function Hero() {
     <section className="from-background to-muted/40 bg-linear-to-b px-4 pt-32 pb-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
-          <h1 className="text-foreground mb-6 text-4xl sm:text-6xl">
-            복잡한 공지사항은 빼고,
-            <br />
+          <h1 className="text-foreground mb-6 flex flex-col space-y-4 text-4xl sm:text-6xl">
+            <span>복잡한 공지사항은 빼고,</span>
             <span className="text-[#C3002F]">내 일정만 깔끔하게.</span>
           </h1>
           <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-xl">
