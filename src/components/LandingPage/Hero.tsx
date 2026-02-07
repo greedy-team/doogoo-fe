@@ -1,28 +1,27 @@
 import { Link } from 'react-router-dom';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { Calendar, CheckCircle2 } from 'lucide-react';
 
 export function Hero() {
   return (
-    <section className="from-background to-muted/40 bg-gradient-to-b px-4 pt-32 pb-20 sm:px-6 lg:px-8">
+    <section className="from-background to-muted/40 bg-linear-to-b px-4 pt-32 pb-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center">
-          <h1 className="text-foreground mb-6 text-5xl sm:text-6xl">
-            Your School Schedule,
+          <h1 className="text-foreground mb-6 text-4xl sm:text-6xl">
+            복잡한 공지사항은 빼고,
             <br />
-            <span className="text-[#C3002F]">Without the Noise.</span>
+            <span className="text-[#C3002F]">내 일정만 깔끔하게.</span>
           </h1>
           <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-xl">
-            Filter Sejong "Do-Dream" events by department and interest.
-            <br />
-            One-time setup, automatic Google Calendar sync.
+            학사일정부터 두드림 비교과까지, 나에게 필요한 정보만 필터링하세요.
+            <br />한 번의 설정으로 캘린더와 실시간 자동 동기화.
           </p>
           <Button
             asChild
             size="lg"
             className="bg-[#C3002F] px-8 py-6 text-lg text-white hover:bg-[#A00025]"
           >
-            <Link to="/events">Create Your Custom Link</Link>
+            <Link to="/events">나만의 일정 만들기</Link>
           </Button>
         </div>
 

@@ -30,12 +30,12 @@ export function Navigation({
             >
               About
             </a> */}
-            <a
+            {/* <a
               href="#faq"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               FAQ
-            </a>
+            </a> */}
 
             <ThemeToggle />
 
