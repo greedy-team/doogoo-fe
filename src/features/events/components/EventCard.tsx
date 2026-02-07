@@ -8,11 +8,12 @@ export interface Event {
   id: string;
   title: string;
   category: "Academic" | "Career" | "Social" | "Competition" | "Workshop";
+  originalCategory?: string; // 원본 한글 카테고리
   date: string;
   daysLeft: number;
   location: string;
   department: string;
-  isPopular: boolean;
+  isPopular?: boolean; // optional:나중에 필요하면 쓸예정
   attendees: number;
   description: string;
   image?: string;
