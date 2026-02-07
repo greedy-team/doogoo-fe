@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { Hero } from "../components/Hero";
-import { FeatureSection } from "../components/FeatureSection";
-import { TutorialSection } from "../components/TutorialSection";
-import { FAQSection } from "../components/FAQSection";
+import { Hero } from "../features/landing/components/Hero";
+import { FeatureSection } from "../features/landing/components/FeatureSection";
+import { TutorialSection } from "../features/landing/components/TutorialSection";
+import { FAQSection } from "../features/landing/components/FAQSection";
 
 export default function LandingPage() {
   const navigate = useNavigate();

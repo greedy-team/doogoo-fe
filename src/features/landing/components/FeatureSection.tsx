@@ -1,4 +1,4 @@
-import { Card } from "./ui/card";
+import { Card } from "../../../components/ui/card";
 import { Filter, Bell, Settings, CheckCircle2 } from "lucide-react";
 
 export function FeatureSection() {

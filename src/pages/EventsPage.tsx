@@ -2,9 +2,9 @@ import { useState, useRef } from "react";
 import {
   FilterConfiguration,
   type FilterConfig,
-} from "../components/FilterConfiguration";
-import { OutputSection } from "../components/OutputSection";
-import { EventBrowser } from "../components/EventBrowser";
+} from "../features/calendar/components/FilterConfiguration";
+import { OutputSection } from "../features/calendar/components/OutputSection";
+import { EventBrowser } from "../features/events/components/EventBrowser";
 
 export default function EventsPage() {
   const [generatedConfig, setGeneratedConfig] =

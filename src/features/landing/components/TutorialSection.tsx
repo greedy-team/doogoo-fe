@@ -1,5 +1,5 @@
-import { Card } from "./ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Card } from "../../../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { Calendar, Smartphone, Monitor } from "lucide-react";
 
 export function TutorialSection() {

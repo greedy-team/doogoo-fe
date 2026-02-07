@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Input } from "./ui/input";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Input } from "../../../components/ui/input";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 import { EventCard, type Event } from "./EventCard";
 import { EventSidebar } from "./EventSidebar";
 import { Search, Grid3x3, Calendar as CalendarIcon, Sparkles } from "lucide-react";
