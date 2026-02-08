@@ -3,7 +3,6 @@ import { Card } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Label } from "../../../components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +10,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "../../../components/ui/dialog";
-import { Calendar, CheckCircle2, Copy, Grid3x3, List, Calendar as CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../components/ui/popover";
+import { Calendar, CheckCircle2, Copy, Grid3x3, List, Calendar as CalendarIcon, ChevronsUpDown } from "lucide-react";
 import { toast } from "sonner";
 import { EventCard } from "../../events/components/EventCard";
 import { upcomingEvents } from "../data/mockEvents";
@@ -38,15 +38,114 @@ export function CalendarFilter() {
   const [copied, setCopied] = useState(false);
 
 
-  const departments = [
-    "Software",
-    "Computer Engineering",
-    "Design",
-    "Business Administration",
-    "Mechanical Engineering",
-    "Architecture",
-    "English Literature",
-    "Economics"
+  const departmentsByCollege = [
+    {
+      college: "인문과학대학",
+      departments: [
+        "국어국문학과",
+        "국제학부 영어데이터융합전공",
+        "국제학부 국제일본학전공",
+        "국제학부 중국통상학전공",
+        "역사학과",
+        "교육학과",
+        "글로벌인재학부 한국언어문화전공",
+        "글로벌인재학부 국제통상전공",
+        "글로벌인재학부 국제협력전공"
+      ]
+    },
+    {
+      college: "사회과학대학",
+      departments: [
+        "행정학과",
+        "미디어커뮤니케이션학과",
+        "법학과"
+      ]
+    },
+    {
+      college: "경영경제대학",
+      departments: [
+        "경영학부",
+        "경제학과"
+      ]
+    },
+    {
+      college: "호텔관광대학",
+      departments: [
+        "호텔관광외식경영학부 호텔관광경영학전공",
+        "호텔관광외식경영학부 외식경영학전공",
+        "호텔외식관광프랜차이즈경영학과",
+        "조리서비스경영학과"
+      ]
+    },
+    {
+      college: "자연과학대학",
+      departments: [
+        "수학통계학과",
+        "물리천문학과",
+        "화학과"
+      ]
+    },
+    {
+      college: "생명과학대학",
+      departments: [
+        "생명시스템학부 식품생명공학전공",
+        "생명시스템학부 바이오융합공학전공",
+        "생명시스템학부 바이오산업자원공학전공",
+        "스마트생명산업융합학과"
+      ]
+    },
+    {
+      college: "인공지능융합대학",
+      departments: [
+        "AI융합전자공학과",
+        "반도체시스템공학과",
+        "컴퓨터공학과",
+        "정보보호학과",
+        "양자지능정보학과",
+        "창의소프트학부 디자인이노베이션전공",
+        "창의소프트학부 만화애니메이션텍전공",
+        "사이버국방학과",
+        "국방AI로봇융합공학과",
+        "인공지능데이터사이언스학과",
+        "AI로봇학과",
+        "지능정보융합학과",
+        "콘텐츠소프트웨어학과"
+      ]
+    },
+    {
+      college: "공과대학",
+      departments: [
+        "건축공학과",
+        "건축학과",
+        "건설환경공학과",
+        "환경융합공학과",
+        "에너지자원공학과",
+        "기계공학과",
+        "우주항공시스템공학부 우주항공공학전공",
+        "우주항공시스템공학부 항공시스템공학전공",
+        "우주항공시스템공학부 지능형드론융합전공",
+        "나노신소재공학과",
+        "양자원자력공학과",
+        "국방AI융합시스템공학과"
+      ]
+    },
+    {
+      college: "예체능대학",
+      departments: [
+        "회화과",
+        "패션디자인학과",
+        "음악과",
+        "체육학과",
+        "무용과",
+        "영화예술학과"
+      ]
+    },
+    {
+      college: "대양휴머니티칼리지",
+      departments: [
+        "자유전공학부"
+      ]
+    }
   ];
 
   const years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
@@ -153,31 +252,59 @@ export function CalendarFilter() {
   return (
     <section id="filter" className="py-2 px-4 sm:px-6 lg:px-8 bg-slate-50">
       <div className="max-w-7xl mx-auto">
-        <Card className="p-5 py-6 px-4 bg-white/50 backdrop-blur border-slate-200 shadow-lg">
-          {/* 1. Filters - Efficient Layout */}
-          <div className="space-y-3 mb-2">
-            {/* Department & Year - Fixed items in one row */}
-            <div className="grid md:grid-cols-2 gap-4">
+        <Card className="p-4 bg-white/50 backdrop-blur border-slate-200 shadow-lg">
+          {/* 1. Filters - Clean Layout */}
+          <div className="space-y-3 mb-3">
+            {/* Department & Year - First row with spacing */}
+            <div className="flex items-start gap-8">
               {/* Department */}
-              <div>
-                <Label className="text-slate-900 mb-2 block text-sm font-medium">Department</Label>
-                <Select value={department} onValueChange={setDepartment}>
-                  <SelectTrigger className="bg-white border-slate-300 h-10">
-                    <SelectValue placeholder="Select your department" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {departments.map(dept => (
-                      <SelectItem key={dept} value={dept}>
-                        {dept}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-slate-900 text-xs font-medium">Department</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Badge
+                      className={`cursor-pointer px-3 py-1.5 text-xs transition-all inline-flex items-center gap-2 ${
+                        department
+                          ? "bg-[#C3002F] text-white hover:bg-[#A00025]"
+                          : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-100"
+                      }`}
+                    >
+                      {department || "학과 선택"}
+                      <ChevronsUpDown className="h-3 w-3" />
+                    </Badge>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[800px] p-4" align="start">
+                    <div className="max-h-96 overflow-y-auto space-y-4">
+                      {departmentsByCollege.map(({ college, departments: depts }) => (
+                        <div key={college}>
+                          <div className="text-xs font-semibold text-slate-600 mb-2 sticky top-0 bg-white py-1">
+                            {college}
+                          </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            {depts.map(dept => (
+                              <Badge
+                                key={dept}
+                                onClick={() => setDepartment(dept)}
+                                className={`cursor-pointer px-3 py-2 text-xs transition-all justify-center text-center whitespace-normal leading-tight min-h-[2rem] ${
+                                  department === dept
+                                    ? "bg-[#C3002F] text-white hover:bg-[#A00025]"
+                                    : "bg-white text-slate-700 border border-slate-300 hover:bg-slate-100"
+                                }`}
+                              >
+                                {dept}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
 
               {/* Year Selection */}
-              <div>
-                <Label className="text-slate-900 mb-2 block text-sm font-medium">Year Level (Multi-select)</Label>
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-slate-900 text-xs font-medium">Year Level</Label>
                 <div className="flex flex-wrap gap-2">
                   {years.map(year => (
                     <Badge
@@ -196,14 +323,13 @@ export function CalendarFilter() {
               </div>
             </div>
 
-            {/* Keywords - Flexible item with full width */}
-            <div>
-              <Label className="text-slate-900 mb-2 block text-sm font-medium">Interest Keywords (Multi-select)</Label>
-
-              <div className="space-y-2">
+            {/* Keywords - Second row, full width */}
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-slate-900 text-xs font-medium">Keywords</Label>
+              <div className="flex flex-wrap gap-3 items-center">
                 {/* 학사공지 키워드 */}
-                <div className="flex items-center gap-3">
-                  <div className="text-xs text-slate-600 font-medium whitespace-nowrap">학사공지</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-600 font-medium">학사공지</span>
                   <div className="flex flex-wrap gap-2">
                     {academicKeywords.map(keyword => (
                       <Badge
@@ -221,9 +347,11 @@ export function CalendarFilter() {
                   </div>
                 </div>
 
+                <div className="w-px h-6 bg-slate-300" />
+
                 {/* 두드림 키워드 */}
-                <div className="flex items-center gap-3">
-                  <div className="text-xs text-slate-600 font-medium whitespace-nowrap">두드림</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-600 font-medium">두드림</span>
                   <div className="flex flex-wrap gap-2">
                     {doDreamKeywords.map(keyword => (
                       <Badge
@@ -242,17 +370,17 @@ export function CalendarFilter() {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* 2. Generate Button */}
-          <Button
-            onClick={handleGenerate}
-            disabled={!department}
-            className="w-full bg-[#C3002F] hover:bg-[#A00025] text-white h-11 mb-3 font-medium"
-          >
-            <Calendar className="w-4 h-4 mr-2" />
-            Generate My Calendar Link
-          </Button>
+            {/* Generate Button - Third row */}
+            <Button
+              onClick={handleGenerate}
+              disabled={!department}
+              className="w-full bg-[#C3002F] hover:bg-[#A00025] text-white h-10 font-medium text-sm"
+            >
+              <Calendar className="w-4 h-4 mr-2" />
+              Generate My Calendar Link
+            </Button>
+          </div>
 
           {/* 3. Event Preview with View Toggle */}
           <div>
