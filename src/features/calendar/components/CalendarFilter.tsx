@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "../../../components/ui/dialog";
-import { Calendar, CheckCircle2, Copy, Download, Grid3x3, List, Calendar as CalendarIcon } from "lucide-react";
+import { Calendar, CheckCircle2, Copy, Grid3x3, List, Calendar as CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { EventCard } from "../../events/components/EventCard";
 import { upcomingEvents } from "../data/mockEvents";
@@ -36,6 +36,7 @@ export function CalendarFilter() {
   const [showOutputModal, setShowOutputModal] = useState(false);
   const [generatedConfig, setGeneratedConfig] = useState<FilterConfig | null>(null);
   const [copied, setCopied] = useState(false);
+
 
   const departments = [
     "Software",
@@ -85,8 +86,10 @@ export function CalendarFilter() {
     setShowOutputModal(true);
   };
 
-  // 두드림 카테고리 5 (전공역량강화) 임시사용
-  const url = "https://do.sejong.ac.kr/ko/module/eco/ical-signin/category/5";
+  // 테스트용 공개 ICS URL (미국 공휴일 - OfficeHolidays.com)
+  // - 세종대 ics는 ical-signin속성으로 인하여 외부 캘린더가 구독이 불가능하여 대체 ics사용
+
+  const url = "https://www.officeholidays.com/ics/usa";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url);
@@ -95,26 +98,38 @@ export function CalendarFilter() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const downloadICS = () => {
-    toast.success("ICS file downloaded!");
-    // Mock download functionality
+  // iOS/Mac Calendar (webcal)
+  const addToAppleCalendar = () => {
+    const webcalUrl = url.replace(/^https?:\/\//, 'webcal://');
+    //webcal 형식으로 대체하여 ios가 자동으로 반응하도록 함
+    window.location.href = webcalUrl;
+    toast.success("Opening Calendar app...");
   };
 
-  // webcal:// 프로토콜로 변환하여 시스템 캘린더 자동 실행
-  const addToCalendar = () => {
-    // HTTPS URL을 webcal:// 프로토콜로 변환-정규식 이용
+  // Google Calendar (웹 경유) - 자동 구독 시도
+  const addToGoogleCalendar = () => {
+    // webcal 프로토콜로 변환
     const webcalUrl = url.replace(/^https?:\/\//, 'webcal://');
+    const googleUrl = `https://www.google.com/calendar/render?cid=${encodeURIComponent(webcalUrl)}`;
+    //참조-encodeURIComponent은 특수문자 인코딩을 위한 함수이다
+    window.open(googleUrl, '_blank');
+    toast.info("Opening Google Calendar...");
+  };
 
-    // iOS/Mac 감지
-    const isAppleDevice = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+  // Outlook Calendar (webcal 프로토콜로 데스크톱 앱 직접 열기)
+  const addToOutlookCalendar = () => {
+    // webcal 프로토콜 사용 - Outlook 데스크톱 앱이 설치되어 있으면 자동으로 구독 모달 표시, outLook은 웹 경유 막힘
+    // =>최종적으로 그냥 os기본 캘린더를 사용하는 방식이아 ios와 같은코드,, 개선및 결정필요
+    const webcalUrl = url.replace(/^https?:\/\//, 'webcal://');
+    window.location.href = webcalUrl;
+    toast.info("Opening Outlook Calendar app...");
+  };
 
-    if (isAppleDevice) {
-      // Apple 기기: webcal 프로토콜로 시스템 캘린더 자동 실행
-      window.location.href = webcalUrl;
-      toast.success("Opening Calendar app...");
-    } else {
-      // 다른 기기: 웹경유하여 추가예정 
-    }
+  // .ics 파일 다운로드
+  const downloadICSFile = () => {
+    // 실제 다운로드 구현 (나중에) 근데 적용해도 일회용임,, 유저가 직접 추가해야함
+    window.open(url, '_blank');
+    toast.success("Downloading .ics file...");
   };
 
   const toggleEventSelection = (id: string) => {
@@ -379,46 +394,79 @@ export function CalendarFilter() {
             </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex flex-col gap-3 mb-4">
-            {/* Add to Calendar (webcal) */}
-            <Button
-              onClick={addToCalendar}
-              className="w-full bg-green-600 hover:bg-green-700 text-white h-12 font-semibold"
-            >
-              <CalendarIcon className="w-5 h-5 mr-2" />
-              Add to My Calendar Now
-            </Button>
+          {/* Calendar Selection */}
+          <div className="mb-4">
+            <Label className="text-slate-900 mb-3 block text-sm font-medium">
+              어떤 캘린더에 추가하시겠습니까?
+            </Label>
 
-            {/* Secondary: Copy & Download */}
-            <div className="flex gap-3">
+            {/* Calendar Buttons Grid */}
+            <div className="grid grid-cols-2 gap-2">
+              {/* iOS/Mac Calendar */}
               <Button
-                onClick={copyToClipboard}
+                onClick={addToAppleCalendar}
                 variant="outline"
-                className="flex-1 border-slate-300"
+                className="h-auto py-3 flex-col items-start hover:bg-slate-50"
               >
-                {copied ? (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copy URL
-                  </>
-                )}
+                <div className="text-lg mb-1">📱</div>
+                <div className="text-sm font-semibold">iOS/Mac</div>
+                <div className="text-xs text-slate-500">Apple Calendar</div>
               </Button>
 
+              {/* Google Calendar */}
               <Button
-                onClick={downloadICS}
+                onClick={addToGoogleCalendar}
                 variant="outline"
-                className="flex-1 border-slate-300"
+                className="h-auto py-3 flex-col items-start hover:bg-slate-50"
               >
-                <Download className="w-4 h-4 mr-2" />
-                Download .ics
+                <div className="text-lg mb-1">🌐</div>
+                <div className="text-sm font-semibold">Google</div>
+                <div className="text-xs text-slate-500">All devices</div>
+              </Button>
+
+              {/* Outlook Calendar */}
+              <Button
+                onClick={addToOutlookCalendar}
+                variant="outline"
+                className="h-auto py-3 flex-col items-start hover:bg-slate-50"
+              >
+                <div className="text-lg mb-1">📧</div>
+                <div className="text-sm font-semibold">Outlook</div>
+                <div className="text-xs text-slate-500">Microsoft</div>
+              </Button>
+
+              {/* Download .ics */}
+              <Button
+                onClick={downloadICSFile}
+                variant="outline"
+                className="h-auto py-3 flex-col items-start hover:bg-slate-50"
+              >
+                <div className="text-lg mb-1">💾</div>
+                <div className="text-sm font-semibold">Download</div>
+                <div className="text-xs text-slate-500">.ics file</div>
               </Button>
             </div>
+          </div>
+
+          {/* Secondary: Copy URL */}
+          <div className="mb-4">
+            <Button
+              onClick={copyToClipboard}
+              variant="outline"
+              className="w-full border-slate-300"
+            >
+              {copied ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy URL
+                </>
+              )}
+            </Button>
           </div>
 
           {/* Status Badge */}
