@@ -374,7 +374,6 @@ export function CalendarFilter() {
             {/* Generate Button - Third row */}
             <Button
               onClick={handleGenerate}
-              disabled={!department}
               className="w-full bg-[#C3002F] hover:bg-[#A00025] text-white h-10 font-medium text-sm"
             >
               <Calendar className="w-4 h-4 mr-2" />
