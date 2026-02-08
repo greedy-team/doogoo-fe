@@ -1,8 +1,8 @@
-import { Navigation } from '../components/Navigation';
-import { Hero } from '../components/LandingPage/Hero';
-import { FeatureSection } from '../components/LandingPage/FeatureSection';
+import { Navigation } from '../components/layout/Navigation';
+import { Hero } from '../features/landing/components/Hero';
+import { FeatureSection } from '../features/landing/components/FeatureSection';
 import { Toaster } from '../components/ui/sonner';
-import { FAQSection } from '../components/LandingPage/FAQSection';
+import { FAQSection } from '../features/landing/components/FAQSection';
 
 export default function LandingPage() {
   return (

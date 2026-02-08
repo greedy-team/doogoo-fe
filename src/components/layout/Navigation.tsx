@@ -1,54 +1,97 @@
-import { Calendar, LayoutDashboard, Home, Sparkles } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Calendar, LayoutDashboard, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Button } from '../ui/button';
+import { ThemeToggle } from '../ThemeToggle';
+import { useAuthStore } from '../../store/auth';
 
 export function Navigation() {
-  const location = useLocation();
-
+  const { isAuthenticated, logout } = useAuthStore();
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#C3002F] rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-white" />
+    <nav className="border-border bg-background/80 fixed top-0 right-0 left-0 z-50 border-b backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <Link
+            to="/"
+            className="text-foreground flex items-center gap-2 transition-opacity hover:opacity-80"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#C3002F]">
+              <Calendar className="h-5 w-5 text-white" />
             </div>
-            <span className="text-slate-900">Sejong Calendar Filter</span>
+            <span className="font-bold">두구두구</span>
           </Link>
 
           <div className="flex items-center gap-6">
-            <Link
-              to="/"
-              className={`flex items-center gap-2 transition-colors ${
-                location.pathname === "/"
-                  ? "text-[#C3002F]"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
+            {/* <a
+              href="#about"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Home className="w-4 h-4" />
-              Home
-            </Link>
-            <Link
-              to="/events"
-              className={`flex items-center gap-2 transition-colors ${
-                location.pathname === "/events"
-                  ? "text-[#C3002F]"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
+              About
+            </a> */}
+            {/* <a
+              href="#faq"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Sparkles className="w-4 h-4" />
-              Events
-            </Link>
-            <Link
-              to="/dashboard"
-              className={`flex items-center gap-2 transition-colors ${
-                location.pathname === "/dashboard"
-                  ? "text-[#C3002F]"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              Dashboard
-            </Link>
+              FAQ
+            </a> */}
+
+            <ThemeToggle />
+
+            {isAuthenticated ? (
+              <>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Link to="/events">
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Browse Events
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Link to="/dashboard">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </Button>
+                <Button
+                  onClick={logout}
+                  variant="outline"
+                  size="sm"
+                  className="border-input text-foreground hover:bg-accent"
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <Link to="/events">
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Browse Events
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="border-[#C3002F] text-[#C3002F] hover:bg-[#C3002F] hover:text-white"
+                >
+                  <Link to="/login">Sign In</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

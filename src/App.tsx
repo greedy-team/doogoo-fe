@@ -10,18 +10,16 @@ import Dashboard from './pages/Dashboard';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-white">
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-        <Footer />
-        <Toaster position="bottom-right" />
-      </div>
-    </BrowserRouter>
+    <div className="min-h-screen">
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+      <Footer />
+      <Toaster position="bottom-right" />
+    </div>
   );
 }

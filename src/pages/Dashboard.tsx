@@ -1,5 +1,5 @@
-import { Navigation } from '@/components/Navigation';
-import { Dashboard } from '@/components/Dashboard';
+import { Navigation } from '@/components/layout/Navigation';
+import { Dashboard } from '@/features/dashboard/components/Dashboard';
 import { Toaster } from 'sonner';
 
 export default function DashboardPage() {
