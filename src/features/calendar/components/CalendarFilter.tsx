@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "../../../components/ui/dialog";
-import { Calendar, CheckCircle2, Copy, Download, ExternalLink, Grid3x3, List, Calendar as CalendarIcon } from "lucide-react";
+import { Calendar, CheckCircle2, Copy, Download, Grid3x3, List, Calendar as CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { EventCard } from "../../events/components/EventCard";
 import { upcomingEvents } from "../data/mockEvents";
@@ -379,71 +379,45 @@ export function CalendarFilter() {
             </div>
           )}
 
-          {/* URL Display */}
-          <div className="mb-4">
-            <Label className="text-slate-900 mb-2 block text-sm">Your Custom Calendar URL</Label>
-            <div className="relative">
-              <div className="font-mono text-sm bg-slate-900 text-green-400 p-4 rounded-lg overflow-x-auto whitespace-nowrap">
-                {url}
-              </div>
-              <div className="absolute top-2 right-2 flex items-center gap-1">
-                <div className="bg-green-500 text-white text-xs px-2 py-0.5 rounded flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                  Live
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-4">
+          <div className="flex flex-col gap-3 mb-4">
+            {/* Add to Calendar (webcal) */}
             <Button
-              onClick={copyToClipboard}
-              className="flex-1 bg-[#C3002F] hover:bg-[#A00025] text-white"
+              onClick={addToCalendar}
+              className="w-full bg-green-600 hover:bg-green-700 text-white h-12 font-semibold"
             >
-              {copied ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4 mr-2" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy URL
-                </>
-              )}
+              <CalendarIcon className="w-5 h-5 mr-2" />
+              Add to My Calendar Now
             </Button>
 
-            <Button
-              onClick={downloadICS}
-              variant="outline"
-              className="flex-1 border-slate-300"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Download .ics File
-            </Button>
-          </div>
-
-          {/* Quick Links */}
-          <div className="pt-4 border-t border-slate-200 space-y-2 text-center text-sm">
-            <a
-              href="#tutorial"
-              className="text-[#C3002F] hover:underline inline-flex items-center gap-1"
-            >
-              How to add this to your calendar
-              <ExternalLink className="w-3 h-3" />
-            </a>
-            <div>
-              <button
-                onClick={() => {
-                  setShowOutputModal(false);
-                  window.dispatchEvent(new CustomEvent('navigate-to-events'));
-                }}
-                className="text-blue-600 hover:underline inline-flex items-center gap-1"
+            {/* Secondary: Copy & Download */}
+            <div className="flex gap-3">
+              <Button
+                onClick={copyToClipboard}
+                variant="outline"
+                className="flex-1 border-slate-300"
               >
-                Want to add specific events? Browse our event catalog
-                <ExternalLink className="w-3 h-3" />
-              </button>
+                {copied ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy URL
+                  </>
+                )}
+              </Button>
+
+              <Button
+                onClick={downloadICS}
+                variant="outline"
+                className="flex-1 border-slate-300"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download .ics
+              </Button>
             </div>
           </div>
 
