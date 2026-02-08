@@ -85,18 +85,8 @@ export function CalendarFilter() {
     setShowOutputModal(true);
   };
 
-  // Generate URL for output
-  const generateURL = () => {
-    if (!generatedConfig) return "";
-    const params = new URLSearchParams({
-      dept: generatedConfig.department,
-      years: generatedConfig.years.join(","),
-      keywords: generatedConfig.keywords.join(",")
-    });
-    return `https://sejong-calendar.app/ics/${btoa(params.toString())}`;
-  };
-
-  const url = generateURL();
+  // 두드림 카테고리 5 (전공역량강화) 임시사용
+  const url = "https://do.sejong.ac.kr/ko/module/eco/ical-signin/category/5";
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url);
@@ -108,6 +98,23 @@ export function CalendarFilter() {
   const downloadICS = () => {
     toast.success("ICS file downloaded!");
     // Mock download functionality
+  };
+
+  // webcal:// 프로토콜로 변환하여 시스템 캘린더 자동 실행
+  const addToCalendar = () => {
+    // HTTPS URL을 webcal:// 프로토콜로 변환-정규식 이용
+    const webcalUrl = url.replace(/^https?:\/\//, 'webcal://');
+
+    // iOS/Mac 감지
+    const isAppleDevice = /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+
+    if (isAppleDevice) {
+      // Apple 기기: webcal 프로토콜로 시스템 캘린더 자동 실행
+      window.location.href = webcalUrl;
+      toast.success("Opening Calendar app...");
+    } else {
+      // 다른 기기: 웹경유하여 추가예정 
+    }
   };
 
   const toggleEventSelection = (id: string) => {
