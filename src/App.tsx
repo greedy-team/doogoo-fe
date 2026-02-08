@@ -5,6 +5,8 @@ import { Toaster } from './components/ui/sonner';
 import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import EventsPage from './pages/EventsPage';
+import LoginPage from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
 export default function App() {
   return (
@@ -15,6 +17,7 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/events" element={<EventsPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
         <Footer />
         <Toaster position="bottom-right" />

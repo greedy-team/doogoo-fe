@@ -4,18 +4,10 @@ import { FeatureSection } from '../components/LandingPage/FeatureSection';
 import { Toaster } from '../components/ui/sonner';
 import { FAQSection } from '../components/LandingPage/FAQSection';
 
-interface LandingPageProps {
-  isAuthenticated: boolean;
-  onLogout: () => void;
-}
-
-export default function LandingPage({
-  isAuthenticated,
-  onLogout,
-}: LandingPageProps) {
+export default function LandingPage() {
   return (
     <div className="min-h-screen">
-      <Navigation isAuthenticated={isAuthenticated} onLogout={onLogout} />
+      <Navigation />
 
       <Hero />
 

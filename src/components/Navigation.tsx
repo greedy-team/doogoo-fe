@@ -2,26 +2,23 @@ import { Calendar, LayoutDashboard, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
 import { ThemeToggle } from './ThemeToggle';
+import { useAuthStore } from '../store/auth';
 
-interface NavigationProps {
-  isAuthenticated?: boolean;
-  onLogout?: () => void;
-}
-
-export function Navigation({
-  isAuthenticated = false,
-  onLogout,
-}: NavigationProps) {
+export function Navigation() {
+  const { isAuthenticated, logout } = useAuthStore();
   return (
     <nav className="border-border bg-background/80 fixed top-0 right-0 left-0 z-50 border-b backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link
+            to="/"
+            className="text-foreground flex items-center gap-2 transition-opacity hover:opacity-80"
+          >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#C3002F]">
               <Calendar className="h-5 w-5 text-white" />
             </div>
-            <span className="text-foreground font-bold">두구두구</span>
-          </div>
+            <span className="font-bold">두구두구</span>
+          </Link>
 
           <div className="flex items-center gap-6">
             {/* <a
@@ -64,7 +61,7 @@ export function Navigation({
                   </Link>
                 </Button>
                 <Button
-                  onClick={onLogout}
+                  onClick={logout}
                   variant="outline"
                   size="sm"
                   className="border-input text-foreground hover:bg-accent"
