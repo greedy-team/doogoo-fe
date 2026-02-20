@@ -1,6 +1,7 @@
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, Sparkles, Check } from 'lucide-react';
+import { GraduationCap, Sparkles } from 'lucide-react';
+import ServiceCard from '../features/landing/components/ServiceCard';
+import { NextButton } from '@/components/layout/RouteButton';
 
 interface ServiceSelectorProps {
   selectedServices: Set<'academic' | 'doodream'>;
@@ -49,54 +50,22 @@ export default function LandingPage({
 
       <div className="grid gap-4 sm:grid-cols-2">
         {services.map((service) => {
-          const Icon = service.icon;
           const isSelected = selectedServices.has(service.id);
 
           return (
-            <Card
+            <ServiceCard
               key={service.id}
-              className={`relative cursor-pointer p-6 transition-all duration-200 hover:shadow-lg ${isSelected ? `${service.borderColor} border-2 shadow-md` : 'hover:border-primary/30 border'} `}
-              onClick={() => onToggleService(service.id)}
-            >
-              {isSelected && (
-                <div className="absolute top-3 right-3">
-                  <div
-                    className={`${service.bgColor} ${service.textColor} rounded-full p-1`}
-                  >
-                    <Check className="h-5 w-5" />
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <div
-                  className={`${service.bgColor} ${service.textColor} flex h-14 w-14 items-center justify-center rounded-xl`}
-                >
-                  <Icon className="h-7 w-7" />
-                </div>
-
-                <div>
-                  <h3 className="text-foreground mb-1 text-xl font-semibold">
-                    {service.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">
-                    {service.description}
-                  </p>
-                </div>
-              </div>
-            </Card>
+              service={{
+                ...service,
+                isSelected,
+                onToggle: onToggleService,
+              }}
+            />
           );
         })}
       </div>
 
-      <Button
-        size="lg"
-        className="h-14 w-full rounded-2xl text-base font-semibold shadow-md"
-        onClick={onContinue}
-        disabled={selectedServices.size === 0}
-      >
-        다음 단계로
-      </Button>
+      <NextButton onClick={onContinue} disabled={selectedServices.size === 0} />
     </div>
   );
 }
