@@ -7,13 +7,26 @@ import LandingPage from './pages/Landing';
 // import EventsPage from './pages/EventsPage';
 // import LoginPage from './pages/Login';
 // import Dashboard from './pages/Dashboard';
-import { useState } from 'react';
-import { Hero } from './components/layout/hero';
+import { useEffect, useState} from 'react';
+import { Hero } from './components/layout/Hero';
+import { useCommonStore } from './stores/useCommonStore';
+import { useNoticeStore } from './stores/useNoticeStore';
+
 
 export default function App() {
   const [selectedServices, setSelectedServices] = useState<
     Set<'academic' | 'doodream'>
   >(new Set());
+
+  const { fetchUIFilterOptions } = useCommonStore();
+  const { fetchAcademicNotices, fetchDodreamNotices } = useNoticeStore();
+
+  useEffect(() => {
+    fetchUIFilterOptions();
+    fetchAcademicNotices();
+    fetchDodreamNotices();
+  }, [fetchUIFilterOptions, fetchAcademicNotices, fetchDodreamNotices]);
+
 
   const handleToggleService = (service: 'academic' | 'doodream') => {
     setSelectedServices((prev) => {
