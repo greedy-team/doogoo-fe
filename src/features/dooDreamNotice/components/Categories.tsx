@@ -1,16 +1,9 @@
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import {
-  Trophy,
-  Briefcase,
-  Heart,
-  MessageCircle,
-  Globe,
-  Building2,
-} from 'lucide-react';
 
-import dooDreamCategoryData from '../../../mock/data/dooDreamCategory.json';
+import { DOO_DREAM_CATEGORIES } from '@/const/dooDreamCategories';
+import { useNavigate } from 'react-router-dom';
 
 export interface CategoriesProps {
   selectedInterests: Set<string>;
@@ -18,39 +11,24 @@ export interface CategoriesProps {
   onCategoryClick: (categoryId: string) => void;
 }
 
-const iconMap: Record<string, React.ElementType> = {
-  Trophy,
-  Briefcase,
-  Heart,
-  MessageCircle,
-  Globe,
-  Building2,
-};
-
-interface dooDreamCategories {
-  id: string;
-  label: string;
-  description: string;
-  icon: React.ElementType;
-}
-
-const categories: dooDreamCategories[] = dooDreamCategoryData.map((item) => ({
-  ...item,
-  icon: iconMap[item.icon] || Trophy,
-}));
-
 export default function Categories({
   selectedInterests,
   onInterestToggle,
   onCategoryClick,
 }: CategoriesProps) {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (categoryId: string) => {
+    onCategoryClick(categoryId);
+    navigate(`/dooDreamNotice/${categoryId}`);
+  };
   return (
     <div className="space-y-3">
       <Label className="text-foreground text-sm font-medium">
         관심 카테고리 선택
       </Label>
       <div className="space-y-2">
-        {categories.map((interest) => {
+        {DOO_DREAM_CATEGORIES.map((interest) => {
           const Icon = interest.icon;
           const isSelected = selectedInterests.has(interest.id);
 
@@ -58,7 +36,7 @@ export default function Categories({
             <Card
               key={interest.id}
               className={`cursor-pointer p-4 transition-all duration-200 ${isSelected ? 'border-purple-300 bg-purple-50' : 'hover:bg-accent/50'}\n `}
-              onClick={() => onCategoryClick(interest.id)}
+              onClick={() => handleCategoryClick(interest.id)}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex flex-1 items-center gap-3">

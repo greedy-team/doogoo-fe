@@ -8,12 +8,13 @@ import DooDreamNotice from './pages/DooDreamNotice';
 import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
 import Result from './pages/Result';
 import majorsData from './mock/data/majors.json';
+import { StepIndicator } from './components/layout/StepIndicator';
 
 export default function App() {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedServices, setSelectedServices] = useState<
     Set<'academic' | 'doodream'>
-  >(new Set());
+  >(new Set(['academic', 'doodream'])); // Default to both services for easier testing
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   // Academic Notice state
@@ -111,6 +112,12 @@ export default function App() {
       <Navigation />
       <div className="container mx-auto px-4 pb-24 sm:px-6">
         <Hero />
+        <StepIndicator
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          stepTitles={steps.map((step) => step.title)}
+          onBack={handleBack}
+        />
 
         <Routes>
           <Route
@@ -147,12 +154,24 @@ export default function App() {
             }
           />
           <Route
-            path="/dooDreamCategoryDetail"
+            path="/dooDreamNotice/:categoryId"
+            element={<DooDreamCategoryDetail />}
+          />
+          <Route
+            path="/result"
             element={
-              <DooDreamCategoryDetail viewingCategoryId={viewingCategoryId} />
+              <Result
+                isSubscriptionModalOpen={isSubscriptionModalOpen}
+                setIsSubscriptionModalOpen={setIsSubscriptionModalOpen}
+                selectedYear={selectedYear}
+                yearFilterType={yearFilterType}
+                selectedMajor={selectedMajor}
+                selectedInterests={selectedInterests}
+                selectedServices={selectedServices}
+                getMajorLabel={getMajorLabel}
+              />
             }
           />
-          <Route path="/result" element={<Result />} />
         </Routes>
         {/* <Toaster position="bottom-right" /> */}
       </div>

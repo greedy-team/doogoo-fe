@@ -31,3 +31,15 @@ export function BackButton({ onClick, disabled = false }: NextButtonProps) {
     </Button>
   );
 }
+
+export function SubscribeButton({ onClick }: NextButtonProps) {
+  return (
+    <Button
+      size="lg"
+      className="h-14 w-full rounded-2xl text-base font-semibold shadow-md"
+      onClick={onClick}
+    >
+      캘린더 구독하기
+    </Button>
+  );
+}
