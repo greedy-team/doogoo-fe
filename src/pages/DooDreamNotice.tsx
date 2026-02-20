@@ -22,7 +22,7 @@ export default function DooDreamNotice({
   onCategoryClick,
 }: DoodreamSelectorProps) {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <Card className="shadow-sm">
         {/* Header */}
         <SelectedEventTypeHeader
@@ -45,8 +45,9 @@ export default function DooDreamNotice({
           />
         </div>
       </Card>
+
       <NextButton onClick={() => {}} disabled={false} />
       <BackButton onClick={() => {}} disabled={false} />
-    </>
+    </div>
   );
 }
