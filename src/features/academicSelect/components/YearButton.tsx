@@ -1,19 +1,19 @@
 import { CheckCircle2 } from 'lucide-react';
+import type { Grade } from '@/shared/api/types';
 
 interface YearButtonProps {
-  year: { value: number; label: string };
+  grade: Grade;
   isSelected: boolean;
   onClick: () => void;
 }
 
 export default function YearButton({
-  year,
+  grade,
   isSelected,
   onClick,
 }: YearButtonProps) {
   return (
     <button
-      key={year.value}
       onClick={onClick}
       className={`relative rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
         isSelected
@@ -22,7 +22,7 @@ export default function YearButton({
       } `}
       style={{ minHeight: '44px' }}
     >
-      {year.label}
+      {grade.name}
       {isSelected && (
         <CheckCircle2 className="absolute top-1 right-1 h-4 w-4" />
       )}
