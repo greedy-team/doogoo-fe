@@ -1,20 +1,19 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Navigation from './components/layout/Navigation';
-import { useState,useEffect } from 'react';
-import { Hero } from './components/layout/Hero';
-import LandingPage from './pages/Landing';
-import AcademicNotice from './pages/AcademicNotice';
-import DooDreamNotice from './pages/DooDreamNotice';
-import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
-import Result from './pages/Result';
-import majorsData from './mock/data/majors.json';
-import { StepIndicator } from './components/layout/StepIndicator';
-import { useCommonStore } from './stores/useCommonStore';
-import { useNoticeStore } from './stores/useNoticeStore';
-
+import { Routes, Route } from 'react-router-dom';
+import Navigation from '@/shared/layout/Navigation';
+import { useState, useEffect } from 'react';
+import { Hero } from '@/shared/layout/Hero';
+import LandingPage from '@/features/serviceSelect/LandingPage';
+import AcademicPage from '@/features/academicSelect/AcademicPage';
+import DodreamPage from '@/features/dodreamSelect/DodreamPage';
+import DodreamCategoryDetailPage from '@/features/dodreamSelect/detail/DodreamCategoryDetailPage';
+import ResultPage from '@/features/calendarSubscribe/ResultPage';
+import majorsData from '@/mock/data/majors.json';
+import { StepIndicator } from '@/features/step-indicator/StepIndicator';
+import { useCommonStore } from '@/shared/stores/useCommonStore';
+import { useNoticeStore } from '@/features/academicSelect/stores/useNoticeStore';
 
 export default function App() {
- 
+
   const { fetchUIFilterOptions } = useCommonStore();
   const { fetchAcademicNotices, fetchDodreamNotices } = useNoticeStore();
 
@@ -22,13 +21,13 @@ export default function App() {
     fetchUIFilterOptions();
     fetchAcademicNotices();
     fetchDodreamNotices();
-  }, [fetchUIFilterOptions, fetchAcademicNotices, fetchDodreamNotices]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedServices, setSelectedServices] = useState<
     Set<'academic' | 'doodream'>
-  >(new Set(['academic', 'doodream'])); // Default to both services for easier testing
+  >(new Set(['academic', 'doodream']));
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   // Academic Notice state
@@ -42,18 +41,11 @@ export default function App() {
   const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
     new Set(['competition', 'career']),
   );
-  const [viewingCategoryId, setViewingCategoryId] = useState<string | null>(
-    null,
-  );
 
   // Major/Minor label lookup
-  const majorsByCollege = majorsData;
-
-  const allMajors = majorsByCollege.flatMap((college) => college.majors);
-
-  const getMajorLabel = (value: string) => {
-    return allMajors.find((m) => m.value === value)?.label || value;
-  };
+  const allMajors = majorsData.flatMap((college) => college.majors);
+  const getMajorLabel = (value: string) =>
+    allMajors.find((m) => m.value === value)?.label || value;
 
   const handleInterestToggle = (id: string) => {
     setSelectedInterests((prev) => {
@@ -84,16 +76,13 @@ export default function App() {
     const steps: { id: string; title: string }[] = [
       { id: 'service', title: '서비스 선택' },
     ];
-
     if (selectedServices.has('academic')) {
       steps.push({ id: 'academic', title: '학사공지 설정' });
     }
     if (selectedServices.has('doodream')) {
       steps.push({ id: 'doodream', title: '두드림 설정' });
     }
-
     steps.push({ id: 'preview', title: '미리보기' });
-
     return steps;
   };
 
@@ -103,7 +92,6 @@ export default function App() {
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
-      // Scroll to top on mobile
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -145,9 +133,9 @@ export default function App() {
             }
           />
           <Route
-            path="/academicNotice"
+            path="/academicSelect"
             element={
-              <AcademicNotice
+              <AcademicPage
                 selectedYear={selectedYear}
                 yearFilterType={yearFilterType}
                 onYearChange={setSelectedYear}
@@ -156,25 +144,25 @@ export default function App() {
             }
           />
           <Route
-            path="/dooDreamNotice"
+            path="/dodreamSelect"
             element={
-              <DooDreamNotice
+              <DodreamPage
                 selectedMajor={selectedMajor}
                 selectedInterests={selectedInterests}
                 onMajorChange={setSelectedMajor}
                 onInterestToggle={handleInterestToggle}
-                onCategoryClick={(id) => setViewingCategoryId(id)}
+                onCategoryClick={(id) => console.log('category:', id)}
               />
             }
           />
           <Route
-            path="/dooDreamNotice/:categoryId"
-            element={<DooDreamCategoryDetail />}
+            path="/dodreamSelect/:categoryId"
+            element={<DodreamCategoryDetailPage />}
           />
           <Route
             path="/result"
             element={
-              <Result
+              <ResultPage
                 isSubscriptionModalOpen={isSubscriptionModalOpen}
                 setIsSubscriptionModalOpen={setIsSubscriptionModalOpen}
                 selectedYear={selectedYear}
@@ -187,7 +175,6 @@ export default function App() {
             }
           />
         </Routes>
-        {/* <Toaster position="bottom-right" /> */}
       </div>
     </div>
   );
