@@ -14,7 +14,7 @@ export const getAcademicNotices = async (): Promise<AcademicNotice[]> => {
   const response = await apiClient.get<AcademicNoticesResponse>(
     '/api/academic/notices'
   );
-  return response.data.academicNotices;
+  return response.data.notices;
 };
 
 /**
@@ -25,5 +25,5 @@ export const getDodreamNotices = async (): Promise<DoDreamNotice[]> => {
   const response = await apiClient.get<DoDreamNoticesResponse>(
     '/api/dodream/notices'
   );
-  return response.data.doDreamNotices;
+  return response.data.notices;
 };
