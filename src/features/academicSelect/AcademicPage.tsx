@@ -9,6 +9,8 @@ interface AcademicNoticeSelectorProps {
   yearFilterType: 'my-year' | 'all';
   onYearChange: (year: number) => void;
   onYearFilterTypeChange: (type: 'my-year' | 'all') => void;
+  onNext: () => void;
+  onBack: () => void;
 }
 
 export default function AcademicPage({
@@ -16,6 +18,8 @@ export default function AcademicPage({
   yearFilterType,
   onYearChange,
   onYearFilterTypeChange,
+  onNext,
+  onBack,
 }: AcademicNoticeSelectorProps) {
   return (
     <div className="flex flex-col gap-4">
@@ -43,8 +47,8 @@ export default function AcademicPage({
           />
         </div>
       </Card>
-      <NextButton onClick={() => {}} disabled={false} />
-      <BackButton onClick={() => {}} disabled={false} />
+      <NextButton onClick={onNext} disabled={false} />
+      <BackButton onClick={onBack} disabled={false} />
     </div>
   );
 }

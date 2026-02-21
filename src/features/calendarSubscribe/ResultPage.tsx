@@ -15,6 +15,7 @@ interface ResultProps {
   selectedInterests: Set<string>;
   yearFilterType: 'my-year' | 'all';
   getMajorLabel: (value: string) => string;
+  onBack: () => void;
 }
 
 export default function ResultPage({
@@ -26,6 +27,7 @@ export default function ResultPage({
   selectedInterests,
   yearFilterType,
   getMajorLabel,
+  onBack,
 }: ResultProps) {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -66,7 +68,7 @@ export default function ResultPage({
       />
 
       <SubscribeButton onClick={() => setIsSubscriptionModalOpen(true)} />
-      <BackButton onClick={() => {}} disabled={false} />
+      <BackButton onClick={onBack} disabled={false} />
     </div>
   );
 }
