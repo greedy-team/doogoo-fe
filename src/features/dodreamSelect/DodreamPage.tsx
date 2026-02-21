@@ -10,6 +10,8 @@ interface DoodreamSelectorProps {
   onMajorChange: (major: string) => void;
   onInterestToggle: (id: string) => void;
   onCategoryClick: (categoryId: string) => void;
+  onNext: () => void;
+  onBack: () => void;
 }
 
 export default function DodreamPage({
@@ -18,6 +20,8 @@ export default function DodreamPage({
   onMajorChange,
   onInterestToggle,
   onCategoryClick,
+  onNext,
+  onBack,
 }: DoodreamSelectorProps) {
   return (
     <div className="flex flex-col gap-4">
@@ -44,8 +48,8 @@ export default function DodreamPage({
         </div>
       </Card>
 
-      <NextButton onClick={() => {}} disabled={false} />
-      <BackButton onClick={() => {}} disabled={false} />
+      <NextButton onClick={onNext} disabled={false} />
+      <BackButton onClick={onBack} disabled={false} />
     </div>
   );
 }

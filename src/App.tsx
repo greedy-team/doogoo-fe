@@ -11,6 +11,7 @@ import majorsData from '@/mock/data/majors.json';
 import { StepIndicator } from '@/features/step-indicator/StepIndicator';
 import { useCommonStore } from '@/shared/stores/useCommonStore';
 import { useNoticeStore } from '@/features/academicSelect/stores/useNoticeStore';
+import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 
 export default function App() {
 
@@ -24,10 +25,13 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [currentStep, setCurrentStep] = useState(0);
   const [selectedServices, setSelectedServices] = useState<
     Set<'academic' | 'doodream'>
   >(new Set(['academic', 'doodream']));
+
+  const { currentStep, totalSteps, handleNext, handleBack } =
+    useStepNavigation(selectedServices);
+
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   // Academic Notice state
@@ -71,38 +75,6 @@ export default function App() {
     });
   };
 
-  // Calculate steps based on selected services
-  const getSteps = () => {
-    const steps: { id: string; title: string }[] = [
-      { id: 'service', title: '서비스 선택' },
-    ];
-    if (selectedServices.has('academic')) {
-      steps.push({ id: 'academic', title: '학사공지 설정' });
-    }
-    if (selectedServices.has('doodream')) {
-      steps.push({ id: 'doodream', title: '두드림 설정' });
-    }
-    steps.push({ id: 'preview', title: '미리보기' });
-    return steps;
-  };
-
-  const steps = getSteps();
-  const totalSteps = steps.length;
-
-  const handleNext = () => {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep(currentStep + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
   const handleServiceContinue = () => {
     if (selectedServices.size > 0) {
       handleNext();
@@ -117,7 +89,6 @@ export default function App() {
         <StepIndicator
           currentStep={currentStep}
           totalSteps={totalSteps}
-          stepTitles={steps.map((step) => step.title)}
           onBack={handleBack}
         />
 
@@ -140,6 +111,8 @@ export default function App() {
                 yearFilterType={yearFilterType}
                 onYearChange={setSelectedYear}
                 onYearFilterTypeChange={setYearFilterType}
+                onNext={handleNext}
+                onBack={handleBack}
               />
             }
           />
@@ -152,6 +125,8 @@ export default function App() {
                 onMajorChange={setSelectedMajor}
                 onInterestToggle={handleInterestToggle}
                 onCategoryClick={(id) => console.log('category:', id)}
+                onNext={handleNext}
+                onBack={handleBack}
               />
             }
           />
@@ -160,7 +135,7 @@ export default function App() {
             element={<DodreamCategoryDetailPage />}
           />
           <Route
-            path="/result"
+            path="/calendarSubscribe"
             element={
               <ResultPage
                 isSubscriptionModalOpen={isSubscriptionModalOpen}
@@ -171,6 +146,7 @@ export default function App() {
                 selectedInterests={selectedInterests}
                 selectedServices={selectedServices}
                 getMajorLabel={getMajorLabel}
+                onBack={handleBack}
               />
             }
           />
