@@ -39,7 +39,7 @@ export default function Categories({
   return (
     <div className="space-y-3">
       <Label className="text-foreground text-sm font-medium">
-        관심 카테고리 선택
+        관심 카테고리 선택(공통)
       </Label>
       <div className="space-y-2">
         {keywords.map((keyword) => {
