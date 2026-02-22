@@ -8,7 +8,6 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -21,7 +20,7 @@ const queryClient = new QueryClient({
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeProvider attribute="class" defaultTheme="light">
         {children}
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />

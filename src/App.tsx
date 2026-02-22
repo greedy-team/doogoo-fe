@@ -1,16 +1,19 @@
 import { Routes, Route } from 'react-router-dom';
-import Navigation from '@/shared/layout/Navigation';
+import Navigation from '@/components/layout/Navigation';
 import { useState } from 'react';
-import { Hero } from '@/shared/layout/Hero';
-import LandingPage from '@/features/serviceSelect/LandingPage';
-import AcademicPage from '@/features/academicSelect/AcademicPage';
-import DodreamPage from '@/features/dodreamSelect/DodreamPage';
-import DodreamCategoryDetailPage from '@/features/dodreamSelect/detail/DodreamCategoryDetailPage';
-import ResultPage from '@/features/calendarSubscribe/ResultPage';
-import { StepIndicator } from '@/features/step-indicator/StepIndicator';
+import { Hero } from '@/components/layout/Hero';
+import Landing from './pages/Landing';
+import AcademicNotice from './pages/AcademicNotice';
+import DooDreamNotice from './pages/DooDreamNotice';
+import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
+import Result from './pages/Result';
+import { StepIndicator } from '@/features/StepIndicator/components/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
-import { useGetAcademicNotices, useGetDodreamNotices } from '@/features/academicSelect/hooks/useNotices';
+import {
+  useGetAcademicNotices,
+  useGetDodreamNotices,
+} from '@/features/academicNotice/hooks/useNotices';
 
 export default function App() {
   useGetAllFilterOptions(); // 학과, 키워드, 학년 데이터 캐싱
@@ -36,7 +39,7 @@ export default function App() {
   // Doodream state
   const [selectedMajor, setSelectedMajor] = useState<string>('all');
   const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
 
   const handleInterestToggle = (id: string) => {
@@ -84,7 +87,7 @@ export default function App() {
           <Route
             path="/"
             element={
-              <LandingPage
+              <Landing
                 selectedServices={selectedServices}
                 onToggleService={handleToggleService}
                 onContinue={handleServiceContinue}
@@ -92,9 +95,9 @@ export default function App() {
             }
           />
           <Route
-            path="/academicSelect"
+            path="/academicNotice"
             element={
-              <AcademicPage
+              <AcademicNotice
                 selectedYear={selectedYear}
                 yearFilterType={yearFilterType}
                 onYearChange={setSelectedYear}
@@ -105,9 +108,9 @@ export default function App() {
             }
           />
           <Route
-            path="/dodreamSelect"
+            path="/dooDreamNotice"
             element={
-              <DodreamPage
+              <DooDreamNotice
                 selectedMajor={selectedMajor}
                 selectedInterests={selectedInterests}
                 onMajorChange={setSelectedMajor}
@@ -119,13 +122,13 @@ export default function App() {
             }
           />
           <Route
-            path="/dodreamSelect/:categoryId"
-            element={<DodreamCategoryDetailPage selectedMajor={selectedMajor} />}
+            path="/dooDreamNotice/:categoryId"
+            element={<DooDreamCategoryDetail selectedMajor={selectedMajor} />}
           />
           <Route
-            path="/calendarSubscribe"
+            path="/result"
             element={
-              <ResultPage
+              <Result
                 isSubscriptionModalOpen={isSubscriptionModalOpen}
                 setIsSubscriptionModalOpen={setIsSubscriptionModalOpen}
                 selectedYear={selectedYear}
@@ -137,6 +140,7 @@ export default function App() {
               />
             }
           />
+          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Routes>
       </div>
     </div>
