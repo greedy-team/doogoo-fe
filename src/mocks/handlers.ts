@@ -5,41 +5,74 @@
  */
 import { http, HttpResponse } from 'msw';
 import majorsData from '@/mock/data/majors.json';
+import type { Department } from '@/shared/api/types';
 
 /**
  * Departments 데이터 변환 함수
  *
- * majors.json (flat 구조) → 3계층 구조 (계열/학부/학과)로 변환
- * ⚠️ 3계층 구조 전체가 아직 백엔드 미구현
+ * majors.json → flat 구조로 변환
+ * 각 학과에 단과대학, 계열 정보를 메타데이터로 추가
  *
  * 입력: [{ college: "공과대학", majors: [...] }]
- * 출력: [{ id: "college-1", name: "공과대학", departments: [...] }]
+ * 출력: [
+ *   {
+ *     id: "dept-1",
+ *     name: "컴퓨터공학과",
+ *     college: "인공지능융합대학",
+ *     collegeId: "college-1",
+ *     field: "IT계열",  // ⚠️ 백엔드 미구현 - 프론트에서 추가
+ *     fieldId: "field-1"  // ⚠️ 백엔드 미구현 - 프론트에서 추가
+ *   },
+ *   ...
+ * ]
  */
-const transformDepartments = () => {
-  const departments = [];
-  let collegeId = 1;
+const transformDepartments = (): Department[] => {
+  const departments: Department[] = [];
   let deptId = 1;
 
-  // 전체 옵션 추가
-  departments.push({
-    id: 'all',
-    name: '전체',
-    type: 'all',
+  // 계열별 단과대학 분류 (프론트엔드에서 추가)
+  const fieldMapping: Record<string, string[]> = {
+    'IT계열': ['인공지능융합대학', '공과대학'],
+    '인문계열': ['인문과학대학', '사회과학대학', '대양휴머니티칼리지'],
+    '경상계열': ['경영경제대학', '호텔관광대학'],
+    '자연계열': ['자연과학대학', '생명과학대학'],
+    '예체능계열': ['예체능대학'],
+  };
+
+  // 단과대학 → 계열 역매핑
+  const collegeToField: Record<string, { fieldName: string; fieldId: string }> = {};
+  let fieldIdCounter = 1;
+  Object.entries(fieldMapping).forEach(([fieldName, collegeNames]) => {
+    const fieldId = `field-${fieldIdCounter++}`;
+    collegeNames.forEach((collegeName) => {
+      collegeToField[collegeName] = { fieldName, fieldId };
+    });
   });
 
+  // 단과대학 ID 매핑
+  const collegeIds: Record<string, string> = {};
+  let collegeIdCounter = 1;
   majorsData.forEach((college) => {
-    const collegeItem = {
-      id: `college-${collegeId}`,
-      name: college.college,
-      type: 'college',
-      departments: college.majors.map((major) => ({
+    if (!collegeIds[college.college]) {
+      collegeIds[college.college] = `college-${collegeIdCounter++}`;
+    }
+  });
+
+  // 각 학과를 flat하게 변환
+  majorsData.forEach((college) => {
+    const fieldInfo = collegeToField[college.college];
+    const collegeId = collegeIds[college.college];
+
+    college.majors.forEach((major) => {
+      departments.push({
         id: `dept-${deptId++}`,
         name: major.label,
-        type: 'department',
-      })),
-    };
-    departments.push(collegeItem);
-    collegeId++;
+        college: college.college,
+        collegeId,
+        field: fieldInfo?.fieldName,
+        fieldId: fieldInfo?.fieldId,
+      });
+    });
   });
 
   return departments;

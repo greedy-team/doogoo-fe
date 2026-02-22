@@ -7,7 +7,6 @@ import AcademicPage from '@/features/academicSelect/AcademicPage';
 import DodreamPage from '@/features/dodreamSelect/DodreamPage';
 import DodreamCategoryDetailPage from '@/features/dodreamSelect/detail/DodreamCategoryDetailPage';
 import ResultPage from '@/features/calendarSubscribe/ResultPage';
-import majorsData from '@/mock/data/majors.json';
 import { StepIndicator } from '@/features/step-indicator/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
@@ -35,15 +34,10 @@ export default function App() {
   );
 
   // Doodream state
-  const [selectedMajor, setSelectedMajor] = useState<string>('computer');
+  const [selectedMajor, setSelectedMajor] = useState<string>('all');
   const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
     new Set(['competition', 'career']),
   );
-
-  // Major/Minor label lookup
-  const allMajors = majorsData.flatMap((college) => college.majors);
-  const getMajorLabel = (value: string) =>
-    allMajors.find((m) => m.value === value)?.label || value;
 
   const handleInterestToggle = (id: string) => {
     setSelectedInterests((prev) => {
@@ -139,7 +133,6 @@ export default function App() {
                 selectedMajor={selectedMajor}
                 selectedInterests={selectedInterests}
                 selectedServices={selectedServices}
-                getMajorLabel={getMajorLabel}
                 onBack={handleBack}
               />
             }

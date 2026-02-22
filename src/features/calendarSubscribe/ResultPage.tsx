@@ -14,7 +14,6 @@ interface ResultProps {
   selectedMajor: string;
   selectedInterests: Set<string>;
   yearFilterType: 'my-year' | 'all';
-  getMajorLabel: (value: string) => string;
   onBack: () => void;
 }
 
@@ -26,7 +25,6 @@ export default function ResultPage({
   selectedMajor,
   selectedInterests,
   yearFilterType,
-  getMajorLabel,
   onBack,
 }: ResultProps) {
   return (
@@ -49,7 +47,6 @@ export default function ResultPage({
             <DooDreamSummaryCard
               selectedMajor={selectedMajor}
               selectedInterests={selectedInterests}
-              getMajorLabel={getMajorLabel}
             />
           )}
         </div>

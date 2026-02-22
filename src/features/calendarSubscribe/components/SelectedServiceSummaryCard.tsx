@@ -1,4 +1,6 @@
 import { DOO_DREAM_CATEGORIES } from '@/features/dodreamSelect/constants/dooDreamCategories';
+import { useGetDepartments } from '@/shared/hooks/useCommonData';
+import { getDepartmentName } from '@/shared/utils/departmentUtils';
 
 function getSelectedDooDreamCategoryLabels(selectedInterests: Set<string>) {
   return DOO_DREAM_CATEGORIES.filter((cat) =>
@@ -29,17 +31,18 @@ export function AcademicNoticeSummaryCard({
 export function DooDreamSummaryCard({
   selectedMajor,
   selectedInterests,
-  getMajorLabel,
 }: {
   selectedMajor: string;
   selectedInterests: Set<string>;
-  getMajorLabel: (value: string) => string;
 }) {
+  const { data: departments = [] } = useGetDepartments();
+  const majorName = getDepartmentName(departments, selectedMajor);
+
   return (
     <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
       <h4 className="text-foreground mb-2 font-semibold">✨ 두드림</h4>
       <div className="text-muted-foreground space-y-1 text-sm">
-        <p>• 전공: {getMajorLabel(selectedMajor)}</p>
+        <p>• 전공: {majorName}</p>
         {/* <p>• 부전공: {getminorlabel(selectedminor)}</p> */}
         <p>
           • 관심사:{' '}
