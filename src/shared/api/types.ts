@@ -1,10 +1,3 @@
-
-
-export type IdName = {
-  id: string;
-  name: string;
-};
-
 /**
  * 학과 정보 (flat 구조)
  * ⚠️ field, fieldId는 백엔드 미구현 - 프론트에서 추가
@@ -18,8 +11,16 @@ export type Department = {
   fieldId?: string;     // 계열 ID (선택, 예: "field-1") - 프론트에서 추가
 };
 
-export type Keyword = IdName;
-export type Grade = IdName;
+export type Keyword = {
+  id: string;
+  name: string;
+  description?: string; // ⚠️ 백엔드 미구현 - 프론트에서 추가
+};
+
+export type Grade = {
+  id: string;
+  name: string;
+};
 
 export type DepartmentsResponse = {
   departments: Department[];

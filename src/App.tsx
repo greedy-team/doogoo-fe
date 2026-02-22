@@ -36,7 +36,7 @@ export default function App() {
   // Doodream state
   const [selectedMajor, setSelectedMajor] = useState<string>('all');
   const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
-    new Set(['competition', 'career']),
+    new Set()
   );
 
   const handleInterestToggle = (id: string) => {

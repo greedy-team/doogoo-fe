@@ -1,11 +1,13 @@
-import { DOO_DREAM_CATEGORIES } from '@/features/dodreamSelect/constants/dooDreamCategories';
-import { useGetDepartments } from '@/shared/hooks/useCommonData';
+import { useGetDepartments, useGetKeywords } from '@/shared/hooks/useCommonData';
 import { getDepartmentName } from '@/shared/utils/departmentUtils';
 
-function getSelectedDooDreamCategoryLabels(selectedInterests: Set<string>) {
-  return DOO_DREAM_CATEGORIES.filter((cat) =>
-    selectedInterests.has(cat.id),
-  ).map((cat) => cat.label);
+function getSelectedDooDreamCategoryLabels(
+  selectedInterests: Set<string>,
+  keywords: { id: string; name: string }[]
+) {
+  return keywords
+    .filter((keyword) => selectedInterests.has(keyword.id))
+    .map((keyword) => keyword.name);
 }
 
 export function AcademicNoticeSummaryCard({
@@ -36,7 +38,10 @@ export function DooDreamSummaryCard({
   selectedInterests: Set<string>;
 }) {
   const { data: departments = [] } = useGetDepartments();
+  const { data: keywords = [] } = useGetKeywords();
   const majorName = getDepartmentName(departments, selectedMajor);
+
+  const categoryLabels = getSelectedDooDreamCategoryLabels(selectedInterests, keywords);
 
   return (
     <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
@@ -46,8 +51,8 @@ export function DooDreamSummaryCard({
         {/* <p>• 부전공: {getminorlabel(selectedminor)}</p> */}
         <p>
           • 관심사:{' '}
-          {getSelectedDooDreamCategoryLabels(selectedInterests).length > 0
-            ? getSelectedDooDreamCategoryLabels(selectedInterests).join(', ')
+          {categoryLabels.length > 0
+            ? categoryLabels.join(', ')
             : '선택 안 함'}
         </p>
       </div>

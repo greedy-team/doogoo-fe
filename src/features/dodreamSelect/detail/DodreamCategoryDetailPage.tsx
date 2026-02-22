@@ -2,12 +2,12 @@ import { Card } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
 import { ArrowLeft, Calendar, MapPin, Users } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DOO_DREAM_CATEGORIES } from '@/features/dodreamSelect/constants/dooDreamCategories';
-import type { DOO_DREAM_CATEGORY_IDS } from '@/features/dodreamSelect/constants/dooDreamCategories';
+import { getCategoryIcon } from '@/features/dodreamSelect/constants/categoryIcons';
+import { useGetKeywords } from '@/shared/hooks/useCommonData';
 import doodreamExampleEvents from '@/mock/data/doodreamExamples.json';
 
 type DoodreamExampleEvent = {
-  interestType: DOO_DREAM_CATEGORY_IDS;
+  interestType: string;
   title: string;
   description: string;
   date: string;
@@ -16,12 +16,21 @@ type DoodreamExampleEvent = {
 };
 
 export default function DodreamCategoryDetailPage() {
-  const { categoryId: categoryIdParam } = useParams<{
-    categoryId: DOO_DREAM_CATEGORY_IDS;
-  }>();
+  const { categoryId: categoryIdParam } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
+  const { data: keywords = [], isLoading } = useGetKeywords();
 
-  const category = DOO_DREAM_CATEGORIES.find((c) => c.id === categoryIdParam);
+  const category = keywords.find((k) => k.id === categoryIdParam);
+  const Icon = getCategoryIcon(categoryIdParam || '');
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">로딩 중...</div>
+      </div>
+    );
+  }
+
   if (!category) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -35,7 +44,6 @@ export default function DodreamCategoryDetailPage() {
     );
   }
 
-  const Icon = category.icon as unknown as React.ElementType;
   const events = (doodreamExampleEvents as DoodreamExampleEvent[]).filter(
     (event) => event.interestType === category.id,
   );
@@ -59,7 +67,7 @@ export default function DodreamCategoryDetailPage() {
               <div className="rounded-lg bg-purple-100 p-2">
                 <Icon className="h-5 w-5 text-purple-600" />
               </div>
-              <h1 className="text-xl font-semibold">{category.label}</h1>
+              <h1 className="text-xl font-semibold">{category.name}</h1>
             </div>
           </div>
         </div>
@@ -72,7 +80,7 @@ export default function DodreamCategoryDetailPage() {
             이 카테고리에 포함되는 행사
           </h2>
           <p className="text-muted-foreground text-sm">
-            최근 두드림에 등록된 {category.label} 관련 행사 예시입니다
+            최근 두드림에 등록된 {category.name} 관련 행사 예시입니다
           </p>
         </div>
 
