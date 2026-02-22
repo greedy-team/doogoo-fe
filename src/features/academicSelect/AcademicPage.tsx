@@ -32,19 +32,19 @@ export default function AcademicPage({
         />
 
         <div className="space-y-4 px-6 pb-6">
-          {/* Year Selection for "My Year" filter */}
+          {/* Filter Type Selection - 먼저 수신 범위 선택 */}
+          <YearTypeSelection
+            yearFilterType={yearFilterType}
+            onYearFilterTypeChange={onYearFilterTypeChange}
+          />
+
+          {/* Year Selection - "내 학년만" 선택 시 학년 선택 */}
           {yearFilterType === 'my-year' && (
             <YearSelectionLayout
               selectedYear={selectedYear}
               onYearChange={onYearChange}
             />
           )}
-
-          {/* Filter Type Selection */}
-          <YearTypeSelection
-            yearFilterType={yearFilterType}
-            onYearFilterTypeChange={onYearFilterTypeChange}
-          />
         </div>
       </Card>
       <NextButton onClick={onNext} disabled={false} />

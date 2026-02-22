@@ -7,8 +7,13 @@ import {
   DialogDescription,
 } from '@/shared/ui/dialog';
 import { Button } from '@/shared/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
 import { Download, ExternalLink, Apple, Chrome } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  useCreateAcademicIcs,
+  useCreateDodreamIcs,
+} from '@/features/calendarSubscribe/hooks/useIcsLink';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -26,93 +31,134 @@ export function SubscriptionModal({
   selectedYear,
   selectedMajor,
   selectedInterests,
-  yearFilterType,
   selectedServices,
 }: SubscriptionModalProps) {
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'academic' | 'doodream'>('academic');
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  // Generate webcal URL
-  const getWebcalUrl = () => {
-    const params = new URLSearchParams();
-    if (selectedServices.has('academic')) {
-      params.append('academic', 'true');
-      params.append('year', selectedYear.toString());
-      if (yearFilterType) params.append('yearFilter', yearFilterType);
-    }
-    if (selectedServices.has('doodream')) {
-      params.append('doodream', 'true');
-      params.append('major', selectedMajor);
-      params.append('interests', Array.from(selectedInterests).join(','));
-    }
-    return `webcal://sejong-sync.app/calendar?${params.toString()}`;
+  const createAcademicIcs = useCreateAcademicIcs();
+  const createDodreamIcs = useCreateDodreamIcs();
+
+  const hasBothServices = selectedServices.has('academic') && selectedServices.has('doodream');
+
+  // API 호출 헬퍼 함수들
+  const callAcademicApi = async () => {
+    // TODO: yearFilterType이 'all'일 때 처리 (엣지케이스 - 현재 보류)
+    const response = await createAcademicIcs.mutateAsync({
+      selectedDepartmentId: selectedMajor,
+      selectedGradeId: selectedYear,
+      alarmEnabled: false, // 미리알림 비활성화
+    });
+    return response;
   };
 
-  const handlePlatformSubscribe = (
+  const callDodreamApi = async () => {
+    const response = await createDodreamIcs.mutateAsync({
+      selectedDepartmentId: selectedMajor,
+      selectedKeywordId: Array.from(selectedInterests),
+      alarmEnabled: false, // 미리알림 비활성화
+    });
+    return response;
+  };
+
+  // 현재 활성화된 서비스에 따라 API 호출
+  const callApiForActiveService = async (serviceType: 'academic' | 'doodream') => {
+    if (serviceType === 'academic') {
+      return await callAcademicApi();
+    } else {
+      return await callDodreamApi();
+    }
+  };
+
+  const handlePlatformSubscribe = async (
     platform: 'apple' | 'google' | 'outlook',
   ) => {
-    const webcalUrl = getWebcalUrl();
-    let finalUrl = webcalUrl;
+    setIsProcessing(true);
+    try {
+      // 현재 서비스 결정 (탭이 있으면 activeTab, 없으면 단일 서비스)
+      const currentService = hasBothServices
+        ? activeTab
+        : (selectedServices.has('academic') ? 'academic' : 'doodream');
 
-    switch (platform) {
-      case 'apple':
-        // iOS/macOS Calendar handles webcal:// directly
-        finalUrl = webcalUrl;
-        break;
-      case 'google':
-        // Google Calendar subscription URL
-        finalUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(
-          webcalUrl.replace('webcal://', 'https://'),
-        )}`;
-        break;
-      case 'outlook':
-        // Outlook.com subscription URL
-        finalUrl = `https://outlook.live.com/owa?path=/calendar/action/compose&rru=addsubscription&url=${encodeURIComponent(
-          webcalUrl.replace('webcal://', 'https://'),
-        )}&name=${encodeURIComponent('세종대학교 캘린더')}`;
-        break;
-    }
+      // API 호출
+      const response = await callApiForActiveService(currentService);
 
-    // Open in new window/tab
-    window.open(finalUrl, '_blank');
+      // icsUrl을 webcal 프로토콜로 변환
+      const webcalUrl = response.icsUrl.replace(/^https?:\/\//, 'webcal://');
+      let finalUrl = webcalUrl;
 
-    toast.success(
-      `${platform === 'apple' ? 'Apple' : platform === 'google' ? 'Google' : 'Outlook'} 캘린더로 이동합니다`,
-      {
-        description: '새 창에서 구독을 완료하세요.',
+      switch (platform) {
+        case 'apple':
+          // iOS/macOS Calendar handles webcal:// directly
+          finalUrl = webcalUrl;
+          break;
+        case 'google':
+          // Google Calendar subscription URL
+          finalUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(
+            webcalUrl.replace('webcal://', 'https://'),
+          )}`;
+          break;
+        case 'outlook':
+          // Outlook.com subscription URL
+          finalUrl = `https://outlook.live.com/owa?path=/calendar/action/compose&rru=addsubscription&url=${encodeURIComponent(
+            webcalUrl.replace('webcal://', 'https://'),
+          )}&name=${encodeURIComponent('세종대학교 캘린더')}`;
+          break;
+      }
+
+      // Open in new window/tab
+      window.open(finalUrl, '_blank');
+
+      toast.success(
+        `${platform === 'apple' ? 'Apple' : platform === 'google' ? 'Google' : 'Outlook'} 캘린더로 이동합니다`,
+        {
+          description: '새 창에서 구독을 완료하세요.',
+          duration: 4000,
+        },
+      );
+    } catch (error) {
+      console.error('ICS 링크 생성 실패:', error);
+      toast.error('캘린더 링크 생성에 실패했습니다', {
+        description: '잠시 후 다시 시도해주세요.',
         duration: 4000,
-      },
-    );
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  const handleDownload = () => {
-    setIsDownloading(true);
+  const handleDownload = async () => {
+    setIsProcessing(true);
+    try {
+      // 현재 서비스 결정-두드림/학사공지중 선택
+      const currentService = hasBothServices
+        ? activeTab
+        : (selectedServices.has('academic') ? 'academic' : 'doodream');
 
-    // Generate ICS file content
-    const icsContent = generateMockICS(
-      selectedYear,
-      selectedMajor,
-      selectedInterests,
-      selectedServices,
-    );
-    const blob = new Blob([icsContent], {
-      type: 'text/calendar;charset=utf-8',
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `sejong-sync.ics`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      // API 호출
+      const response = await callApiForActiveService(currentService);
 
-    setTimeout(() => {
-      setIsDownloading(false);
+      // downloadUrl로 다운로드
+      const link = document.createElement('a');
+      link.href = response.downloadUrl;
+      link.download = `sejong-sync-${currentService}.ics`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
       toast.success('캘린더 파일이 다운로드되었습니다!', {
         description: '캘린더 앱에 .ics 파일을 가져오세요.',
         duration: 4000,
       });
-    }, 500);
+    } catch (error) {
+      console.error('ICS 다운로드 실패:', error);
+      toast.error('캘린더 파일 다운로드에 실패했습니다', {
+        description: '잠시 후 다시 시도해주세요.',
+        duration: 4000,
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const platforms = [
@@ -139,6 +185,62 @@ export function SubscriptionModal({
     },
   ];
 
+  // 플랫폼 버튼 및 다운로드 버튼 렌더링
+  const renderContent = () => (
+    <div className="space-y-3 py-4">
+      {platforms.map((platform) => {
+        const Icon = platform.icon;
+        return (
+          <button
+            key={platform.id}
+            onClick={() =>
+              handlePlatformSubscribe(
+                platform.id as 'apple' | 'google' | 'outlook',
+              )
+            }
+            disabled={isProcessing}
+            className={`flex w-full items-center gap-4 rounded-xl p-4 text-left transition-all duration-200 ${platform.color} hover:border-primary/30 border-2 border-transparent active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            <div className="shrink-0">
+              <Icon className="h-8 w-8" />
+            </div>
+            <div className="flex-1">
+              <div className="text-base font-semibold">{platform.name}</div>
+              <div className="text-sm opacity-70">
+                {platform.description}
+              </div>
+            </div>
+            <ExternalLink className="h-5 w-5 opacity-50" />
+          </button>
+        );
+      })}
+
+      {/* Divider */}
+      <div className="relative py-2">
+        <div className="absolute inset-0 flex items-center">
+          <div className="border-border w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs">
+          <span className="bg-card text-muted-foreground px-2">또는</span>
+        </div>
+      </div>
+
+      {/* Download ICS */}
+      <Button
+        variant="outline"
+        className="h-14 w-full text-base"
+        onClick={handleDownload}
+        disabled={isProcessing}
+      >
+        <Download className="mr-2 h-5 w-5" />
+        {isProcessing ? '처리 중...' : '.ics 파일 다운로드'}
+      </Button>
+      <p className="text-muted-foreground text-center text-xs">
+        다운로드한 파일을 캘린더 앱으로 가져오세요
+      </p>
+    </div>
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
@@ -149,131 +251,23 @@ export function SubscriptionModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3 py-4">
-          {platforms.map((platform) => {
-            const Icon = platform.icon;
-            return (
-              <button
-                key={platform.id}
-                onClick={() =>
-                  handlePlatformSubscribe(
-                    platform.id as 'apple' | 'google' | 'outlook',
-                  )
-                }
-                className={`flex w-full items-center gap-4 rounded-xl p-4 text-left transition-all duration-200 ${platform.color} hover:border-primary/30 border-2 border-transparent active:scale-[0.98]`}
-              >
-                <div className="shrink-0">
-                  <Icon className="h-8 w-8" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-base font-semibold">{platform.name}</div>
-                  <div className="text-sm opacity-70">
-                    {platform.description}
-                  </div>
-                </div>
-                <ExternalLink className="h-5 w-5 opacity-50" />
-              </button>
-            );
-          })}
-
-          {/* Divider */}
-          <div className="relative py-2">
-            <div className="absolute inset-0 flex items-center">
-              <div className="border-border w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-card text-muted-foreground px-2">또는</span>
-            </div>
-          </div>
-
-          {/* Download ICS */}
-          <Button
-            variant="outline"
-            className="h-14 w-full text-base"
-            onClick={handleDownload}
-            disabled={isDownloading}
-          >
-            <Download className="mr-2 h-5 w-5" />
-            {isDownloading ? '다운로드 중...' : '.ics 파일 다운로드'}
-          </Button>
-          <p className="text-muted-foreground text-center text-xs">
-            다운로드한 파일을 캘린더 앱으로 가져오세요
-          </p>
-        </div>
+        {hasBothServices ? (
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'academic' | 'doodream')}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="academic">📚 학사공지</TabsTrigger>
+              <TabsTrigger value="doodream">✨ 두드림</TabsTrigger>
+            </TabsList>
+            <TabsContent value="academic">
+              {renderContent()}
+            </TabsContent>
+            <TabsContent value="doodream">
+              {renderContent()}
+            </TabsContent>
+          </Tabs>
+        ) : (
+          renderContent()
+        )}
       </DialogContent>
     </Dialog>
   );
-}
-
-// Helper function to generate mock ICS content
-function generateMockICS(
-  year: number,
-  major: string,
-  _interests: Set<string>,
-  services: Set<'academic' | 'doodream'>,
-): string {
-  const now = new Date();
-  const timestamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-  let calendarName = '세종대학교';
-  if (services.has('academic') && services.has('doodream')) {
-    calendarName += ' 학사공지 & 두드림';
-  } else if (services.has('academic')) {
-    calendarName += ' 학사공지';
-  } else if (services.has('doodream')) {
-    calendarName += ' 두드림';
-  }
-
-  let events = '';
-
-  // Academic events
-  if (services.has('academic')) {
-    events += `
-BEGIN:VEVENT
-UID:${timestamp}-1@sejong-sync.app
-DTSTAMP:${timestamp}
-DTSTART:20260212T090000Z
-DTEND:20260212T100000Z
-SUMMARY:중간고사 기간 시작
-DESCRIPTION:${year}학년 학사일정
-CATEGORIES:학사
-END:VEVENT
-
-BEGIN:VEVENT
-UID:${timestamp}-2@sejong-sync.app
-DTSTAMP:${timestamp}
-DTSTART:20260301T000000Z
-DTEND:20260301T235900Z
-SUMMARY:삼일절 (휴교)
-DESCRIPTION:국경일 - 휴교
-CATEGORIES:학사
-END:VEVENT
-`;
-  }
-
-  // Doodream events
-  if (services.has('doodream')) {
-    events += `
-BEGIN:VEVENT
-UID:${timestamp}-3@sejong-sync.app
-DTSTAMP:${timestamp}
-DTSTART:20260225T130000Z
-DTEND:20260225T170000Z
-SUMMARY:2026 세종 해커톤
-DESCRIPTION:두드림 행사 - ${major}
-CATEGORIES:두드림
-END:VEVENT
-`;
-  }
-
-  return `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Sejong Sync//Calendar//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-X-WR-CALNAME:${calendarName}
-X-WR-TIMEZONE:Asia/Seoul
-X-WR-CALDESC:맞춤형 세종대학교 캘린더
-${events}
-END:VCALENDAR`;
 }

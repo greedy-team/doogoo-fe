@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card } from '@/shared/ui/card';
 
 import ResultListView from './ResultListView';
@@ -7,25 +7,9 @@ import ResultMonthView from './ResultMonthView';
 import EventDetailsDialog from './EventDetailsDialog';
 import generateMonthsData from './generateMonthsData';
 
-import resultPreviewEventsData from '@/mock/data/resultPreviewEvents.json';
 import type { MonthData } from './generateMonthsData';
-
-interface RawPreviewEvent {
-  date: string;
-  day: number;
-  month: number;
-  title: string;
-  serviceType: string;
-  category?: string;
-  link?: string;
-}
-
-type RawData = {
-  academicEvents: RawPreviewEvent[];
-  doodreamEvents: Record<string, RawPreviewEvent[]>;
-};
-
-const data = resultPreviewEventsData as RawData;
+import { useGetAcademicNotices, useGetDodreamNotices } from '@/features/academicSelect/hooks/useNotices';
+import { filterAcademicNotices, filterDodreamNotices } from '@/features/academicSelect/utils/noticeFilters';
 
 export interface PreviewEvent {
   date: string;
@@ -37,7 +21,21 @@ export interface PreviewEvent {
   link?: string;
 }
 
-export default function CalendarPreview() {
+interface CalendarPreviewProps {
+  selectedYear: number;
+  yearFilterType: 'my-year' | 'all';
+  selectedMajor: string;
+  selectedInterests: Set<string>;
+  selectedServices: Set<'academic' | 'doodream'>;
+}
+
+export default function CalendarPreview({
+  selectedYear,
+  yearFilterType,
+  selectedMajor,
+  selectedInterests,
+  selectedServices,
+}: CalendarPreviewProps) {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
   const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
   const [selectedDayEvents, setSelectedDayEvents] = useState<PreviewEvent[]>(
@@ -45,31 +43,61 @@ export default function CalendarPreview() {
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const isValidEvent = (e: RawPreviewEvent): e is PreviewEvent => {
-    return e.serviceType === 'academic' || e.serviceType === 'doodream';
-  };
+  // API 데이터 가져오기
+  const { data: academicNotices = [] } = useGetAcademicNotices();
+  const { data: dodreamNotices = [] } = useGetDodreamNotices();
 
-  const safeAcademicEvents: PreviewEvent[] =
-    data.academicEvents.filter(isValidEvent);
-
-  const safeDooDreamEvents: PreviewEvent[] = Object.values(data.doodreamEvents)
-    .flat()
-    .filter(isValidEvent);
-
-  // Mock preview events based on selections
-  const getPreviewEvents = (): PreviewEvent[] => {
+  // 필터링된 공지 데이터
+  const previewEvents = useMemo((): PreviewEvent[] => {
     const events: PreviewEvent[] = [];
 
-    events.push(...safeAcademicEvents);
-    events.push(...safeDooDreamEvents);
+    // 학사공지 필터링 및 변환
+    if (selectedServices.has('academic')) {
+      const filteredAcademicNotices = filterAcademicNotices(
+        academicNotices,
+        selectedYear,
+        yearFilterType
+      );
 
+      filteredAcademicNotices.forEach((notice) => {
+        const startDate = new Date(notice.startAt);
+        events.push({
+          date: notice.startAt,
+          day: startDate.getDate(),
+          month: startDate.getMonth() + 1,
+          title: notice.title,
+          serviceType: 'academic',
+        });
+      });
+    }
+
+    // 두드림 공지 필터링 및 변환
+    if (selectedServices.has('doodream')) {
+      const filteredDodreamNotices = filterDodreamNotices(
+        dodreamNotices,
+        selectedMajor,
+        selectedInterests
+      );
+
+      filteredDodreamNotices.forEach((notice) => {
+        const startDate = new Date(notice.operatingStartAt);
+        events.push({
+          date: notice.operatingStartAt,
+          day: startDate.getDate(),
+          month: startDate.getMonth() + 1,
+          title: notice.title,
+          serviceType: 'doodream',
+          link: notice.detailUrl,
+        });
+      });
+    }
+
+    // 날짜순 정렬
     return events.sort((a, b) => {
       if (a.month !== b.month) return a.month - b.month;
       return a.day - b.day;
     });
-  };
-
-  const previewEvents = getPreviewEvents();
+  }, [academicNotices, dodreamNotices, selectedYear, yearFilterType, selectedMajor, selectedInterests, selectedServices]);
   const monthsData: MonthData[] = generateMonthsData();
 
   const getEventsForDay = (month: number, day: number) => {

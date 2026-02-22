@@ -21,6 +21,14 @@ export default function EventDetailsDialog({
   onOpenChange,
   selectedDayEvents,
 }: EventDetailsDialogProps) {
+  // ISO 8601 형식을 "월 일" 형식으로 변환하는 헬퍼 함수 - api명세로 통일하기 위하여
+  const formatDate = (isoDate: string) => {
+    const dateObj = new Date(isoDate);
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    return `${month}월 ${day}일`;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[500px]">
@@ -28,22 +36,27 @@ export default function EventDetailsDialog({
           <DialogTitle>행사 상세 정보</DialogTitle>
           <DialogDescription>
             {selectedDayEvents.length > 1
-              ? `${selectedDayEvents[0]?.date}에 ${selectedDayEvents.length}개의 행사가 있습니다.`
-              : `${selectedDayEvents[0]?.date}에 열리는 행사입니다.`}
+              ? `${formatDate(selectedDayEvents[0]?.date)}에 ${selectedDayEvents.length}개의 행사가 있습니다.`
+              : `${formatDate(selectedDayEvents[0]?.date)}에 열리는 행사입니다.`}
           </DialogDescription>
         </DialogHeader>
         {selectedDayEvents.length > 0 && (
           <div className="space-y-3 py-2">
-            {selectedDayEvents.map((event, index) => (
+            {selectedDayEvents.map((event, index) => {
+              const dateObj = new Date(event.date);
+              const month = dateObj.getMonth() + 1;
+              const day = dateObj.getDate();
+
+              return (
               <Card key={index} className="p-4 shadow-sm">
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="min-w-[48px] text-center">
                       <div className="text-muted-foreground text-xs font-medium">
-                        {event.date.split(' ')[0]}
+                        {month}월
                       </div>
                       <div className="text-primary text-2xl font-bold">
-                        {event.date.split(' ')[1].replace('일', '')}
+                        {day}
                       </div>
                     </div>
                     <div className="min-w-0 flex-1 pt-1">
@@ -79,7 +92,8 @@ export default function EventDetailsDialog({
                   )}
                 </div>
               </Card>
-            ))}
+            );
+            })}
           </div>
         )}
       </DialogContent>

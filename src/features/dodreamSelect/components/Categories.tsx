@@ -2,7 +2,8 @@ import { Card } from '@/shared/ui/card';
 import { Label } from '@/shared/ui/label';
 import { Switch } from '@/shared/ui/switch';
 
-import { DOO_DREAM_CATEGORIES } from '@/features/dodreamSelect/constants/dooDreamCategories';
+import { getCategoryIcon } from '@/features/dodreamSelect/constants/categoryIcons';
+import { useGetKeywords } from '@/shared/hooks/useCommonData';
 import { useNavigate } from 'react-router-dom';
 
 export interface CategoriesProps {
@@ -17,27 +18,40 @@ export default function Categories({
   onCategoryClick,
 }: CategoriesProps) {
   const navigate = useNavigate();
+  const { data: keywords = [], isLoading } = useGetKeywords();
 
   const handleCategoryClick = (categoryId: string) => {
     onCategoryClick(categoryId);
-    navigate(`/dooDreamNotice/${categoryId}`);
+    navigate(`/dodreamSelect/${categoryId}`);
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-3">
+        <Label className="text-foreground text-sm font-medium">
+          관심 카테고리 선택
+        </Label>
+        <div className="text-muted-foreground text-sm">로딩 중...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <Label className="text-foreground text-sm font-medium">
-        관심 카테고리 선택
+        관심 카테고리 선택(공통)
       </Label>
       <div className="space-y-2">
-        {DOO_DREAM_CATEGORIES.map((interest) => {
-          const Icon = interest.icon;
-          const isSelected = selectedInterests.has(interest.id);
+        {keywords.map((keyword) => {
+          const Icon = getCategoryIcon(keyword.id);
+          const isSelected = selectedInterests.has(keyword.id);
 
           return (
             <Card
-              key={interest.id}
+              key={keyword.id}
               className={`cursor-pointer p-4 transition-all duration-200 ${isSelected ? 'border-purple-300 bg-purple-50' : 'hover:bg-accent/50'}
  `}
-              onClick={() => handleCategoryClick(interest.id)}
+              onClick={() => handleCategoryClick(keyword.id)}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex flex-1 items-center gap-3">
@@ -48,21 +62,21 @@ export default function Categories({
                   </div>
                   <div className="min-w-0 flex-1">
                     <Label
-                      htmlFor={`switch-${interest.id}`}
+                      htmlFor={`switch-${keyword.id}`}
                       className="mb-0.5 block cursor-pointer text-base font-medium"
                     >
-                      {interest.label}
+                      {keyword.name}
                     </Label>
                     <p className="text-muted-foreground line-clamp-1 text-sm">
-                      {interest.description}
+                      {keyword.description}
                     </p>
                   </div>
                 </div>
 
                 <Switch
-                  id={`switch-${interest.id}`}
+                  id={`switch-${keyword.id}`}
                   checked={isSelected}
-                  onCheckedChange={() => onInterestToggle(interest.id)}
+                  onCheckedChange={() => onInterestToggle(keyword.id)}
                   className="shrink-0"
                   onClick={(e) => e.stopPropagation()}
                 />

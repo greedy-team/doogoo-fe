@@ -1,29 +1,22 @@
 import { Routes, Route } from 'react-router-dom';
 import Navigation from '@/shared/layout/Navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Hero } from '@/shared/layout/Hero';
 import LandingPage from '@/features/serviceSelect/LandingPage';
 import AcademicPage from '@/features/academicSelect/AcademicPage';
 import DodreamPage from '@/features/dodreamSelect/DodreamPage';
 import DodreamCategoryDetailPage from '@/features/dodreamSelect/detail/DodreamCategoryDetailPage';
 import ResultPage from '@/features/calendarSubscribe/ResultPage';
-import majorsData from '@/mock/data/majors.json';
 import { StepIndicator } from '@/features/step-indicator/StepIndicator';
-import { useCommonStore } from '@/shared/stores/useCommonStore';
-import { useNoticeStore } from '@/features/academicSelect/stores/useNoticeStore';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
+import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
+import { useGetAcademicNotices, useGetDodreamNotices } from '@/features/academicSelect/hooks/useNotices';
 
 export default function App() {
-
-  const { fetchUIFilterOptions } = useCommonStore();
-  const { fetchAcademicNotices, fetchDodreamNotices } = useNoticeStore();
-
-  useEffect(() => {
-    fetchUIFilterOptions();
-    fetchAcademicNotices();
-    fetchDodreamNotices();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useGetAllFilterOptions(); // 학과, 키워드, 학년 데이터 캐싱
+  useGetAcademicNotices(); // 학사공지 데이터 캐싱
+  useGetDodreamNotices(); // 두드림 공지 데이터 캐싱
+  //일단 tanstackQuery로 데이터 캐싱하기로 하였음
 
   const [selectedServices, setSelectedServices] = useState<
     Set<'academic' | 'doodream'>
@@ -41,15 +34,10 @@ export default function App() {
   );
 
   // Doodream state
-  const [selectedMajor, setSelectedMajor] = useState<string>('computer');
+  const [selectedMajor, setSelectedMajor] = useState<string>('all');
   const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
-    new Set(['competition', 'career']),
+    new Set()
   );
-
-  // Major/Minor label lookup
-  const allMajors = majorsData.flatMap((college) => college.majors);
-  const getMajorLabel = (value: string) =>
-    allMajors.find((m) => m.value === value)?.label || value;
 
   const handleInterestToggle = (id: string) => {
     setSelectedInterests((prev) => {
@@ -132,7 +120,7 @@ export default function App() {
           />
           <Route
             path="/dodreamSelect/:categoryId"
-            element={<DodreamCategoryDetailPage />}
+            element={<DodreamCategoryDetailPage selectedMajor={selectedMajor} />}
           />
           <Route
             path="/calendarSubscribe"
@@ -145,7 +133,6 @@ export default function App() {
                 selectedMajor={selectedMajor}
                 selectedInterests={selectedInterests}
                 selectedServices={selectedServices}
-                getMajorLabel={getMajorLabel}
                 onBack={handleBack}
               />
             }
