@@ -8,6 +8,11 @@ interface EventItemProps {
 }
 
 export default function EventItem({ event, onClick }: EventItemProps) {
+  // ISO 8601 형식을 "월 일" 형식으로 변환하는 헬퍼 함수 - api명세로 통일하기 위하여
+  const dateObj = new Date(event.date);
+  const month = dateObj.getMonth() + 1;
+  const day = dateObj.getDate();
+
   return (
     <button
       onClick={onClick}
@@ -15,10 +20,10 @@ export default function EventItem({ event, onClick }: EventItemProps) {
     >
       <div className="min-w-[48px] text-center">
         <div className="text-muted-foreground text-xs font-medium">
-          {event.date.split(' ')[0]}
+          {month}월
         </div>
         <div className="text-foreground text-lg font-bold">
-          {event.date.split(' ')[1].replace('일', '')}
+          {day}
         </div>
       </div>
       <div className="min-w-0 flex-1 pt-1 text-left">

@@ -22,7 +22,7 @@ export default function Categories({
 
   const handleCategoryClick = (categoryId: string) => {
     onCategoryClick(categoryId);
-    navigate(`/dooDreamNotice/${categoryId}`);
+    navigate(`/dodreamSelect/${categoryId}`);
   };
 
   if (isLoading) {

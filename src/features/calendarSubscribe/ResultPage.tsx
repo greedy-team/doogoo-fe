@@ -51,7 +51,13 @@ export default function ResultPage({
           )}
         </div>
 
-        <CalendarPreview />
+        <CalendarPreview
+          selectedYear={selectedYear}
+          yearFilterType={yearFilterType}
+          selectedMajor={selectedMajor}
+          selectedInterests={selectedInterests}
+          selectedServices={selectedServices}
+        />
       </div>
 
       <SubscriptionModal

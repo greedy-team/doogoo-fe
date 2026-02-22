@@ -23,6 +23,7 @@ export type AcademicNoticesResponse = {
 export type DoDreamNotice = {
   noticeId: string; //"seed-dodream-1"
   title: string; // "학술제 대회 참가 신청"
+  departmentId: string | null; // 학과 ID ("dept-3" or "all" or null)
   departmentName: string | null; // "컴퓨터공학과"
   applicationStartAt: string; // ISO 8601 format "2026-02-19T09:00:00"
   applicationEndAt: string | null; // Nullable
