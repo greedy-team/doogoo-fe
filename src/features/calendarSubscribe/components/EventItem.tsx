@@ -13,6 +13,7 @@ export default function EventItem({ event, onClick }: EventItemProps) {
   const month = dateObj.getMonth() + 1;
   const day = dateObj.getDate();
 
+  //일정(특히 두드림)의 실제일정만 표시하고, 신청기간은 나타내지 않은상태
   return (
     <button
       onClick={onClick}
