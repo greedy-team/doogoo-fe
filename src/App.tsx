@@ -120,7 +120,7 @@ export default function App() {
           />
           <Route
             path="/dodreamSelect/:categoryId"
-            element={<DodreamCategoryDetailPage />}
+            element={<DodreamCategoryDetailPage selectedMajor={selectedMajor} />}
           />
           <Route
             path="/calendarSubscribe"

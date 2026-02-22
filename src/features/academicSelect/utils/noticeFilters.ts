@@ -44,7 +44,9 @@ export const filterDodreamNotices = (
   if (selectedMajor !== 'all') {
     filtered = filtered.filter(
       (notice) =>
-        notice.departmentId === selectedMajor || notice.departmentId === 'all'
+        notice.departmentId === selectedMajor ||
+        notice.departmentId === 'all' ||
+        notice.departmentId === null // 학과 미지정 공지는 보수적으로 모든 학과에 표시
     );
   }
 

@@ -6,7 +6,13 @@ import { getCategoryIcon } from '@/features/dodreamSelect/constants/categoryIcon
 import { useGetKeywords } from '@/shared/hooks/useCommonData';
 import { useGetDodreamNotices } from '@/features/academicSelect/hooks/useNotices';
 
-export default function DodreamCategoryDetailPage() {
+interface DodreamCategoryDetailPageProps {
+  selectedMajor: string;
+}
+
+export default function DodreamCategoryDetailPage({
+  selectedMajor,
+}: DodreamCategoryDetailPageProps) {
   const { categoryId: categoryIdParam } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
   const { data: keywords = [], isLoading: keywordsLoading } = useGetKeywords();
@@ -15,10 +21,16 @@ export default function DodreamCategoryDetailPage() {
   const category = keywords.find((k) => k.id === categoryIdParam);
   const Icon = getCategoryIcon(categoryIdParam || '');
 
-  // 해당 카테고리의 공지만 필터링
-  const notices = allNotices.filter((notice) =>
-    notice.keywordIds.includes(categoryIdParam || '')
-  );
+  // 해당 카테고리의 공지 필터링 (키워드 && 학과)
+  const notices = allNotices.filter((notice) => {
+    const matchesKeyword = notice.keywordIds.includes(categoryIdParam || '');
+    const matchesMajor =
+      selectedMajor === 'all' ||
+      notice.departmentId === selectedMajor ||
+      notice.departmentId === 'all' ||
+      notice.departmentId === null; // 학과 미지정 공지는 보수적으로 모든 학과에 표시
+    return matchesKeyword && matchesMajor;
+  });
 
 // ISO 8601 형식을 "월 일" 형식으로 변환하는 헬퍼 함수 - api명세로 통일하기 위하여
   const formatDate = (isoDate: string) => {
