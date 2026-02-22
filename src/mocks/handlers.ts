@@ -86,11 +86,12 @@ const transformDepartments = (): Department[] => {
 export const handlers = [
   /**
    * GET /api/grades - 학년 목록 조회
+   *
+   * "전체" 옵션 제거 - "수신 범위"에서 "전체 학년" 선택 시 학년 선택 불필요
    */
   http.get('/api/grades', () => {
     return HttpResponse.json({
       grades: [
-        { id: 'all', name: '전체' },
         { id: '1', name: '1학년' },
         { id: '2', name: '2학년' },
         { id: '3', name: '3학년' },
@@ -474,6 +475,9 @@ export const handlers = [
   /**
    * POST /api/academic/ics - 학사공지 ICS 파일 생성
    *
+   * ⚠️ MSW 비활성화: 실제 백엔드 API 사용
+   * 실제 엔드포인트: https://www.sejongdoogoo-api.com/api/academic/ics
+   *
    * 요청 본문:
    * {
    *   selectedDepartmentId: string,  // 학과 ID (필수)
@@ -489,20 +493,23 @@ export const handlers = [
    *   downloadUrl: string   // 다운로드 URL
    * }
    */
-  http.post('/api/academic/ics', async ({ request }) => {
-    const body = await request.json();
-    console.log('📝 Academic ICS 요청:', body);
-
-    return HttpResponse.json({
-      token: 'mock-academic-token',
-      icsUrl: 'https://www.sejongdoogoo-api.com/cal/mock-academic-token.ics',
-      downloadUrl:
-        'https://www.sejongdoogoo-api.com/cal/mock-academic-token.ics?download=true',
-    });
-  }),
+  // http.post('/api/academic/ics', async ({ request }) => {
+  //   const body = await request.json();
+  //   console.log('📝 Academic ICS 요청:', body);
+  //
+  //   return HttpResponse.json({
+  //     token: 'mock-academic-token',
+  //     icsUrl: 'https://www.sejongdoogoo-api.com/cal/mock-academic-token.ics',
+  //     downloadUrl:
+  //       'https://www.sejongdoogoo-api.com/cal/mock-academic-token.ics?download=true',
+  //   });
+  // }),
 
   /**
    * POST /api/dodream/ics - 두드림 ICS 파일 생성
+   *
+   * ⚠️ MSW 비활성화: 실제 백엔드 API 사용
+   * 실제 엔드포인트: https://www.sejongdoogoo-api.com/api/dodream/ics
    *
    * 요청 본문:
    * {
@@ -520,15 +527,15 @@ export const handlers = [
    *   downloadUrl: string   // 다운로드 URL
    * }
    */
-  http.post('/api/dodream/ics', async ({ request }) => {
-    const body = await request.json();
-    console.log('📝 DoDream ICS 요청:', body);
-
-    return HttpResponse.json({
-      token: 'mock-dodream-token',
-      icsUrl: 'https://www.sejongdoogoo-api.com/cal/mock-dodream-token.ics',
-      downloadUrl:
-        'https://www.sejongdoogoo-api.com/cal/mock-dodream-token.ics?download=true',
-    });
-  }),
+  // http.post('/api/dodream/ics', async ({ request }) => {
+  //   const body = await request.json();
+  //   console.log('📝 DoDream ICS 요청:', body);
+  //
+  //   return HttpResponse.json({
+  //     token: 'mock-dodream-token',
+  //     icsUrl: 'https://www.sejongdoogoo-api.com/cal/mock-dodream-token.ics',
+  //     downloadUrl:
+  //       'https://www.sejongdoogoo-api.com/cal/mock-dodream-token.ics?download=true',
+  //   });
+  // }),
 ];

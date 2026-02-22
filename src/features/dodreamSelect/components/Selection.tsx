@@ -42,7 +42,7 @@ export function MajorSelection({
 
   return (
     <div className="space-y-3">
-      <Label className="text-foreground text-sm font-medium">전공 선택</Label>
+      <Label className="text-foreground text-sm font-medium">전공 선택(해당 학과만)</Label>
       <Select value={selectedMajor} onValueChange={onMajorChange}>
         <SelectTrigger className="h-12 w-full">
           <SelectValue placeholder="전공을 선택하세요" />
