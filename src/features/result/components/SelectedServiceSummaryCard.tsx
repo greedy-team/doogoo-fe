@@ -1,5 +1,5 @@
-import { useGetDepartments, useGetKeywords } from '@/shared/hooks/useCommonData';
-import { getDepartmentName } from '@/shared/utils/departmentUtils';
+import { useGetColleges, useGetKeywords } from '@/shared/hooks/useCommonData';
+import type { CollegeResponse } from '@/shared/api/types';
 
 function getSelectedDooDreamCategoryLabels(
   selectedInterests: Set<string>,
@@ -8,6 +8,14 @@ function getSelectedDooDreamCategoryLabels(
   return keywords
     .filter((keyword) => selectedInterests.has(keyword.id))
     .map((keyword) => keyword.name);
+}
+
+function getDepartmentName(colleges: CollegeResponse[], id: string): string {
+  for (const college of colleges) {
+    const dept = college.Department.find((d) => d.id === id);
+    if (dept) return dept.name;
+  }
+  return id;
 }
 
 export function AcademicNoticeSummaryCard({
@@ -38,9 +46,9 @@ export function DooDreamSummaryCard({
   selectedMajor: string;
   selectedInterests: Set<string>;
 }) {
-  const { data: departments = [] } = useGetDepartments();
+  const { data: colleges = [] } = useGetColleges();
   const { data: keywords = [] } = useGetKeywords();
-  const majorName = getDepartmentName(departments, selectedMajor);
+  const majorName = getDepartmentName(colleges, selectedMajor);
 
   const categoryLabels = getSelectedDooDreamCategoryLabels(selectedInterests, keywords);
 

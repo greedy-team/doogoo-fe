@@ -4,79 +4,14 @@
  * 역할: 각 API 엔드포인트별로 Mock 데이터를 정의
  */
 import { http, HttpResponse } from 'msw';
-import majorsData from '@/mock/data/majors.json';
-import type { Department } from '@/shared/api/types';
 
 /**
- * Departments 데이터 변환 함수
+ * ⚠️ DEPRECATED: transformDepartments (구 스키마 - 사용 안 함)
  *
- * majors.json → flat 구조로 변환
- * 각 학과에 단과대학, 계열 정보를 메타데이터로 추가
- *
- * 입력: [{ college: "공과대학", majors: [...] }]
- * 출력: [
- *   {
- *     id: "dept-1",
- *     name: "컴퓨터공학과",
- *     college: "인공지능융합대학",
- *     collegeId: "college-1",
- *     field: "IT계열",  // ⚠️ 백엔드 미구현 - 프론트에서 추가
- *     fieldId: "field-1"  // ⚠️ 백엔드 미구현 - 프론트에서 추가
- *   },
- *   ...
- * ]
+ * 새 스키마에서는 백엔드가 College[] 구조로 응답
+ * 프론트엔드에서 transformCollegesToDepartments()로 변환
  */
-const transformDepartments = (): Department[] => {
-  const departments: Department[] = [];
-  let deptId = 1;
-
-  // 계열별 단과대학 분류 (프론트엔드에서 추가)
-  const fieldMapping: Record<string, string[]> = {
-    'IT계열': ['인공지능융합대학', '공과대학'],
-    '인문계열': ['인문과학대학', '사회과학대학', '대양휴머니티칼리지'],
-    '경상계열': ['경영경제대학', '호텔관광대학'],
-    '자연계열': ['자연과학대학', '생명과학대학'],
-    '예체능계열': ['예체능대학'],
-  };
-
-  // 단과대학 → 계열 역매핑
-  const collegeToField: Record<string, { fieldName: string; fieldId: string }> = {};
-  let fieldIdCounter = 1;
-  Object.entries(fieldMapping).forEach(([fieldName, collegeNames]) => {
-    const fieldId = `field-${fieldIdCounter++}`;
-    collegeNames.forEach((collegeName) => {
-      collegeToField[collegeName] = { fieldName, fieldId };
-    });
-  });
-
-  // 단과대학 ID 매핑
-  const collegeIds: Record<string, string> = {};
-  let collegeIdCounter = 1;
-  majorsData.forEach((college) => {
-    if (!collegeIds[college.college]) {
-      collegeIds[college.college] = `college-${collegeIdCounter++}`;
-    }
-  });
-
-  // 각 학과를 flat하게 변환
-  majorsData.forEach((college) => {
-    const fieldInfo = collegeToField[college.college];
-    const collegeId = collegeIds[college.college];
-
-    college.majors.forEach((major) => {
-      departments.push({
-        id: `dept-${deptId++}`,
-        name: major.label,
-        college: college.college,
-        collegeId,
-        field: fieldInfo?.fieldName,
-        fieldId: fieldInfo?.fieldId,
-      });
-    });
-  });
-
-  return departments;
-};
+// const transformDepartments = (): Department[] => { ... }
 
 /**
  * API Handlers 배열
@@ -102,16 +37,134 @@ export const handlers = [
   }),
 
   /**
-   * GET /api/departments - 학과 목록 조회
+   * GET /api/departments - 학과 목록 조회 (새 스키마)
    *
-   * ⚠️ 3계층 구조 (계열 → 학부 → 학과) 전체가 백엔드 미구현
-   * - ID 네이밍: field-*, college-*, dept-*
-   * - "all" 옵션 포함
-   * - majors.json 데이터를 동적으로 변환
+   * 백엔드 응답: College[] (단과대학 중심)
+   * 프론트엔드에서 Department[] (flat)로 변환하여 사용
+   *
+   * 출처: /src/mock/data/majors.json (전체 80+ 학과)
    */
   http.get('/api/departments', () => {
     return HttpResponse.json({
-      departments: transformDepartments(), // ⚠️ 전체 구조가 백엔드 미구현
+      colleges: [
+        {
+          id: 'college-1',
+          name: '인문과학대학',
+          Department: [
+            { id: 'korean', name: '국어국문학과' },
+            { id: 'intl-english', name: '영어데이터융합전공' },
+            { id: 'intl-japan', name: '국제학부 국제일본학전공' },
+            { id: 'intl-china', name: '국제학부 중국통상학전공' },
+            { id: 'history', name: '역사학과' },
+            { id: 'education', name: '교육학과' },
+            { id: 'global-korean', name: '한국언어문화전공' },
+            { id: 'global-trade', name: '국제통상전공' },
+            { id: 'global-cooperation', name: '국제협력전공' },
+          ],
+        },
+        {
+          id: 'college-2',
+          name: '사회과학대학',
+          Department: [
+            { id: 'public-admin', name: '행정학과' },
+            { id: 'media', name: '미디어커뮤니케이션학과' },
+            { id: 'law', name: '법학과' },
+          ],
+        },
+        {
+          id: 'college-3',
+          name: '경영경제대학',
+          Department: [
+            { id: 'business', name: '경영학부' },
+            { id: 'economics', name: '경제학과' },
+          ],
+        },
+        {
+          id: 'college-4',
+          name: '호텔관광대학',
+          Department: [
+            { id: 'hotel-tourism', name: '호텔관광경영학전공' },
+            { id: 'food-service', name: '외식경영학전공' },
+            { id: 'franchise', name: '호텔외식관광프랜차이즈경영학과' },
+            { id: 'culinary', name: '조리서비스경영학과' },
+          ],
+        },
+        {
+          id: 'college-5',
+          name: '자연과학대학',
+          Department: [
+            { id: 'mathematics', name: '수학통계학과' },
+            { id: 'physics', name: '물리천문학과' },
+            { id: 'chemistry', name: '화학과' },
+          ],
+        },
+        {
+          id: 'college-6',
+          name: '생명과학대학',
+          Department: [
+            { id: 'bio-food', name: '식품생명공학전공' },
+            { id: 'bio-convergence', name: '바이오융합공학전공' },
+            { id: 'bio-resource', name: '바이오산업자원공학전공' },
+            { id: 'smart-bio', name: '스마트생명산업융합학과' },
+          ],
+        },
+        {
+          id: 'college-7',
+          name: '인공지능융합대학',
+          Department: [
+            { id: 'ai-electronics', name: 'AI융합전자공학과' },
+            { id: 'semiconductor', name: '반도체시스템공학과' },
+            { id: 'computer', name: '컴퓨터공학과' },
+            { id: 'info-security', name: '정보보호학과' },
+            { id: 'quantum-info', name: '양자지능정보학과' },
+            { id: 'creative-design', name: '디자인이노베이션전공' },
+            { id: 'creative-animation', name: '만화애니메이션텍전공' },
+            { id: 'cyber-defense', name: '사이버국방학과' },
+            { id: 'defense-ai-robot', name: '국방AI로봇융합공학과' },
+            { id: 'ai-data-science', name: '인공지능데이터사이언스학과' },
+            { id: 'ai-robot', name: 'AI로봇학과' },
+            { id: 'intelligent-info', name: '지능정보융합학과' },
+            { id: 'content-software', name: '콘텐츠소프트웨어학과' },
+          ],
+        },
+        {
+          id: 'college-8',
+          name: '공과대학',
+          Department: [
+            { id: 'architecture-eng', name: '건축공학과' },
+            { id: 'architecture', name: '건축학과' },
+            { id: 'civil-env', name: '건설환경공학과' },
+            { id: 'env-convergence', name: '환경융합공학과' },
+            { id: 'energy-resources', name: '에너지자원공학과' },
+            { id: 'mechanical', name: '기계공학과' },
+            { id: 'aerospace-eng', name: '우주항공공학전공' },
+            { id: 'aerospace-system', name: '항공시스템공학전공' },
+            { id: 'aerospace-drone', name: '지능형드론융합전공' },
+            { id: 'nano-materials', name: '나노신소재공학과' },
+            { id: 'quantum-nuclear', name: '양자원자력공학과' },
+            { id: 'defense-ai-system', name: '국방AI융합시스템공학과' },
+          ],
+        },
+        {
+          id: 'college-9',
+          name: '예체능대학',
+          Department: [
+            { id: 'painting', name: '회화과' },
+            { id: 'fashion', name: '패션디자인학과' },
+            { id: 'music', name: '음악과' },
+            { id: 'physical-ed', name: '체육학과' },
+            { id: 'dance', name: '무용과' },
+            { id: 'film', name: '영화예술학과' },
+          ],
+        },
+        {
+          id: 'college-10',
+          name: '대양휴머니티칼리지',
+          Department: [
+            { id: 'liberal-arts', name: '자유전공학부' },
+          ],
+        },
+      ],
     });
   }),
 
