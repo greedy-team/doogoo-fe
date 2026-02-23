@@ -51,7 +51,7 @@ export default function DodreamPage({
         </div>
       </Card>
 
-      <NextButton onClick={onNext} disabled={false} />
+      <NextButton onClick={onNext} disabled={!selectedMajor} />
       <BackButton onClick={onBack} disabled={false} />
     </div>
   );
