@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -22,11 +21,6 @@ export function MajorSelection({
   onMajorChange,
 }: MajorSelectionProps) {
   const { data: colleges = [], isLoading } = useGetColleges();
-
-  // 페이지 로드 시 첫 번째 학과를 기본값으로 설정
-  useEffect(() => {
-      onMajorChange(colleges[0].Department[0].id);
-  }, [colleges, selectedMajor, onMajorChange]);
 
   return (
     <div className="space-y-3">
