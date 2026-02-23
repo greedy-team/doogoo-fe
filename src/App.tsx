@@ -37,7 +37,7 @@ export default function App() {
   );
 
   // Doodream state
-  const [selectedMajor, setSelectedMajor] = useState<string>('all');
+  const [selectedMajor, setSelectedMajor] = useState<string>('');
   const [selectedInterests, setSelectedInterests] = useState<Set<string>>(
     new Set(),
   );

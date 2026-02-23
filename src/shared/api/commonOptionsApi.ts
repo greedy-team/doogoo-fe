@@ -1,9 +1,9 @@
 import { apiClient } from './client';
 import type {
-  Department,
+  CollegeResponse,
   Keyword,
   Grade,
-  DepartmentsResponse,
+  CollegesResponse,
   KeywordsResponse,
   GradesResponse,
 } from './types';
@@ -13,17 +13,17 @@ import type {
  * GET /api/grades
  */
 export const getGrades = async (): Promise<Grade[]> => {
-    const response = await apiClient.get<GradesResponse>('/api/grades');
-    return response.data.grades;
+  const response = await apiClient.get<GradesResponse>('/api/grades');
+  return response.data.grades;
 };
 
 /**
- * 학과 목록 조회
+ * 학과 목록 조회 (College[] 구조 그대로)
  * GET /api/departments
  */
-export const getDepartments = async (): Promise<Department[]> => {
-    const response = await apiClient.get<DepartmentsResponse>('/api/departments');
-    return response.data.departments;
+export const getColleges = async (): Promise<CollegeResponse[]> => {
+  const response = await apiClient.get<CollegesResponse>('/api/departments');
+  return response.data.colleges;
 };
 
 /**
@@ -31,6 +31,6 @@ export const getDepartments = async (): Promise<Department[]> => {
  * GET /api/keywords
  */
 export const getKeywords = async (): Promise<Keyword[]> => {
-    const response = await apiClient.get<KeywordsResponse>('/api/keywords');
-    return response.data.keywords;
+  const response = await apiClient.get<KeywordsResponse>('/api/keywords');
+  return response.data.keywords;
 };

@@ -4,16 +4,16 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { getDepartments, getKeywords, getGrades } from '@/shared/api/commonOptionsApi';
+import { getColleges, getKeywords, getGrades } from '@/shared/api/commonOptionsApi';
 
 /**
- * 학과 목록 조회
+ * 학과 목록 조회 (College[] 구조)
  * GET /api/departments
  */
-export const useGetDepartments = () => {
+export const useGetColleges = () => {
   return useQuery({
-    queryKey: ['departments'],
-    queryFn: getDepartments,
+    queryKey: ['colleges'],
+    queryFn: getColleges,
     staleTime: 24 * 60 * 60 * 1000, // 24시간 캐시
   });
 };
@@ -47,19 +47,19 @@ export const useGetGrades = () => {
  * 병렬 처리로 성능 최적화
  */
 export const useGetAllFilterOptions = () => {
-  const departments = useGetDepartments();
+  const colleges = useGetColleges();
   const keywords = useGetKeywords();
   const grades = useGetGrades();
 
   return {
-    departments: departments.data ?? [],
+    colleges: colleges.data ?? [],
     keywords: keywords.data ?? [],
     grades: grades.data ?? [],
 
     isLoading:
-      departments.isLoading || keywords.isLoading || grades.isLoading,
-    isError: departments.isError || keywords.isError || grades.isError,
-    error: departments.error || keywords.error || grades.error,
+      colleges.isLoading || keywords.isLoading || grades.isLoading,
+    isError: colleges.isError || keywords.isError || grades.isError,
+    error: colleges.error || keywords.error || grades.error,
     //하나라도 에러,로딩중이면 전부 에러/로딩처리
   };
 };
