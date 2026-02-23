@@ -100,16 +100,12 @@ export function SubscriptionModal({
           finalUrl = webcalUrl;
           break;
         case 'google':
-          // Google Calendar subscription URL
-          finalUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(
-            webcalUrl.replace('webcal://', 'https://'),
-          )}`;
+          // Google Calendar subscription URL (webcal:// 프로토콜 유지)=>이렇게 하면 된데,,
+          finalUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcalUrl)}`;
           break;
         case 'outlook':
-          // Outlook.com subscription URL
-          finalUrl = `https://outlook.live.com/owa?path=/calendar/action/compose&rru=addsubscription&url=${encodeURIComponent(
-            webcalUrl.replace('webcal://', 'https://'),
-          )}&name=${encodeURIComponent('세종대학교 캘린더')}`;
+          // Outlook.com subscription URL (/0/ 제거)=>안됨 ㅜㅜㅜ
+          finalUrl = `https://outlook.live.com/calendar/addfromweb?url=${encodeURIComponent(webcalUrl)}`;
           break;
       }
 
@@ -147,15 +143,11 @@ export function SubscriptionModal({
       // API 호출
       const response = await callApiForActiveService(currentService);
 
-      // downloadUrl로 다운로드
-      const link = document.createElement('a');
-      link.href = response.downloadUrl;
-      link.download = `sejong-sync-${currentService}.ics`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // 서버의 downloadUrl을 새 탭에서 열기
+      // 서버가 Content-Disposition: attachment 헤더를 제공하면 자동 다운로드됨
+      window.open(response.downloadUrl, '_blank');
 
-      toast.success('캘린더 파일이 다운로드되었습니다!', {
+      toast.success('캘린더 파일 다운로드를 시작합니다!', {
         description: '캘린더 앱에 .ics 파일을 가져오세요.',
         duration: 4000,
       });
