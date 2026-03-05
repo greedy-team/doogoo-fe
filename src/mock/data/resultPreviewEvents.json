@@ -1,0 +1,267 @@
+{
+  "academicEvents": [
+    {
+      "date": "2월 12일",
+      "day": 12,
+      "month": 2,
+      "title": "중간고사 기간 시작",
+      "serviceType": "academic"
+    },
+    {
+      "date": "3월 1일",
+      "day": 1,
+      "month": 3,
+      "title": "삼일절 (휴교)",
+      "serviceType": "academic"
+    },
+    {
+      "date": "4월 21일",
+      "day": 21,
+      "month": 4,
+      "title": "기말고사 기간",
+      "serviceType": "academic"
+    },
+    {
+      "date": "3월 3일",
+      "day": 3,
+      "month": 3,
+      "title": "개강",
+      "serviceType": "academic"
+    },
+    {
+      "date": "2월 28일",
+      "day": 28,
+      "month": 2,
+      "title": "수강정정 기간",
+      "serviceType": "academic"
+    },
+    {
+      "date": "4월 5일",
+      "day": 5,
+      "month": 4,
+      "title": "중간 성적 공시",
+      "serviceType": "academic"
+    }
+  ],
+  "doodreamEvents": {
+    "competition": [
+      {
+        "date": "2월 25일",
+        "day": 25,
+        "month": 2,
+        "title": "2026 세종 해커톤 대회",
+        "serviceType": "doodream",
+        "category": "대회 및 학술제",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "3월 3일",
+        "day": 3,
+        "month": 3,
+        "title": "SW 융합 경진대회",
+        "serviceType": "doodream",
+        "category": "대회 및 학술제",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "4월 8일",
+        "day": 8,
+        "month": 4,
+        "title": "창의아이디어 공모전",
+        "serviceType": "doodream",
+        "category": "대회 및 학술제",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "2월 22일",
+        "day": 22,
+        "month": 2,
+        "title": "학술논문 발표대회",
+        "serviceType": "doodream",
+        "category": "대회 및 학술제",
+        "link": "https://doodream.sejong.ac.kr"
+      }
+    ],
+    "career": [
+      {
+        "date": "3월 5일",
+        "day": 5,
+        "month": 3,
+        "title": "창업 아이디어 경진대회",
+        "serviceType": "doodream",
+        "category": "취창업",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "4월 10일",
+        "day": 10,
+        "month": 4,
+        "title": "스타트업 IR 데이",
+        "serviceType": "doodream",
+        "category": "취창업",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "2월 18일",
+        "day": 18,
+        "month": 2,
+        "title": "대기업 채용 설명회",
+        "serviceType": "doodream",
+        "category": "취창업",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "3월 20일",
+        "day": 20,
+        "month": 3,
+        "title": "면접 스킬업 특강",
+        "serviceType": "doodream",
+        "category": "취창업",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "4월 15일",
+        "day": 15,
+        "month": 4,
+        "title": "취업 멘토링 프로그램",
+        "serviceType": "doodream",
+        "category": "취창업",
+        "link": "https://doodream.sejong.ac.kr"
+      }
+    ],
+    "volunteer": [
+      {
+        "date": "3월 8일",
+        "day": 8,
+        "month": 3,
+        "title": "지역사회 봉사활동",
+        "serviceType": "doodream",
+        "category": "봉사·사회참여",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "4월 12일",
+        "day": 12,
+        "month": 4,
+        "title": "환경정화 캠페인",
+        "serviceType": "doodream",
+        "category": "봉사·사회참여",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "2월 20일",
+        "day": 20,
+        "month": 2,
+        "title": "독거노인 돌봄 봉사",
+        "serviceType": "doodream",
+        "category": "봉사·사회참여",
+        "link": "https://doodream.sejong.ac.kr"
+      }
+    ],
+    "counseling": [
+      {
+        "date": "2월 14일",
+        "day": 14,
+        "month": 2,
+        "title": "심리상담 워크샵",
+        "serviceType": "doodream",
+        "category": "상담",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "3월 18일",
+        "day": 18,
+        "month": 3,
+        "title": "진로탐색 상담 프로그램",
+        "serviceType": "doodream",
+        "category": "상담",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "4월 22일",
+        "day": 22,
+        "month": 4,
+        "title": "학업 멘토링 상담",
+        "serviceType": "doodream",
+        "category": "상담",
+        "link": "https://doodream.sejong.ac.kr"
+      }
+    ],
+    "global": [
+      {
+        "date": "3월 11일",
+        "day": 11,
+        "month": 3,
+        "title": "교환학생 설명회",
+        "serviceType": "doodream",
+        "category": "글로벌",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "4월 18일",
+        "day": 18,
+        "month": 4,
+        "title": "국제교류 프로그램",
+        "serviceType": "doodream",
+        "category": "글로벌",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "2월 26일",
+        "day": 26,
+        "month": 2,
+        "title": "해외 인턴십 박람회",
+        "serviceType": "doodream",
+        "category": "글로벌",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "3월 28일",
+        "day": 28,
+        "month": 3,
+        "title": "글로벌 문화체험",
+        "serviceType": "doodream",
+        "category": "글로벌",
+        "link": "https://doodream.sejong.ac.kr"
+      }
+    ],
+    "campus": [
+      {
+        "date": "3월 12일",
+        "day": 12,
+        "month": 3,
+        "title": "동아리 박람회",
+        "serviceType": "doodream",
+        "category": "캠퍼스",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "4월 25일",
+        "day": 25,
+        "month": 4,
+        "title": "세종 봄 축제",
+        "serviceType": "doodream",
+        "category": "캠퍼스",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "2월 16일",
+        "day": 16,
+        "month": 2,
+        "title": "신입생 환영회",
+        "serviceType": "doodream",
+        "category": "캠퍼스",
+        "link": "https://doodream.sejong.ac.kr"
+      },
+      {
+        "date": "3월 25일",
+        "day": 25,
+        "month": 3,
+        "title": "학과 체육대회",
+        "serviceType": "doodream",
+        "category": "캠퍼스",
+        "link": "https://doodream.sejong.ac.kr"
+      }
+    ]
+  }
+}
