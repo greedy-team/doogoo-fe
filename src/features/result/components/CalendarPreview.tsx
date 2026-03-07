@@ -12,7 +12,7 @@ import { useGetAcademicNotices, useGetDodreamNotices } from '@/shared/hooks/useN
 import {
   filterAcademicNotices,
   filterDodreamNotices,
-} from '@/features/academicNotice/utils/noticeFilters';
+} from '@/shared/utils/noticeFilters';
 
 export interface PreviewEvent {
   date: string;
