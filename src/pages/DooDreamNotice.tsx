@@ -13,7 +13,7 @@ interface DooDreamNoticeProps {
   onBack: () => void;
 }
 
-export default function DodreamPage({ onNext, onBack }: DooDreamNoticeProps) {
+export default function DooDreamNotice({ onNext, onBack }: DooDreamNoticeProps) {
   const {
     selectedDepartmentId,
     selectedInterestKeywordIds,
