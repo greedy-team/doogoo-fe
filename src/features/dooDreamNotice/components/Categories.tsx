@@ -10,19 +10,16 @@ import { useNavigate } from 'react-router-dom';
 export interface CategoriesProps {
   selectedInterests: Set<string>;
   onInterestToggle: (id: string) => void;
-  onCategoryClick: (categoryId: string) => void;
 }
 
 export default function Categories({
   selectedInterests,
   onInterestToggle,
-  onCategoryClick,
 }: CategoriesProps) {
   const navigate = useNavigate();
   const { data: keywords = [], isLoading } = useGetKeywords();
 
   const handleCategoryClick = (categoryId: string) => {
-    onCategoryClick(categoryId);
     navigate(`/dooDreamNotice/${categoryId}`);
   };
 

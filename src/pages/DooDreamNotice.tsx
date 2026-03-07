@@ -42,7 +42,6 @@ export default function DodreamPage({ onNext, onBack }: DooDreamNoticeProps) {
           <Categories
             selectedInterests={selectedInterestKeywordIds}
             onInterestToggle={toggleInterestKeyword}
-            onCategoryClick={(id) => console.log('category:', id)}
           />
         </div>
       </Card>
