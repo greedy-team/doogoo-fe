@@ -8,28 +8,25 @@ import {
   DooDreamSummaryCard,
 } from '@/features/result/components/SelectedServiceSummaryCard';
 import { SubscriptionModal } from '@/features/result/components/subscriptionModal/subscriptionModal';
+import { useServiceStore } from '@/shared/stores/useServiceStore';
+import { useAcademicStore } from '@/shared/stores/useAcademicStore';
+import { useDodreamStore } from '@/shared/stores/useDodreamStore';
+import { useUIStore } from '@/shared/stores/useUIStore';
 
 interface ResultProps {
-  isSubscriptionModalOpen: boolean;
-  setIsSubscriptionModalOpen: (open: boolean) => void;
-  selectedServices: Set<'academic' | 'doodream'>;
-  selectedYear: number;
-  selectedMajor: string;
-  selectedInterests: Set<string>;
-  yearFilterType: 'my-year' | 'all';
   onBack: () => void;
 }
 
-export default function ResultPage({
-  isSubscriptionModalOpen,
-  setIsSubscriptionModalOpen,
-  selectedServices,
-  selectedYear,
-  selectedMajor,
-  selectedInterests,
-  yearFilterType,
-  onBack,
-}: ResultProps) {
+export default function ResultPage({ onBack }: ResultProps) {
+  const { selectedServices } = useServiceStore();
+  const { selectedGradeYear, gradeFilterScope } = useAcademicStore();
+  const { selectedDepartmentId, selectedInterestKeywordIds } = useDodreamStore();
+  const {
+    isSubscriptionModalOpen,
+    openSubscriptionModal,
+    closeSubscriptionModal,
+  } = useUIStore();
+
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -40,40 +37,39 @@ export default function ResultPage({
           {/* 학사공지 요약 카드 */}
           {selectedServices.has('academic') && (
             <AcademicNoticeSummaryCard
-              selectedYear={selectedYear}
-              yearFilterType={yearFilterType}
+              selectedYear={selectedGradeYear}
+              yearFilterType={gradeFilterScope}
             />
           )}
 
           {/* 두드림 요약 카드 */}
           {selectedServices.has('doodream') && (
             <DooDreamSummaryCard
-              selectedMajor={selectedMajor}
-              selectedInterests={selectedInterests}
+              selectedMajor={selectedDepartmentId}
+              selectedInterests={selectedInterestKeywordIds}
             />
           )}
         </div>
 
         <CalendarPreview
-          selectedYear={selectedYear}
-          yearFilterType={yearFilterType}
-          selectedMajor={selectedMajor}
-          selectedInterests={selectedInterests}
+          selectedYear={selectedGradeYear}
+          yearFilterType={gradeFilterScope}
+          selectedMajor={selectedDepartmentId}
+          selectedInterests={selectedInterestKeywordIds}
           selectedServices={selectedServices}
         />
       </div>
 
       <SubscriptionModal
         isOpen={isSubscriptionModalOpen}
-        onClose={() => setIsSubscriptionModalOpen(false)}
-        selectedYear={selectedYear}
-        selectedMajor={selectedMajor}
-        selectedInterests={selectedInterests}
-        yearFilterType={yearFilterType}
+        onClose={closeSubscriptionModal}
+        selectedYear={selectedGradeYear}
+        selectedMajor={selectedDepartmentId}
+        selectedInterests={selectedInterestKeywordIds}
         selectedServices={selectedServices}
       />
 
-      <SubscribeButton onClick={() => setIsSubscriptionModalOpen(true)} />
+      <SubscribeButton onClick={openSubscriptionModal} />
       <BackButton onClick={onBack} disabled={false} />
     </div>
   );

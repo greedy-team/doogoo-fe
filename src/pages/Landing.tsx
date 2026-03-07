@@ -1,18 +1,19 @@
 import { GraduationCap, Sparkles } from 'lucide-react';
 import ServiceCard from '@/features/landing/components/ServiceCard';
 import { NextButton } from '@/features/StepIndicator/components/RouteButton';
+import { useServiceStore } from '@/shared/stores/useServiceStore';
 
-interface ServiceSelectorProps {
-  selectedServices: Set<'academic' | 'doodream'>;
-  onToggleService: (service: 'academic' | 'doodream') => void;
+interface LandingProps {
   onContinue: () => void;
 }
 
-export default function Landing({
-  selectedServices,
-  onToggleService,
-  onContinue,
-}: ServiceSelectorProps) {
+export default function Landing({ onContinue }: LandingProps) {
+  const {
+    selectedServices,
+    toggleServiceSelection,
+    canProceedToNextStep,
+  } = useServiceStore();
+
   const services = [
     {
       id: 'academic' as const,
@@ -36,6 +37,12 @@ export default function Landing({
     },
   ];
 
+  const handleContinueIfValid = () => {
+    if (canProceedToNextStep()) {
+      onContinue();
+    }
+  };
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="space-y-2 text-center">
@@ -57,14 +64,14 @@ export default function Landing({
               service={{
                 ...service,
                 isSelected,
-                onToggle: onToggleService,
+                onToggle: toggleServiceSelection,
               }}
             />
           );
         })}
       </div>
 
-      <NextButton onClick={onContinue} disabled={selectedServices.size === 0} />
+      <NextButton onClick={handleContinueIfValid} disabled={!canProceedToNextStep()} />
     </div>
   );
 }

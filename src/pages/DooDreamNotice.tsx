@@ -6,26 +6,22 @@ import {
   NextButton,
   BackButton,
 } from '@/features/StepIndicator/components/RouteButton';
+import { useDodreamStore } from '@/shared/stores/useDodreamStore';
 
-interface DoodreamSelectorProps {
-  selectedMajor: string;
-  selectedInterests: Set<string>;
-  onMajorChange: (major: string) => void;
-  onInterestToggle: (id: string) => void;
-  onCategoryClick: (categoryId: string) => void;
+interface DooDreamNoticeProps {
   onNext: () => void;
   onBack: () => void;
 }
 
-export default function DodreamPage({
-  selectedMajor,
-  selectedInterests,
-  onMajorChange,
-  onInterestToggle,
-  onCategoryClick,
-  onNext,
-  onBack,
-}: DoodreamSelectorProps) {
+export default function DodreamPage({ onNext, onBack }: DooDreamNoticeProps) {
+  const {
+    selectedDepartmentId,
+    selectedInterestKeywordIds,
+    setSelectedDepartmentId,
+    toggleInterestKeyword,
+    isDepartmentSelected,
+  } = useDodreamStore();
+
   return (
     <div className="flex flex-col gap-4">
       <Card className="shadow-sm">
@@ -38,20 +34,20 @@ export default function DodreamPage({
         <div className="space-y-5 px-6 pb-6">
           {/* Major Selection */}
           <MajorSelection
-            selectedMajor={selectedMajor}
-            onMajorChange={onMajorChange}
+            selectedMajor={selectedDepartmentId}
+            onMajorChange={setSelectedDepartmentId}
           />
 
           {/* Interest Categories */}
           <Categories
-            selectedInterests={selectedInterests}
-            onInterestToggle={onInterestToggle}
-            onCategoryClick={onCategoryClick}
+            selectedInterests={selectedInterestKeywordIds}
+            onInterestToggle={toggleInterestKeyword}
+            onCategoryClick={(id) => console.log('category:', id)}
           />
         </div>
       </Card>
 
-      <NextButton onClick={onNext} disabled={!selectedMajor} />
+      <NextButton onClick={onNext} disabled={!isDepartmentSelected()} />
       <BackButton onClick={onBack} disabled={false} />
     </div>
   );
