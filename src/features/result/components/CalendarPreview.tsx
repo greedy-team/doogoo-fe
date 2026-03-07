@@ -8,10 +8,7 @@ import EventDetailsDialog from './EventDetailsDialog';
 import generateMonthsData from './generateMonthsData';
 
 import type { MonthData } from './generateMonthsData';
-import {
-  useGetAcademicNotices,
-  useGetDodreamNotices,
-} from '@/features/academicNotice/hooks/useNotices';
+import { useGetAcademicNotices, useGetDodreamNotices } from '@/shared/hooks/useNotices';
 import {
   filterAcademicNotices,
   filterDodreamNotices,

@@ -9,10 +9,7 @@ import Result from './pages/Result';
 import { StepIndicator } from '@/features/StepIndicator/components/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
-import {
-  useGetAcademicNotices,
-  useGetDodreamNotices,
-} from '@/features/academicNotice/hooks/useNotices';
+import { useGetAcademicNotices, useGetDodreamNotices } from '@/shared/hooks/useNotices';
 
 export default function App() {
   useGetAllFilterOptions(); // 학과, 키워드, 학년 데이터 캐싱

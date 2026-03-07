@@ -1,4 +1,4 @@
-import type { AcademicNotice, DoDreamNotice } from '../api/types';
+import type { AcademicNotice, DoDreamNotice } from '@/shared/api/types';
 
 export type YearFilterType = 'my-year' | 'all';
 
