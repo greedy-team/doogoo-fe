@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { MajorSelection } from '@/features/dooDreamNotice/components/Selection';
 import Categories from '@/features/dooDreamNotice/components/Categories';
-import SelectedEventTypeHeader from '@/features/StepIndicator/components/SelectedEventTypeHeader';
+import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHeader';
 import {
   NextButton,
   BackButton,
@@ -26,8 +26,8 @@ export default function DooDreamNotice({ onNext, onBack }: DooDreamNoticeProps) 
     <div className="flex flex-col gap-4">
       <Card className="shadow-sm">
         {/* Header */}
-        <SelectedEventTypeHeader
-          type="dooDream"
+        <SelectedServiceTypeHeader
+          type="doodream"
           title="두드림 관심사"
           description="교내 활동 및 프로그램"
         />

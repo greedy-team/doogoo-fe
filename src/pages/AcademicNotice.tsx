@@ -4,7 +4,7 @@ import {
   BackButton,
 } from '@/features/StepIndicator/components/RouteButton';
 import YearTypeSelection from '@/features/academicNotice/components/YearTypeSelection';
-import SelectedEventTypeHeader from '@/features/StepIndicator/components/SelectedEventTypeHeader';
+import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHeader';
 import YearSelectionLayout from '@/features/academicNotice/components/YearSelectionLayout';
 import { useAcademicStore } from '@/shared/stores/useAcademicStore';
 
@@ -26,7 +26,7 @@ export default function AcademicNotice({ onNext, onBack }: AcademicNoticeProps) 
     <div className="flex flex-col gap-4">
       <Card className="shadow-sm">
         {/* Header */}
-        <SelectedEventTypeHeader
+        <SelectedServiceTypeHeader
           type="academic"
           title="학사공지"
           description="학사 일정 및 공지사항"
