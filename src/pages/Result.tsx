@@ -2,11 +2,11 @@ import {
   BackButton,
   SubscribeButton,
 } from '@/shared/components/RouteButton';
-import CalendarPreview from '@/features/result/components/CalendarPreview';
+import CalendarPreview from '@/features/result/components/calendarPreview/CalendarPreview';
 import {
   AcademicNoticeSummaryCard,
   DooDreamSummaryCard,
-} from '@/features/result/components/SelectedServiceSummaryCard';
+} from '@/features/result/components/summaryCards/SelectedServiceSummaryCard';
 import { SubscriptionModal } from '@/features/result/components/subscriptionModal/subscriptionModal';
 import { useServiceStore } from '@/shared/stores/useServiceStore';
 import { useAcademicStore } from '@/shared/stores/useAcademicStore';
