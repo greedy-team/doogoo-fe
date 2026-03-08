@@ -5,7 +5,7 @@ import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHe
 import {
   NextButton,
   BackButton,
-} from '@/features/StepIndicator/components/RouteButton';
+} from '@/shared/components/RouteButton';
 import { useDodreamStore } from '@/shared/stores/useDodreamStore';
 
 interface DooDreamNoticeProps {

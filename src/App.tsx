@@ -6,7 +6,7 @@ import AcademicNotice from './pages/AcademicNotice';
 import DooDreamNotice from './pages/DooDreamNotice';
 import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
 import Result from './pages/Result';
-import { StepIndicator } from '@/features/StepIndicator/components/StepIndicator';
+import { StepIndicator } from '@/shared/components/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
 import {

@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import {
   NextButton,
   BackButton,
-} from '@/features/StepIndicator/components/RouteButton';
+} from '@/shared/components/RouteButton';
 import YearTypeSelection from '@/features/academicNotice/components/YearTypeSelection';
 import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHeader';
 import YearSelectionLayout from '@/features/academicNotice/components/YearSelectionLayout';

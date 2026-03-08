@@ -1,6 +1,6 @@
 import { GraduationCap, Sparkles } from 'lucide-react';
 import ServiceCard from '@/features/landing/components/ServiceCard';
-import { NextButton } from '@/features/StepIndicator/components/RouteButton';
+import { NextButton } from '@/shared/components/RouteButton';
 import { useServiceStore } from '@/shared/stores/useServiceStore';
 
 interface LandingProps {

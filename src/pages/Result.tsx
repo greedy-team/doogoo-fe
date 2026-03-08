@@ -1,7 +1,7 @@
 import {
   BackButton,
   SubscribeButton,
-} from '@/features/StepIndicator/components/RouteButton';
+} from '@/shared/components/RouteButton';
 import CalendarPreview from '@/features/result/components/CalendarPreview';
 import {
   AcademicNoticeSummaryCard,
