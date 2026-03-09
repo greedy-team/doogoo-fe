@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import Navigation from '@/components/layout/Navigation';
-import { Hero } from '@/components/layout/Hero';
 import Landing from './pages/Landing';
 import AcademicNotice from './pages/AcademicNotice';
 import DooDreamNotice from './pages/DooDreamNotice';

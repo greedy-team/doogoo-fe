@@ -31,21 +31,18 @@ export default function AcademicNotice({
           description="수강 신청, 시험기간 등"
         />
 
-        <div className="space-y-4">
-          {/* Filter Type Selection - 먼저 수신 범위 선택 */}
-          <YearTypeSelection
-            yearFilterType={gradeFilterScope}
-            onYearFilterTypeChange={setGradeFilterScope}
+        {/* Year Selection - "내 학년만" 선택 시 학년 선택 */}
+        {gradeFilterScope === 'my-year' && (
+          <YearSelectionLayout
+            selectedYear={selectedGradeYear}
+            onYearChange={setSelectedGradeYear}
           />
-
-          {/* Year Selection - "내 학년만" 선택 시 학년 선택 */}
-          {gradeFilterScope === 'my-year' && (
-            <YearSelectionLayout
-              selectedYear={selectedGradeYear}
-              onYearChange={setSelectedGradeYear}
-            />
-          )}
-        </div>
+        )}
+        {/* Filter Type Selection - 먼저 수신 범위 선택 */}
+        <YearTypeSelection
+          yearFilterType={gradeFilterScope}
+          onYearFilterTypeChange={setGradeFilterScope}
+        />
       </Card>
       <NextButton onClick={onNext} disabled={false} />
       <BackButton onClick={onBack} disabled={false} />

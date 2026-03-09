@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui/card';
-import { MajorSelection } from '@/features/dooDreamNotice/components/Selection';
 import Categories from '@/features/dooDreamNotice/components/Categories';
 import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHeader';
 import { NextButton, BackButton } from '@/shared/components/RouteButton';
@@ -31,16 +30,12 @@ export default function DooDreamNotice({
           description="교내 대회, 학과 행사 등"
         />
         <div className="space-y-5">
-          {/* Major Selection */}
-          <MajorSelection
-            selectedMajor={selectedDepartmentId}
-            onMajorChange={setSelectedDepartmentId}
-          />
-
           {/* Interest Categories */}
           <Categories
             selectedInterests={selectedInterestKeywordIds}
             onInterestToggle={toggleInterestKeyword}
+            selectedMajor={selectedDepartmentId}
+            onMajorChange={setSelectedDepartmentId}
           />
         </div>
       </Card>

@@ -178,6 +178,11 @@ export const handlers = [
     return HttpResponse.json({
       keywords: [
         {
+          id: 'k_0',
+          name: '학과 행사',
+          description: '학과 주최 행사 및 대회', // ⚠️ 백엔드 미구현
+        },
+        {
           id: 'k_1',
           name: '대회 및 학술제',
           description: '경진대회, 공모전, 학술행사', // ⚠️ 백엔드 미구현

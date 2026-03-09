@@ -25,9 +25,15 @@ export function MajorSelection({
   return (
     <div className="space-y-3">
       <Label className="text-foreground text-sm font-medium">전공 선택</Label>
-      <Select value={selectedMajor} onValueChange={onMajorChange} disabled={isLoading}>
-        <SelectTrigger className="h-12 w-full">
-          <SelectValue placeholder={isLoading ? '로딩 중...' : '전공을 선택하세요'} />
+      <Select
+        value={selectedMajor}
+        onValueChange={onMajorChange}
+        disabled={isLoading}
+      >
+        <SelectTrigger className="bg-background h-12 w-full shadow-none">
+          <SelectValue
+            placeholder={isLoading ? '로딩 중...' : '전공을 선택하세요'}
+          />
         </SelectTrigger>
         <SelectContent>
           {colleges.map((college, index) => (
