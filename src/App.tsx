@@ -25,7 +25,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <Navigation />
-      <div className="container mx-auto px-4 py-6 sm:px-6">
+      <div className="container mx-auto px-2 py-8 sm:px-6">
         <Routes>
           <Route path="/" element={<Landing onContinue={handleNext} />} />
           <Route
@@ -44,6 +44,7 @@ export default function App() {
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Routes>
       </div>
+      <div className="block h-24 md:hidden" />
     </div>
   );
 }

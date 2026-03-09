@@ -22,7 +22,7 @@ export default function DooDreamNotice({
 
   return (
     <div className="flex flex-col gap-4">
-      <Card className="p-6">
+      <Card className="p-4 md:p-6">
         {/* Header */}
         <SelectedServiceTypeHeader
           type="doodream"

@@ -64,7 +64,7 @@ export default function Categories({
                   </div>
                   <div className="min-w-0 flex-1">
                     <h3 className="text-base font-medium">{interest.name}</h3>
-                    <p className="text-muted-foreground line-clamp-1 hidden text-sm md:block">
+                    <p className="text-muted-foreground line-clamp-1 text-sm">
                       {interest.description}
                     </p>
                   </div>
