@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://doogoodoogoo.kr/sitemap.xml
