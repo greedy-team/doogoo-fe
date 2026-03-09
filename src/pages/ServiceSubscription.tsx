@@ -68,6 +68,7 @@ export default function ServiceSubscription({
         isOpen={isSubscriptionModalOpen}
         onClose={closeSubscriptionModal}
         selectedYear={selectedGradeYear}
+        yearFilterType={gradeFilterScope}
         selectedMajor={selectedDepartmentId}
         selectedInterests={selectedInterestKeywordIds}
         selectedServices={selectedServices}

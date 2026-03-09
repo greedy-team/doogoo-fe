@@ -30,6 +30,7 @@ export function SubscriptionModal({
   isOpen,
   onClose,
   selectedYear,
+  yearFilterType,
   selectedMajor,
   selectedInterests,
   selectedServices,
@@ -49,14 +50,14 @@ export function SubscriptionModal({
   // API 호출 헬퍼 함수들
   const callAcademicApi = async () => {
     const response = await createAcademicIcs.mutateAsync({
-      selectedGradeId: String(selectedYear),
+      selectedGradeId: yearFilterType === 'all' ? null : String(selectedYear),
     });
     return response;
   };
 
   const callDodreamApi = async () => {
     const response = await createDodreamIcs.mutateAsync({
-      selectedDepartmentId: selectedMajor === 'all' ? null : selectedMajor,//백앤드에서  "null"은 전체로 처리,
+      selectedDepartmentId: !selectedMajor || selectedMajor === 'all' ? null : selectedMajor,//백앤드에서  "null"은 전체로 처리,
       selectedKeywordId: Array.from(selectedInterests),
     });
     return response;
