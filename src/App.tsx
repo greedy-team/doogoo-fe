@@ -20,8 +20,7 @@ export default function App() {
   useGetDodreamNotices(); // 두드림 공지 데이터 캐싱
   //일단 tanstackQuery로 데이터 캐싱하기로 하였음
 
-  const { currentStep, totalSteps, handleNext, handleBack } =
-    useStepNavigation();
+  const { handleNext, handleBack } = useStepNavigation();
 
   return (
     <div className="min-h-screen">
@@ -42,7 +41,7 @@ export default function App() {
             element={<DooDreamCategoryDetail />}
           />
           <Route
-            path="/serviceSubscription"
+            path="/subscription"
             element={<ServiceSubscription onBack={handleBack} />}
           />
           <Route path="/result" element={<Result onBack={handleBack} />} />
