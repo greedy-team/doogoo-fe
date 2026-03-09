@@ -6,20 +6,4 @@
     <priority>1.0</priority>
     <!-- 구글에서 priority를 거의 안쓴다고 발표함  -->
   </url>
-  <url>
-    <loc>https://doogoodoogoo.kr/academicNotice</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://doogoodoogoo.kr/dooDreamNotice</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://doogoodoogoo.kr/result</loc>
-    <!-- 페이지 구조가 바뀔예정이라 추후 조정  -->
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
 </urlset>
