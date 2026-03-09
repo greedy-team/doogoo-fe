@@ -1,20 +1,20 @@
 import { GraduationCap, Sparkles } from 'lucide-react';
 
-interface SelectedEventTypeHeaderProps {
-  type: 'academic' | 'dooDream';
+interface SelectedServiceTypeHeaderProps {
+  type: 'academic' | 'doodream';
   title: string;
   description: string;
 }
 
-export default function SelectedEventTypeHeader({
+export default function SelectedServiceTypeHeader({
   type,
   title,
   description,
-}: SelectedEventTypeHeaderProps) {
+}: SelectedServiceTypeHeaderProps) {
   return (
     <div className="p-6 pb-4">
       <div className="flex items-center gap-2">
-        {type === 'dooDream' ? (
+        {type === 'doodream' ? (
           <div className="rounded-lg bg-purple-100 p-2">
             <Sparkles className="h-6 w-6 text-purple-600" />
           </div>

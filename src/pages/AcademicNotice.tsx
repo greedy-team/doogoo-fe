@@ -2,33 +2,31 @@ import { Card } from '@/components/ui/card';
 import {
   NextButton,
   BackButton,
-} from '@/features/StepIndicator/components/RouteButton';
+} from '@/shared/components/RouteButton';
 import YearTypeSelection from '@/features/academicNotice/components/YearTypeSelection';
-import SelectedEventTypeHeader from '@/features/StepIndicator/components/SelectedEventTypeHeader';
+import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHeader';
 import YearSelectionLayout from '@/features/academicNotice/components/YearSelectionLayout';
+import { useAcademicStore } from '@/shared/stores/useAcademicStore';
 
-interface AcademicNoticeSelectorProps {
-  selectedYear: number;
-  yearFilterType: 'my-year' | 'all';
-  onYearChange: (year: number) => void;
-  onYearFilterTypeChange: (type: 'my-year' | 'all') => void;
+interface AcademicNoticeProps {
+
   onNext: () => void;
   onBack: () => void;
 }
 
-export default function AcademicNotice({
-  selectedYear,
-  yearFilterType,
-  onYearChange,
-  onYearFilterTypeChange,
-  onNext,
-  onBack,
-}: AcademicNoticeSelectorProps) {
+export default function AcademicNotice({ onNext, onBack }: AcademicNoticeProps) {
+  const {
+    selectedGradeYear,
+    gradeFilterScope,
+    setSelectedGradeYear,
+    setGradeFilterScope,
+  } = useAcademicStore();
+
   return (
     <div className="flex flex-col gap-4">
       <Card className="shadow-sm">
         {/* Header */}
-        <SelectedEventTypeHeader
+        <SelectedServiceTypeHeader
           type="academic"
           title="학사공지"
           description="학사 일정 및 공지사항"
@@ -37,15 +35,15 @@ export default function AcademicNotice({
         <div className="space-y-4 px-6 pb-6">
           {/* Filter Type Selection - 먼저 수신 범위 선택 */}
           <YearTypeSelection
-            yearFilterType={yearFilterType}
-            onYearFilterTypeChange={onYearFilterTypeChange}
+            yearFilterType={gradeFilterScope}
+            onYearFilterTypeChange={setGradeFilterScope}
           />
 
           {/* Year Selection - "내 학년만" 선택 시 학년 선택 */}
-          {yearFilterType === 'my-year' && (
+          {gradeFilterScope === 'my-year' && (
             <YearSelectionLayout
-              selectedYear={selectedYear}
-              onYearChange={onYearChange}
+              selectedYear={selectedGradeYear}
+              onYearChange={setSelectedGradeYear}
             />
           )}
         </div>

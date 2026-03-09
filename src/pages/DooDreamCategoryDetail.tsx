@@ -1,18 +1,16 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, MapPin, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, ExternalLink, Building2 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCategoryIcon } from '@/features/dooDreamNotice/constants/categoryIcons';
+import { CATEGORY_ICON_MAP } from '@/features/dooDreamNotice/constants/categoryIcons';
 import { useGetKeywords } from '@/shared/hooks/useCommonData';
-import { useGetDodreamNotices } from '@/features/academicNotice/hooks/useNotices';
+import { useGetDodreamNotices } from '@/shared/hooks/useNotices';
+import { useDodreamStore } from '@/shared/stores/useDodreamStore';
 
-interface DooDreamCategoryDetailPageProps {
-  selectedMajor: string;
-}
-
-export default function DooDreamCategoryDetailPage({
-  selectedMajor,
-}: DooDreamCategoryDetailPageProps) {
+export default function DooDreamCategoryDetailPage() {
+  const selectedDepartmentId = useDodreamStore(
+    (state) => state.selectedDepartmentId,
+  );
   const { categoryId: categoryIdParam } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
   const { data: keywords = [], isLoading: keywordsLoading } = useGetKeywords();
@@ -20,14 +18,14 @@ export default function DooDreamCategoryDetailPage({
     useGetDodreamNotices();
 
   const category = keywords.find((k) => k.id === categoryIdParam);
-  const Icon = getCategoryIcon(categoryIdParam || '');
+  const Icon = CATEGORY_ICON_MAP[categoryIdParam || ''] ?? Building2;
 
   // 해당 카테고리의 공지 필터링 (키워드 && 학과)
   const notices = allNotices.filter((notice) => {
     const matchesKeyword = notice.keywordIds.includes(categoryIdParam || '');
     const matchesMajor =
-      selectedMajor === 'all' ||
-      notice.departmentId === selectedMajor ||
+      selectedDepartmentId === 'all' ||
+      notice.departmentId === selectedDepartmentId ||
       notice.departmentId === 'all' ||
       notice.departmentId === null; // 학과 미지정 공지는 보수적으로 모든 학과에 표시
     return matchesKeyword && matchesMajor;
