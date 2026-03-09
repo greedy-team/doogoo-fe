@@ -41,7 +41,7 @@ export default function Categories({
       </Label>
       <div className="space-y-2">
         {keywords.map((keyword) => {
-          const Icon = getCategoryIcon(keyword.id);
+          const Icon = getCategoryIcon(keyword.icon);
           const isSelected = selectedInterests.has(keyword.id);
 
           return (
