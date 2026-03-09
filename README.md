@@ -148,10 +148,9 @@ src/
     └── handlers.ts
 
 
-
-<img width="1824" height="723" alt="image" src="https://github.com/user-attachments/assets/11f86d76-d4fc-49fe-ac03-a6563245e4ed" />
-
 ```
+<img width="1824" height="723" alt="image" src="https://github.com/user-attachments/assets/049634ab-25b8-4890-942b-c90cfa90e6b9" />
+
 
 </details>
 ---
