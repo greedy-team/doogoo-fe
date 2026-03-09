@@ -29,8 +29,13 @@ import { useUIStore } from '@/shared/stores/useUIStore';
 // Navigation Button Components
 import { SubscribeButton, BackButton } from '@/shared/components/RouteButton';
 
-export default function ServiceSubscription() {
-  const navigate = useNavigate();
+interface ServiceSubscriptionProps {
+  onBack: () => void;
+}
+
+export default function ServiceSubscription({
+  onBack,
+}: ServiceSubscriptionProps) {
   // Stores
   const {
     selectedGradeYear,
@@ -57,10 +62,6 @@ export default function ServiceSubscription() {
   // Collapsible state for both mobile and desktop
   const [isAcademicExpanded, setIsAcademicExpanded] = useState(true);
   const [isDoDreamExpanded, setIsDoDreamExpanded] = useState(true);
-
-  const handleBack = () => {
-    navigate('/');
-  };
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -173,7 +174,7 @@ export default function ServiceSubscription() {
       {/* Navigation Buttons - Always at bottom */}
       <div className="space-y-3 py-6">
         <SubscribeButton onClick={openSubscriptionModal} />
-        <BackButton onClick={handleBack} />
+        <BackButton onClick={onBack} />
       </div>
     </div>
   );

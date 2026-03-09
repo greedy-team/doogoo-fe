@@ -42,7 +42,7 @@ export default function App() {
             element={<DooDreamCategoryDetail />}
           />
           <Route
-            path="/subscription"
+            path="/serviceSubscription"
             element={<ServiceSubscription onBack={handleBack} />}
           />
           <Route path="/result" element={<Result onBack={handleBack} />} />
