@@ -134,6 +134,18 @@ export default function DooDreamCategoryDetailPage() {
                       </span>
                     </div>
                   )}
+                  {notice.location && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <span className="text-foreground">{notice.location}</span>
+                    </div>
+                  )}
+                  {notice.description && (
+                    <p className="text-muted-foreground line-clamp-2 text-sm">
+                      {notice.description}
+                    </p>
+                  )}
+                  {/* 장소, 설명추가했는데 디자인이 바뀔예정이라 테스트용 */}
                   {notice.detailUrl && (
                     <Button
                       variant="outline"
