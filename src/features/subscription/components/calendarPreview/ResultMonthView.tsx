@@ -5,23 +5,16 @@ import type { PreviewEvent } from './CalendarPreview';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ResultMonthViewProps {
-  previewEvents: PreviewEvent[];
   getEventsForDay: (month: number, day: number) => PreviewEvent[];
 }
 
 export default function ResultMonthView({
-  previewEvents,
   getEventsForDay,
 }: ResultMonthViewProps) {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [selectedDayEvents, setSelectedDayEvents] = useState<PreviewEvent[]>(
     [],
-  );
-
-  // Get events for the currently visible month
-  const currentMonthEvents = previewEvents.filter(
-    (e) => e.month === currentMonth.getMonth() + 1,
   );
 
   return (

@@ -141,7 +141,6 @@ export default function CalendarPreview({
           />
         ) : (
           <ResultMonthView
-            previewEvents={previewEvents}
             getEventsForDay={getEventsForDay}
           />
         )}
