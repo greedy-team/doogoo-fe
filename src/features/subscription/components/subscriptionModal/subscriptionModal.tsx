@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import {
   useCreateAcademicIcs,
   useCreateDodreamIcs,
-} from '@/features/result/hooks/useIcsLink';
+} from '@/features/subscription/hooks/useIcsLink';
 
 interface SubscriptionModalProps {
   isOpen: boolean;

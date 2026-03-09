@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import {
   Collapsible,
@@ -16,9 +15,9 @@ import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHe
 // DooDream Notice Components
 import Categories from '@/features/dooDreamNotice/components/Categories';
 
-// Result Components
-import CalendarPreview from '@/features/result/components/calendarPreview/CalendarPreview';
-import { SubscriptionModal } from '@/features/result/components/subscriptionModal/subscriptionModal';
+// Subscription Components
+import CalendarPreview from '@/features/subscription/components/calendarPreview/CalendarPreview';
+import { SubscriptionModal } from '@/features/subscription/components/subscriptionModal/subscriptionModal';
 
 // Store Hooks
 import { useAcademicStore } from '@/shared/stores/useAcademicStore';
