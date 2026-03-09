@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import {
   ArrowLeft,
   Calendar,
+  ClipboardList,
   MapPin,
   ExternalLink,
   Building2,
@@ -24,7 +25,7 @@ export default function DooDreamCategoryDetailPage() {
     useGetDodreamNotices();
 
   const category = keywords.find((k) => k.id === categoryIdParam);
-  const Icon = CATEGORY_ICON_MAP[categoryIdParam || ''] ?? Building2;
+  const Icon = CATEGORY_ICON_MAP[category?.icon || ''] ?? Building2;
 
   // 해당 카테고리의 공지 필터링 (키워드 && 학과)
   const notices = allNotices.filter((notice) => {
@@ -133,13 +134,24 @@ export default function DooDreamCategoryDetailPage() {
                     </div>
                     {notice.applicationStartAt && (
                       <div className="flex items-center gap-2 text-sm">
-                        <MapPin className="text-muted-foreground h-4 w-4" />
+                        <ClipboardList className="text-muted-foreground h-4 w-4" />
                         <span className="text-foreground">
                           신청: {formatDate(notice.applicationStartAt)}
                           {notice.applicationEndAt &&
                             ` - ${formatDate(notice.applicationEndAt)}`}
                         </span>
                       </div>
+                    )}
+                    {notice.location && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <MapPin className="text-muted-foreground h-4 w-4" />
+                        <span className="text-foreground">{notice.location}</span>
+                      </div>
+                    )}
+                    {notice.description && (
+                      <p className="text-muted-foreground line-clamp-2 text-sm">
+                        {notice.description}
+                      </p>
                     )}
                     {notice.detailUrl && (
                       <Button
