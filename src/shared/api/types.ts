@@ -1,6 +1,3 @@
-/**
- * 백엔드 College 응답
- */
 export type CollegeResponse = {
   id: string;
   name: string;
@@ -13,7 +10,7 @@ export type CollegeResponse = {
 export type Keyword = {
   id: string;
   name: string;
-  description?: string; // ⚠️ 백엔드 미구현 - 프론트에서 추가
+  description?: string;
 };
 
 export type Grade = {
@@ -31,4 +28,33 @@ export type KeywordsResponse = {
 
 export type GradesResponse = {
   grades: Grade[];
+};
+
+export type AcademicNotice = {
+  noticeId: string;
+  title: string;
+  gradeId: string;
+  startAt: string;
+  endAt: string | null;
+};
+
+export type AcademicNoticesResponse = {
+  notices: AcademicNotice[];
+};
+
+export type DoDreamNotice = {
+  noticeId: string;
+  title: string;
+  departmentId: string | null;
+  departmentName: string | null;
+  applicationStartAt: string;
+  applicationEndAt: string | null;
+  operatingStartAt: string;
+  operatingEndAt: string | null;
+  keywordIds: string[];
+  detailUrl?: string;
+};
+
+export type DoDreamNoticesResponse = {
+  notices: DoDreamNotice[];
 };
