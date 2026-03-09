@@ -6,7 +6,6 @@ import DooDreamNotice from './pages/DooDreamNotice';
 import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
 import ServiceSubscription from './pages/ServiceSubscription';
 import Result from './pages/Result';
-// import { StepIndicator } from '@/features/StepIndicator/components/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
 import {
