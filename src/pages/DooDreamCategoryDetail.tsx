@@ -103,7 +103,7 @@ export default function DooDreamCategoryDetailPage() {
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {notices.length === 0 ? (
-              <div className="col-span-full py-12 text-center">
+              <div className="col-span-full flex min-h-96 items-center justify-center py-12 text-center">
                 <p className="text-muted-foreground">
                   현재 등록된 {category.name} 행사가 없습니다.
                 </p>

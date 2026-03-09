@@ -14,7 +14,7 @@ export default function YearButton({
   return (
     <button
       onClick={onClick}
-      className={`relative rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+      className={`relative rounded-xl px-4 py-3 text-xs font-medium transition-all duration-200 sm:text-sm ${
         isSelected
           ? 'bg-primary text-primary-foreground shadow-md'
           : 'bg-accent text-foreground hover:bg-accent/80'

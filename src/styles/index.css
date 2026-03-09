@@ -23,7 +23,7 @@
   --popover-foreground: oklch(0.145 0 0);
   /* --primary: oklch(0.205 0 0); */
   --purple: oklch(0.5576 0.2877 302.3);
-  --primary: #C3002F;
+  --primary: oklch(0.5166 0.207695 20.7292);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);

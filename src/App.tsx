@@ -4,6 +4,7 @@ import Landing from './pages/Landing';
 import AcademicNotice from './pages/AcademicNotice';
 import DooDreamNotice from './pages/DooDreamNotice';
 import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
+import ServiceSubscription from './pages/ServiceSubscription';
 import Result from './pages/Result';
 // import { StepIndicator } from '@/features/StepIndicator/components/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
@@ -40,11 +41,14 @@ export default function App() {
             path="/dooDreamNotice/:categoryId"
             element={<DooDreamCategoryDetail />}
           />
+          <Route
+            path="/subscription"
+            element={<ServiceSubscription onBack={handleBack} />}
+          />
           <Route path="/result" element={<Result onBack={handleBack} />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Routes>
       </div>
-      <div className="block h-24 md:hidden" />
     </div>
   );
 }
