@@ -22,7 +22,7 @@ export const getGrades = async (): Promise<Grade[]> => {
  * GET /api/departments
  */
 export const getColleges = async (): Promise<CollegeResponse[]> => {
-  const response = await apiClient.get<CollegesResponse>('/api/departments');
+  const response = await apiClient.get<CollegesResponse>('/api/colleges');
   return response.data.colleges;
 };
 

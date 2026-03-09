@@ -1,7 +1,7 @@
 export type CollegeResponse = {
   id: string;
   name: string;
-  Department: {
+  departments: {
     id: string;
     name: string;
   }[];

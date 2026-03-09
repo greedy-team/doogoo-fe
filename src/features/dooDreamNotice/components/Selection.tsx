@@ -43,7 +43,7 @@ export function MajorSelection({
                 <SelectLabel className="text-foreground bg-accent/30 -mx-1 mt-1 mb-1 px-3 py-2 text-sm font-bold">
                   {college.name}
                 </SelectLabel>
-                {college.Department.map((dept) => (
+                {college.departments.map((dept) => (
                   <SelectItem key={dept.id} value={dept.id}>
                     {dept.name}
                   </SelectItem>
