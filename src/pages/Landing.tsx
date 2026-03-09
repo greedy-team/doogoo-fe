@@ -65,7 +65,7 @@ export default function Landing({ onContinue }: LandingProps) {
                 service={{
                   ...service,
                   isSelected,
-                  onToggle: onToggleService,
+                  onToggle: toggleServiceSelection,
                 }}
               />
             );
@@ -73,32 +73,10 @@ export default function Landing({ onContinue }: LandingProps) {
         </div>
 
         <NextButton
-          onClick={onContinue}
-          disabled={selectedServices.size === 0}
+          onClick={handleContinueIfValid}
+          disabled={!canProceedToNextStep()}
         />
       </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        {services.map((service) => {
-          const isSelected = selectedServices.has(service.id);
-
-          return (
-            <ServiceCard
-              key={service.id}
-              service={{
-                ...service,
-                isSelected,
-                onToggle: toggleServiceSelection,
-              }}
-            />
-          );
-        })}
-      </div>
-
-      <NextButton
-        onClick={handleContinueIfValid}
-        disabled={!canProceedToNextStep()}
-      />
     </div>
   );
 }
