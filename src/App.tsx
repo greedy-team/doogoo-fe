@@ -6,7 +6,7 @@ import AcademicNotice from './pages/AcademicNotice';
 import DooDreamNotice from './pages/DooDreamNotice';
 import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
 import Result from './pages/Result';
-import { StepIndicator } from '@/shared/components/StepIndicator';
+// import { StepIndicator } from '@/features/StepIndicator/components/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
 import {
@@ -26,14 +26,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <Navigation />
-      <div className="container mx-auto px-4 pb-24 sm:px-6">
-        <Hero />
-        <StepIndicator
-          currentStep={currentStep}
-          totalSteps={totalSteps}
-          onBack={handleBack}
-        />
-
+      <div className="container mx-auto px-4 py-6 sm:px-6">
         <Routes>
           <Route path="/" element={<Landing onContinue={handleNext} />} />
           <Route

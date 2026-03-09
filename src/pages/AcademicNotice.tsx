@@ -1,20 +1,19 @@
 import { Card } from '@/components/ui/card';
-import {
-  NextButton,
-  BackButton,
-} from '@/shared/components/RouteButton';
+import { NextButton, BackButton } from '@/shared/components/RouteButton';
 import YearTypeSelection from '@/features/academicNotice/components/YearTypeSelection';
 import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHeader';
 import YearSelectionLayout from '@/features/academicNotice/components/YearSelectionLayout';
 import { useAcademicStore } from '@/shared/stores/useAcademicStore';
 
 interface AcademicNoticeProps {
-
   onNext: () => void;
   onBack: () => void;
 }
 
-export default function AcademicNotice({ onNext, onBack }: AcademicNoticeProps) {
+export default function AcademicNotice({
+  onNext,
+  onBack,
+}: AcademicNoticeProps) {
   const {
     selectedGradeYear,
     gradeFilterScope,
@@ -24,15 +23,15 @@ export default function AcademicNotice({ onNext, onBack }: AcademicNoticeProps) 
 
   return (
     <div className="flex flex-col gap-4">
-      <Card className="shadow-sm">
+      <Card className="p-6">
         {/* Header */}
         <SelectedServiceTypeHeader
           type="academic"
-          title="학사공지"
-          description="학사 일정 및 공지사항"
+          title="학사일정"
+          description="수강 신청, 시험기간 등"
         />
 
-        <div className="space-y-4 px-6 pb-6">
+        <div className="space-y-4">
           {/* Filter Type Selection - 먼저 수신 범위 선택 */}
           <YearTypeSelection
             yearFilterType={gradeFilterScope}
