@@ -146,6 +146,11 @@ src/
 └── mocks/                         # MSW 핸들러 (개발용 목 데이터)
     ├── browser.ts
     └── handlers.ts
+
+
+
+<img width="1824" height="723" alt="image" src="https://github.com/user-attachments/assets/11f86d76-d4fc-49fe-ac03-a6563245e4ed" />
+
 ```
 
 </details>
