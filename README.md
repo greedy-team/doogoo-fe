@@ -5,7 +5,7 @@
 # 📅 Sejong D-Cal
 ### 세종대 맞춤형 두드림 캘린더 구독 서비스
 
-세종대학교 **두드림** 비교과 공지와 **학사공지**를 학과·키워드·학년으로 필터링해<br>
+세종대학교 **두드림** 비교과 공지와 **학사일정**를 학과·키워드·학년으로 필터링해<br>
 나만의 `.ics` 구독 URL을 발급받아 구글·애플·아웃룩 캘린더에 자동 동기화하는 웹 서비스
 
 <br>
@@ -109,7 +109,7 @@
 src/
 ├── pages/                         # 라우트 단위 페이지
 │   ├── Landing.tsx                # 서비스 선택 (학사공지 / 두드림)
-│   ├── AcademicNotice.tsx         # 학사공지 학년 필터 설정
+│   ├── AcademicNotice.tsx         # 학사일정 학년 필터 설정
 │   ├── DooDreamNotice.tsx         # 두드림 카테고리 선택
 │   ├── DooDreamCategoryDetail.tsx # 카테고리별 상세 키워드 설정
 │   └── Result.tsx                 # 캘린더 미리보기 + ICS URL 발급
@@ -133,7 +133,7 @@ src/
 │   │   └── useStepNavigation.ts   # 스텝 이동 로직
 │   ├── stores/                    # Zustand 전역 상태
 │   │   ├── useServiceStore.ts     # 선택된 서비스 (학사/두드림)
-│   │   ├── useAcademicStore.ts    # 학사공지 필터 상태
+│   │   ├── useAcademicStore.ts    # 학사일정 필터 상태
 │   │   ├── useDodreamStore.ts     # 두드림 필터 상태
 │   │   └── useUIStore.ts          # UI 상태
 │   └── utils/
@@ -160,9 +160,9 @@ src/
 | `GET` | `/api/colleges` | 단과대·학과 목록 조회 |
 | `GET` | `/api/keywords` | 두드림 키워드 목록 조회 |
 | `GET` | `/api/grades` | 학년 목록 조회 |
-| `GET` | `/api/academic/notices` | 학사공지 목록 조회 |
+| `GET` | `/api/academic/notices` | 학사일정 목록 조회 |
 | `GET` | `/api/dodream/notices` | 두드림 공지 목록 조회 |
-| `POST` | `/api/academic/ics` | 학사공지 ICS 구독 URL 발급 |
+| `POST` | `/api/academic/ics` | 학사일정 ICS 구독 URL 발급 |
 | `POST` | `/api/dodream/ics` | 두드림 ICS 구독 URL 발급 |
 
 ---
