@@ -19,7 +19,6 @@ export default function DooDreamNotice({ onNext, onBack }: DooDreamNoticeProps) 
     selectedInterestKeywordIds,
     setSelectedDepartmentId,
     toggleInterestKeyword,
-    isDepartmentSelected,
   } = useDodreamStore();
 
   return (
@@ -46,7 +45,7 @@ export default function DooDreamNotice({ onNext, onBack }: DooDreamNoticeProps) 
         </div>
       </Card>
 
-      <NextButton onClick={onNext} disabled={!isDepartmentSelected()} />
+      <NextButton onClick={onNext} disabled={selectedInterestKeywordIds.size === 0} />
       <BackButton onClick={onBack} disabled={false} />
     </div>
   );
