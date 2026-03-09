@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Apple, Chrome, Mail, Download, ExternalLink } from 'lucide-react';
+import { Apple, Chrome, Mail, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useCreateAcademicIcs,
@@ -48,20 +48,16 @@ export function SubscriptionModal({
 
   // API 호출 헬퍼 함수들
   const callAcademicApi = async () => {
-    // TODO: yearFilterType이 'all'일 때 처리 (엣지케이스 - 현재 보류)
     const response = await createAcademicIcs.mutateAsync({
-      selectedDepartmentId: selectedMajor,
-      selectedGradeId: selectedYear,
-      alarmEnabled: false, // 미리알림 비활성화
+      selectedGradeId: String(selectedYear),
     });
     return response;
   };
 
   const callDodreamApi = async () => {
     const response = await createDodreamIcs.mutateAsync({
-      selectedDepartmentId: selectedMajor,
+      selectedDepartmentId: selectedMajor === 'all' ? null : selectedMajor,//백앤드에서  "null"은 전체로 처리,
       selectedKeywordId: Array.from(selectedInterests),
-      alarmEnabled: false, // 미리알림 비활성화
     });
     return response;
   };
@@ -126,40 +122,6 @@ export function SubscriptionModal({
     } catch (error) {
       console.error('ICS 링크 생성 실패:', error);
       toast.error('캘린더 링크 생성에 실패했습니다', {
-        description: '잠시 후 다시 시도해주세요.',
-        duration: 4000,
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handleDownload = async () => {
-    setIsProcessing(true);
-    try {
-      // 현재 서비스 결정-두드림/학사공지중 선택
-      const currentService = hasBothServices
-        ? activeTab
-        : selectedServices.has('academic')
-          ? 'academic'
-          : 'doodream';
-
-      // API 호출
-      const response = await callApiForActiveService(currentService);
-
-      // 서버의 downloadUrl을 새 탭에서 열기
-      // 서버가 Content-Disposition: attachment 헤더를 제공하면 자동 다운로드됨
-      window.open(response.downloadUrl, '_blank');
-      onClose();
-      navigate('/result');
-
-      toast.success('캘린더 파일 다운로드를 시작합니다!', {
-        description: '캘린더 앱에 .ics 파일을 가져오세요.',
-        duration: 4000,
-      });
-    } catch (error) {
-      console.error('ICS 다운로드 실패:', error);
-      toast.error('캘린더 파일 다운로드에 실패했습니다', {
         description: '잠시 후 다시 시도해주세요.',
         duration: 4000,
       });
