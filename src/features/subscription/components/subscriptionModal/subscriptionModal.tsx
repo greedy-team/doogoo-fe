@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Apple, Chrome, Mail, ExternalLink } from 'lucide-react';
+import { Apple, Chrome, Mail, Download, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useCreateAcademicIcs,
@@ -130,6 +130,37 @@ export function SubscriptionModal({
     }
   };
 
+  const handleDownload = async () => {
+    setIsProcessing(true);
+    try {
+      const currentService = hasBothServices
+        ? activeTab
+        : selectedServices.has('academic')
+          ? 'academic'
+          : 'doodream';
+
+      const response = await callApiForActiveService(currentService);
+
+      // 서버가 Content-Disposition: attachment 헤더를 제공하면 자동 다운로드됨
+      window.open(response.downloadUrl, '_blank');
+      onClose();
+      navigate('/result');
+
+      toast.success('캘린더 파일 다운로드를 시작합니다!', {
+        description: '캘린더 앱에 .ics 파일을 가져오세요.',
+        duration: 4000,
+      });
+    } catch (error) {
+      console.error('ICS 다운로드 실패:', error);
+      toast.error('캘린더 파일 다운로드에 실패했습니다', {
+        description: '잠시 후 다시 시도해주세요.',
+        duration: 4000,
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const platforms = [
     {
       id: 'apple',
@@ -194,7 +225,7 @@ export function SubscriptionModal({
         </div>
       </div> */}
 
-      {/* Download ICS
+      {/* Download ICS */}
       <Button
         variant="outline"
         className="h-14 w-full text-base"
@@ -206,7 +237,7 @@ export function SubscriptionModal({
       </Button>
       <p className="text-muted-foreground text-center text-xs">
         다운로드한 파일을 캘린더 앱으로 가져오세요
-      </p> */}
+      </p>
     </div>
   );
 
