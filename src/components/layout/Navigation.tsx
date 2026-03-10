@@ -12,9 +12,7 @@ export default function Navigation() {
             className="h-8 w-8"
           />
           {/* 아이콘을 더 크게 할 지, 옆에 로고를 넣을 지 고민해봐야 합니다. */}
-          <span className="text-foreground hidden font-semibold sm:inline">
-            두구두구
-          </span>
+          <span className="text-foreground inline font-semibold">두구두구</span>
         </Link>
         <HowToInfo />
       </div>
