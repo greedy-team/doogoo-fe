@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import {
   createAcademicIcsLink,
   createDodreamIcsLink,
-} from '@/features/result/api/icsApi';
+} from '@/features/subscription/api/icsApi';
 import { API_BASE_URL } from '@/shared/api/client';
 import type { AcademicIcsRequest, DoDreamIcsRequest } from '../api/types';
 
