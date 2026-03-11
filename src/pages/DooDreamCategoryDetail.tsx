@@ -113,53 +113,57 @@ export default function DooDreamCategoryDetailPage() {
               notices.map((notice) => (
                 <Card
                   key={notice.noticeId}
-                  className="p-4 shadow-none transition-shadow"
+                  className="flex h-full flex-col p-4 shadow-none transition-shadow"
                 >
-                  <h3 className="mb-2 text-base font-semibold">
-                    {notice.title}
-                  </h3>
-                  {notice.departmentName && (
-                    <p className="text-muted-foreground mb-3 text-sm">
-                      {notice.departmentName}
-                    </p>
-                  )}
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Calendar className="text-muted-foreground h-4 w-4" />
-                      <span className="text-foreground">
-                        {formatDate(notice.operatingStartAt)}
-                        {notice.operatingEndAt &&
-                          ` - ${formatDate(notice.operatingEndAt)}`}
-                      </span>
-                    </div>
-                    {notice.applicationStartAt && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <ClipboardList className="text-muted-foreground h-4 w-4" />
-                        <span className="text-foreground">
-                          신청: {formatDate(notice.applicationStartAt)}
-                          {notice.applicationEndAt &&
-                            ` - ${formatDate(notice.applicationEndAt)}`}
-                        </span>
-                      </div>
-                    )}
-                    {notice.location && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <MapPin className="text-muted-foreground h-4 w-4" />
-                        <span className="text-foreground">
-                          {notice.location}
-                        </span>
-                      </div>
-                    )}
+                  <div className="flex flex-1 flex-col">
+                    <h3 className="mb-2 text-base font-semibold">
+                      {notice.title}
+                    </h3>
                     {notice.description && (
-                      <p className="text-muted-foreground line-clamp-2 text-sm">
+                      <p className="text-muted-foreground mb-3 line-clamp-3 text-sm">
                         {notice.description}
                       </p>
                     )}
+                    <div className="mt-auto pt-4">
+                      <div className="space-y-2 pb-4">
+                        {notice.departmentName && (
+                          <p className="text-muted-foreground text-sm">
+                            {notice.departmentName}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 text-sm">
+                          <Calendar className="text-muted-foreground h-4 w-4" />
+                          <span className="text-foreground">
+                            {formatDate(notice.operatingStartAt)}
+                            {notice.operatingEndAt &&
+                              ` - ${formatDate(notice.operatingEndAt)}`}
+                          </span>
+                        </div>
+                        {notice.applicationStartAt && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <ClipboardList className="text-muted-foreground h-4 w-4" />
+                            <span className="text-foreground">
+                              신청: {formatDate(notice.applicationStartAt)}
+                              {notice.applicationEndAt &&
+                                ` - ${formatDate(notice.applicationEndAt)}`}
+                            </span>
+                          </div>
+                        )}
+                        {notice.location && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <MapPin className="text-muted-foreground h-4 w-4" />
+                            <span className="text-foreground">
+                              {notice.location}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     {notice.detailUrl && (
                       <Button
                         variant="outline"
                         size="sm"
-                        className="mt-2 w-full shadow-none"
+                        className="w-full shadow-none"
                         onClick={() => {
                           const url = notice.detailUrl?.startsWith('http')
                             ? notice.detailUrl
