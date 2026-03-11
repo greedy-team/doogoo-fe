@@ -42,8 +42,7 @@ export default function EventItem({
               : 'border-purple-300 text-purple-600'
           }`}
         >
-          {event.category ||
-            (event.serviceType === 'academic' ? '학사' : '두드림')}
+          {event.category ?? event.serviceType}
         </Badge>
       </div>
 

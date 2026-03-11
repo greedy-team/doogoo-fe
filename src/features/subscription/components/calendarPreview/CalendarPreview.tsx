@@ -12,6 +12,7 @@ import {
   useGetAcademicNotices,
   useGetDodreamNotices,
 } from '@/shared/hooks/useNotices';
+import { useGetKeywords } from '@/shared/hooks/useCommonData';
 import {
   filterAcademicNotices,
   filterDodreamNotices,
@@ -52,6 +53,7 @@ export default function CalendarPreview({
   // API 데이터 가져오기
   const { data: academicNotices = [] } = useGetAcademicNotices();
   const { data: dodreamNotices = [] } = useGetDodreamNotices();
+  const { data: keywords = [] } = useGetKeywords();
 
   // 필터링된 공지 데이터
   const previewEvents = useMemo((): PreviewEvent[] => {
@@ -73,6 +75,7 @@ export default function CalendarPreview({
           month: startDate.getMonth() + 1,
           title: notice.title,
           serviceType: 'academic',
+          category: '학사',
         });
       });
     }
@@ -87,12 +90,16 @@ export default function CalendarPreview({
 
       filteredDodreamNotices.forEach((notice) => {
         const startDate = new Date(notice.operatingStartAt);
+        const keywordName = keywords.find(
+          (k) => notice.keywordIds.includes(k.id),
+        )?.name;
         events.push({
           date: notice.operatingStartAt,
           day: startDate.getDate(),
           month: startDate.getMonth() + 1,
           title: notice.title,
           serviceType: 'doodream',
+          category: keywordName,
           link: notice.detailUrl,
         });
       });
@@ -106,6 +113,7 @@ export default function CalendarPreview({
   }, [
     academicNotices,
     dodreamNotices,
+    keywords,
     selectedYear,
     yearFilterType,
     selectedMajor,
