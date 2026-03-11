@@ -124,6 +124,17 @@ export default function CalendarPreview({
     selectedInterests,
     selectedServices,
   ]);
+  // 오늘 이후 이벤트만 (헤더 개수, 리스트 뷰용)
+  const upcomingEvents = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return previewEvents.filter((e) => {
+      const eventDate = new Date(e.year, e.month - 1, e.day);
+      eventDate.setHours(0, 0, 0, 0);
+      return eventDate >= today;
+    });
+  }, [previewEvents]);
+
   const currentMonthData = getMonthData(currentYear, currentMonth);
 
   const goToPrevMonth = () => {
@@ -154,14 +165,14 @@ export default function CalendarPreview({
     <Card className="from-card to-accent/20 bg-linear-to-br p-6">
       <div className="space-y-4">
         <ResultHeader
-          previewEvents={previewEvents}
+          previewEvents={upcomingEvents}
           viewMode={viewMode}
           onViewModeChange={(mode) => setViewMode(mode)}
         />
 
         {viewMode === 'list' ? (
           <ResultListView
-            previewEvents={previewEvents}
+            previewEvents={upcomingEvents}
             currentMonthData={currentMonthData}
             onPrevMonth={goToPrevMonth}
             onNextMonth={goToNextMonth}
