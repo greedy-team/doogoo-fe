@@ -8,10 +8,7 @@ import EventDetailsDialog from './EventDetailsDialog';
 import generateMonthsData from './generateMonthsData';
 
 import type { MonthData } from './generateMonthsData';
-import {
-  useGetAcademicNotices,
-  useGetDodreamNotices,
-} from '@/shared/hooks/useNotices';
+import { useGetAcademicNotices, useGetDodreamNotices } from '@/shared/hooks/useNotices';
 import {
   filterAcademicNotices,
   filterDodreamNotices,
@@ -118,8 +115,10 @@ export default function CalendarPreview({
     return previewEvents.filter((e) => e.month === month && e.day === day);
   };
 
+  const currentMonth = monthsData[currentMonthIndex];
+
   return (
-    <Card className="from-card to-accent/20 bg-linear-to-br p-6">
+    <Card className="from-card to-accent/20 bg-linear-to-br p-6 shadow-lg lg:shadow-xl">
       <div className="space-y-4">
         <ResultHeader
           previewEvents={previewEvents}
@@ -141,6 +140,15 @@ export default function CalendarPreview({
           />
         ) : (
           <ResultMonthView
+            currentMonth={currentMonth}
+            monthsData={monthsData}
+            currentMonthIndex={currentMonthIndex}
+            previewEvents={previewEvents}
+            onMonthChange={setCurrentMonthIndex}
+            onDayClick={(events) => {
+              setSelectedDayEvents(events);
+              setIsDialogOpen(true);
+            }}
             getEventsForDay={getEventsForDay}
           />
         )}

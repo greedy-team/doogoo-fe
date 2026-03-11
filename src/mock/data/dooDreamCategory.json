@@ -1,11 +1,5 @@
 [
   {
-    "id": "major",
-    "label": "학과 행사",
-    "description": "학과 주최 행사 및 대회",
-    "icon": "Building2"
-  },
-  {
     "id": "competition",
     "label": "대회 및 학술제",
     "description": "경진대회, 공모전, 학술행사",

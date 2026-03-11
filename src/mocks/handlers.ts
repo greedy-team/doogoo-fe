@@ -30,7 +30,8 @@ export const handlers = [
         { id: '1', name: '1학년' },
         { id: '2', name: '2학년' },
         { id: '3', name: '3학년' },
-        { id: '4', name: '4학년+' },
+        { id: '4', name: '4학년' },
+        { id: '4-5', name: '4~5학년' }, // ⚠️ 백엔드 미구현 (의학/수의학 전용)
       ],
     });
   }),
@@ -159,7 +160,9 @@ export const handlers = [
         {
           id: 'college-10',
           name: '대양휴머니티칼리지',
-          Department: [{ id: 'liberal-arts', name: '자유전공학부' }],
+          Department: [
+            { id: 'liberal-arts', name: '자유전공학부' },
+          ],
         },
       ],
     });
@@ -178,11 +181,6 @@ export const handlers = [
     return HttpResponse.json({
       keywords: [
         {
-          id: 'k_0',
-          name: '학과 행사',
-          description: '학과 주최 행사 및 대회', // ⚠️ 백엔드 미구현
-        },
-        {
           id: 'k_1',
           name: '대회 및 학술제',
           description: '경진대회, 공모전, 학술행사', // ⚠️ 백엔드 미구현
@@ -190,7 +188,7 @@ export const handlers = [
         {
           id: 'k_2',
           name: '취창업',
-          description: '취업, 창업, 진로 관련 행사', // ⚠️ 백엔드 미구현
+          description: '취업, 창업, 진로 관련 행사' // ⚠️ 백엔드 미구현
         },
         {
           id: 'k_3',

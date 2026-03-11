@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogContent,
@@ -9,12 +8,12 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Apple, Chrome, Mail, Download, ExternalLink } from 'lucide-react';
+import { Download, ExternalLink, Apple, Chrome } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useCreateAcademicIcs,
   useCreateDodreamIcs,
-} from '@/features/subscription/hooks/useIcsLink';
+} from '@/features/result/hooks/useIcsLink';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -30,12 +29,10 @@ export function SubscriptionModal({
   isOpen,
   onClose,
   selectedYear,
-  yearFilterType,
   selectedMajor,
   selectedInterests,
   selectedServices,
 }: SubscriptionModalProps) {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'academic' | 'doodream'>(
     'academic',
   );
@@ -49,16 +46,20 @@ export function SubscriptionModal({
 
   // API 호출 헬퍼 함수들
   const callAcademicApi = async () => {
+    // TODO: yearFilterType이 'all'일 때 처리 (엣지케이스 - 현재 보류)
     const response = await createAcademicIcs.mutateAsync({
-      selectedGradeId: yearFilterType === 'all' ? null : String(selectedYear),
+      selectedDepartmentId: selectedMajor,
+      selectedGradeId: selectedYear,
+      alarmEnabled: false, // 미리알림 비활성화
     });
     return response;
   };
 
   const callDodreamApi = async () => {
     const response = await createDodreamIcs.mutateAsync({
-      selectedDepartmentId: !selectedMajor || selectedMajor === 'all' ? null : selectedMajor,//백앤드에서  "null"은 전체로 처리,
+      selectedDepartmentId: selectedMajor,
       selectedKeywordId: Array.from(selectedInterests),
+      alarmEnabled: false, // 미리알림 비활성화
     });
     return response;
   };
@@ -110,8 +111,6 @@ export function SubscriptionModal({
 
       // Open in new window/tab
       window.open(finalUrl, '_blank');
-      onClose();
-      navigate('/result');
 
       toast.success(
         `${platform === 'apple' ? 'Apple' : platform === 'google' ? 'Google' : 'Outlook'} 캘린더로 이동합니다`,
@@ -134,18 +133,19 @@ export function SubscriptionModal({
   const handleDownload = async () => {
     setIsProcessing(true);
     try {
+      // 현재 서비스 결정-두드림/학사공지중 선택
       const currentService = hasBothServices
         ? activeTab
         : selectedServices.has('academic')
           ? 'academic'
           : 'doodream';
 
+      // API 호출
       const response = await callApiForActiveService(currentService);
 
+      // 서버의 downloadUrl을 새 탭에서 열기
       // 서버가 Content-Disposition: attachment 헤더를 제공하면 자동 다운로드됨
       window.open(response.downloadUrl, '_blank');
-      onClose();
-      navigate('/result');
 
       toast.success('캘린더 파일 다운로드를 시작합니다!', {
         description: '캘린더 앱에 .ics 파일을 가져오세요.',
@@ -165,66 +165,64 @@ export function SubscriptionModal({
   const platforms = [
     {
       id: 'apple',
-      icon: Apple,
       name: 'Apple 캘린더',
       description: 'iPhone, iPad, Mac',
+      icon: Apple,
+      color: 'bg-gray-100 hover:bg-gray-200 text-gray-900',
     },
     {
       id: 'google',
-      icon: Chrome,
       name: 'Google 캘린더',
       description: 'Gmail과 동기화',
+      icon: Chrome,
+      color: 'bg-blue-50 hover:bg-blue-100 text-blue-600',
     },
     {
       id: 'outlook',
-      icon: Mail,
       name: 'Outlook 캘린더',
       description: 'Microsoft 계정',
+      icon: ExternalLink,
+      color: 'bg-sky-50 hover:bg-sky-100 text-sky-600',
     },
   ];
 
   // 플랫폼 버튼 및 다운로드 버튼 렌더링
   const renderContent = () => (
-    <div className="flex flex-col space-y-3 py-4">
+    <div className="space-y-3 py-4">
       {platforms.map((platform) => {
         const Icon = platform.icon;
         return (
-          <Button
+          <button
             key={platform.id}
             onClick={() =>
               handlePlatformSubscribe(
                 platform.id as 'apple' | 'google' | 'outlook',
               )
             }
-            variant={'outline'}
             disabled={isProcessing}
-            className="flex h-full flex-row justify-between p-4"
+            className={`flex w-full items-center gap-4 rounded-xl p-4 text-left transition-all duration-200 ${platform.color} hover:border-primary/30 border-2 border-transparent active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50`}
           >
-            <div className="flex flex-row items-center gap-4">
-              <div className="shrink-0">
-                <Icon className="size-8" />
-              </div>
-              <div className="flex flex-col items-start">
-                <div className="text-base font-semibold">{platform.name}</div>
-                <div className="text-muted-foreground text-sm">
-                  {platform.description}
-                </div>
-              </div>
+            <div className="shrink-0">
+              <Icon className="h-8 w-8" />
+            </div>
+            <div className="flex-1">
+              <div className="text-base font-semibold">{platform.name}</div>
+              <div className="text-sm opacity-70">{platform.description}</div>
             </div>
             <ExternalLink className="h-5 w-5 opacity-50" />
-          </Button>
+          </button>
         );
       })}
 
       {/* Divider */}
-      {/* <div className="relative py-2">
+      <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
           <div className="border-border w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs">
           <span className="bg-card text-muted-foreground px-2">또는</span>
         </div>
-      </div> */}
+      </div>
 
       {/* Download ICS */}
       <Button
@@ -244,7 +242,7 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-125">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="text-xl">캘린더 구독하기</DialogTitle>
           <DialogDescription>
@@ -258,20 +256,8 @@ export function SubscriptionModal({
             onValueChange={(v) => setActiveTab(v as 'academic' | 'doodream')}
           >
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="academic" className="gap-2">
-                <span
-                  className="bg-primary h-2.5 w-2.5 rounded-full"
-                  aria-hidden="true"
-                />
-                학사공지
-              </TabsTrigger>
-              <TabsTrigger value="doodream" className="gap-2">
-                <span
-                  className="h-2.5 w-2.5 rounded-full bg-purple-500"
-                  aria-hidden="true"
-                />
-                두드림
-              </TabsTrigger>
+              <TabsTrigger value="academic">📚 학사공지</TabsTrigger>
+              <TabsTrigger value="doodream">✨ 두드림</TabsTrigger>
             </TabsList>
             <TabsContent value="academic">{renderContent()}</TabsContent>
             <TabsContent value="doodream">{renderContent()}</TabsContent>
