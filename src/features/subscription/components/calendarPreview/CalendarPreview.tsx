@@ -5,13 +5,12 @@ import ResultListView from './ResultListView';
 import ResultHeader from './ResultHeader';
 import ResultMonthView from './ResultMonthView';
 import EventDetailsDialog from './EventDetailsDialog';
-import generateMonthsData from './generateMonthsData';
-
-import type { MonthData } from './generateMonthsData';
+import { getMonthData } from './generateMonthsData';
 import {
   useGetAcademicNotices,
   useGetDodreamNotices,
 } from '@/shared/hooks/useNotices';
+import { useGetKeywords } from '@/shared/hooks/useCommonData';
 import {
   filterAcademicNotices,
   filterDodreamNotices,
@@ -19,6 +18,7 @@ import {
 
 export interface PreviewEvent {
   date: string;
+  year: number;
   day: number;
   month: number;
   title: string;
@@ -43,7 +43,9 @@ export default function CalendarPreview({
   selectedServices,
 }: CalendarPreviewProps) {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
-  const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
+  const now = new Date();
+  const [currentYear, setCurrentYear] = useState(now.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1);
   const [selectedDayEvents, setSelectedDayEvents] = useState<PreviewEvent[]>(
     [],
   );
@@ -52,6 +54,7 @@ export default function CalendarPreview({
   // API 데이터 가져오기
   const { data: academicNotices = [] } = useGetAcademicNotices();
   const { data: dodreamNotices = [] } = useGetDodreamNotices();
+  const { data: keywords = [] } = useGetKeywords();
 
   // 필터링된 공지 데이터
   const previewEvents = useMemo((): PreviewEvent[] => {
@@ -69,10 +72,12 @@ export default function CalendarPreview({
         const startDate = new Date(notice.startAt);
         events.push({
           date: notice.startAt,
+          year: startDate.getFullYear(),
           day: startDate.getDate(),
           month: startDate.getMonth() + 1,
           title: notice.title,
           serviceType: 'academic',
+          category: '학사',
         });
       });
     }
@@ -87,12 +92,17 @@ export default function CalendarPreview({
 
       filteredDodreamNotices.forEach((notice) => {
         const startDate = new Date(notice.operatingStartAt);
+        const keywordName = keywords.find(
+          (k) => notice.keywordIds.includes(k.id),
+        )?.name;
         events.push({
           date: notice.operatingStartAt,
+          year: startDate.getFullYear(),
           day: startDate.getDate(),
           month: startDate.getMonth() + 1,
           title: notice.title,
           serviceType: 'doodream',
+          category: keywordName,
           link: notice.detailUrl,
         });
       });
@@ -100,39 +110,72 @@ export default function CalendarPreview({
 
     // 날짜순 정렬
     return events.sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
       if (a.month !== b.month) return a.month - b.month;
       return a.day - b.day;
     });
   }, [
     academicNotices,
     dodreamNotices,
+    keywords,
     selectedYear,
     yearFilterType,
     selectedMajor,
     selectedInterests,
     selectedServices,
   ]);
-  const monthsData: MonthData[] = generateMonthsData();
+  // 오늘 이후 이벤트만 (헤더 개수, 리스트 뷰용)
+  const upcomingEvents = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return previewEvents.filter((e) => {
+      const eventDate = new Date(e.year, e.month - 1, e.day);
+      eventDate.setHours(0, 0, 0, 0);
+      return eventDate >= today;
+    });
+  }, [previewEvents]);
 
-  const getEventsForDay = (month: number, day: number) => {
-    return previewEvents.filter((e) => e.month === month && e.day === day);
+  const currentMonthData = getMonthData(currentYear, currentMonth);
+
+  const goToPrevMonth = () => {
+    if (currentMonth === 1) {
+      setCurrentYear(currentYear - 1);
+      setCurrentMonth(12);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (currentMonth === 12) {
+      setCurrentYear(currentYear + 1);
+      setCurrentMonth(1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  const getEventsForDay = (year: number, month: number, day: number) => {
+    return previewEvents.filter(
+      (e) => e.year === year && e.month === month && e.day === day,
+    );
   };
 
   return (
     <Card className="from-card to-accent/20 bg-linear-to-br p-6">
       <div className="space-y-4">
         <ResultHeader
-          previewEvents={previewEvents}
+          previewEvents={upcomingEvents}
           viewMode={viewMode}
           onViewModeChange={(mode) => setViewMode(mode)}
         />
 
         {viewMode === 'list' ? (
           <ResultListView
-            previewEvents={previewEvents}
-            monthsData={monthsData}
-            currentMonthIndex={currentMonthIndex}
-            onMonthChange={setCurrentMonthIndex}
+            previewEvents={upcomingEvents}
+            currentMonthData={currentMonthData}
+            onPrevMonth={goToPrevMonth}
+            onNextMonth={goToNextMonth}
             onEventClick={(events) => {
               setSelectedDayEvents(events);
               setIsDialogOpen(true);

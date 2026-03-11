@@ -158,7 +158,12 @@ export default function DooDreamCategoryDetailPage() {
                         variant="outline"
                         size="sm"
                         className="mt-2 w-full shadow-none"
-                        onClick={() => window.open(notice.detailUrl, '_blank')}
+                        onClick={() => {
+                          const url = notice.detailUrl?.startsWith('http')
+                            ? notice.detailUrl
+                            : `https://${notice.detailUrl}`;
+                          window.open(url, '_blank');
+                        }}
                       >
                         <ExternalLink className="mr-2 h-4 w-4" />
                         자세히 보기

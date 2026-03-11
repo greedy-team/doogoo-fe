@@ -4,7 +4,7 @@ import type { PreviewEvent } from './CalendarPreview';
 
 interface CalendarGridProps {
   onDayClick: (date: Date, events: PreviewEvent[]) => void;
-  getEventsForDay: (month: number, day: number) => PreviewEvent[];
+  getEventsForDay: (year: number, month: number, day: number) => PreviewEvent[];
   initialMonth?: Date;
   onMonthChange?: (month: Date) => void;
 }
@@ -29,6 +29,7 @@ export default function CalendarGrid({
       onDayClick={(date) => {
         if (date) {
           const dayEvents = getEventsForDay(
+            date.getFullYear(),
             date.getMonth() + 1,
             date.getDate(),
           );
@@ -45,6 +46,7 @@ export default function CalendarGrid({
           const dayDate = new Date(day.date);
           dayDate.setHours(0, 0, 0, 0);
           const dayEvents = getEventsForDay(
+            day.date.getFullYear(),
             day.date.getMonth() + 1,
             day.date.getDate(),
           );

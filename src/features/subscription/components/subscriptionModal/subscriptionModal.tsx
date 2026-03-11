@@ -15,6 +15,7 @@ import {
   useCreateAcademicIcs,
   useCreateDodreamIcs,
 } from '@/features/subscription/hooks/useIcsLink';
+import { useGetKeywords } from '@/shared/hooks/useCommonData';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -43,6 +44,7 @@ export function SubscriptionModal({
 
   const createAcademicIcs = useCreateAcademicIcs();
   const createDodreamIcs = useCreateDodreamIcs();
+  const { data: keywords = [] } = useGetKeywords();
 
   const hasBothServices =
     selectedServices.has('academic') && selectedServices.has('doodream');
@@ -58,7 +60,10 @@ export function SubscriptionModal({
   const callDodreamApi = async () => {
     const response = await createDodreamIcs.mutateAsync({
       selectedDepartmentId: !selectedMajor || selectedMajor === 'all' ? null : selectedMajor,//백앤드에서  "null"은 전체로 처리,
-      selectedKeywordId: Array.from(selectedInterests),
+      // 모든 키워드 선택 시 빈 배열 → 백엔드에서 "전체"로 처리(백앤드 요구사항)
+      selectedKeywordId: selectedInterests.size === keywords.length
+        ? []
+        : Array.from(selectedInterests),
     });
     return response;
   };
