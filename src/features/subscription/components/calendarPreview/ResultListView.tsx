@@ -34,11 +34,7 @@ export default function ResultListView({
         <>
           {/* Month navigation for list view */}
           <div className="mb-4 flex items-center justify-between border-b pb-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onPrevMonth}
-            >
+            <Button variant="ghost" size="sm" onClick={onPrevMonth}>
               <ChevronLeft className="mr-1 h-4 w-4" />
               이전
             </Button>
@@ -47,11 +43,7 @@ export default function ResultListView({
               {currentMonthData.name} {currentMonthData.year}
             </h3>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onNextMonth}
-            >
+            <Button variant="ghost" size="sm" onClick={onNextMonth}>
               다음 달
               <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
@@ -59,25 +51,36 @@ export default function ResultListView({
 
           {/* Events for current month */}
           <div className="space-y-2">
-            {previewEvents
-              .filter(
+            {(() => {
+              const monthEvents = previewEvents.filter(
                 (e) =>
                   e.year === currentMonthData.year &&
                   e.month === currentMonthData.number,
-              )
-              .map((event, index) => {
-                const dayEvents = getEventsForDay(event.year, event.month, event.day);
-                return (
-                  <EventItem
-                    isListView={true}
-                    key={index}
-                    event={event}
-                    onClick={() => {
-                      onEventClick(dayEvents);
-                    }}
-                  />
-                );
-              })}
+              );
+              return monthEvents.length === 0 ? (
+                <div className="text-muted-foreground py-8 text-center text-sm">
+                  <p>일정이 없습니다</p>
+                </div>
+              ) : (
+                monthEvents.map((event, index) => {
+                  const dayEvents = getEventsForDay(
+                    event.year,
+                    event.month,
+                    event.day,
+                  );
+                  return (
+                    <EventItem
+                      isListView={true}
+                      key={index}
+                      event={event}
+                      onClick={() => {
+                        onEventClick(dayEvents);
+                      }}
+                    />
+                  );
+                })
+              );
+            })()}
           </div>
         </>
       )}
