@@ -19,7 +19,7 @@ export default function YearTypeSelection({
         <div className="space-y-2">
           <label
             htmlFor="my-year"
-            className={`flex cursor-pointer items-start space-x-3 rounded-xl border-2 p-4 transition-colors ${
+            className={`flex cursor-pointer items-start space-x-3 rounded-xl border p-4 transition-colors ${
               yearFilterType === 'my-year'
                 ? 'border-primary bg-primary/5'
                 : 'border-border bg-card hover:bg-accent/50'
@@ -36,7 +36,7 @@ export default function YearTypeSelection({
 
           <label
             htmlFor="all"
-            className={`flex cursor-pointer items-start space-x-3 rounded-xl border-2 p-4 transition-colors ${
+            className={`flex cursor-pointer items-start space-x-3 rounded-xl border p-4 transition-colors ${
               yearFilterType === 'all'
                 ? 'border-primary bg-primary/5'
                 : 'border-border bg-card hover:bg-accent/50'

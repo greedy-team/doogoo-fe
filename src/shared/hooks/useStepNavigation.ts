@@ -13,18 +13,11 @@ export function useStepNavigation() {
     const step: { id: string; title: string; path: string }[] = [
       { id: 'service', title: '서비스 선택', path: '/' },
     ];
-    if (selectedServices.has('academic')) {
+    if (selectedServices.has('academic') || selectedServices.has('doodream')) {
       step.push({
-        id: 'academic',
-        title: '학사공지 설정',
-        path: '/academicNotice',
-      });
-    }
-    if (selectedServices.has('doodream')) {
-      step.push({
-        id: 'doodream',
-        title: '두드림 설정',
-        path: '/dooDreamNotice',
+        id: 'subscription',
+        title: '구독 설정',
+        path: '/subscription',
       });
     }
     step.push({
@@ -38,7 +31,10 @@ export function useStepNavigation() {
 
   const steps = getSteps();
   const totalSteps = steps.length;
-  const currentStep = Math.max(0, steps.findIndex((s) => s.path === location.pathname));
+  const currentStep = Math.max(
+    0,
+    steps.findIndex((s) => s.path === location.pathname),
+  );
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

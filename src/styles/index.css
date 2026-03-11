@@ -22,7 +22,8 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   /* --primary: oklch(0.205 0 0); */
-  --primary: #C3002F;
+  --purple: oklch(0.5576 0.2877 302.3);
+  --primary: oklch(0.5166 0.207695 20.7292);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -133,5 +134,9 @@
     @apply bg-background text-foreground;
     margin: 0;
     min-height: 100vh;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
