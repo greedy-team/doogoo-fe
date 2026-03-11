@@ -204,8 +204,9 @@ export function SubscriptionModal({
               )
             }
             variant={'outline'}
+            size={null}
             disabled={isProcessing}
-            className="flex h-full flex-row justify-between p-4"
+            className="flex h-auto w-full flex-row justify-between p-4"
           >
             <div className="flex flex-row items-center gap-4">
               <div className="shrink-0">
@@ -224,14 +225,14 @@ export function SubscriptionModal({
       })}
 
       {/* Divider */}
-      {/* <div className="relative py-2">
+      <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
           <div className="border-border w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs">
           <span className="bg-card text-muted-foreground px-2">또는</span>
         </div>
-      </div> */}
+      </div>
 
       {/* Download ICS */}
       <Button
