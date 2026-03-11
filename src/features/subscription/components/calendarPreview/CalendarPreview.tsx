@@ -5,9 +5,7 @@ import ResultListView from './ResultListView';
 import ResultHeader from './ResultHeader';
 import ResultMonthView from './ResultMonthView';
 import EventDetailsDialog from './EventDetailsDialog';
-import generateMonthsData from './generateMonthsData';
-
-import type { MonthData } from './generateMonthsData';
+import { getMonthData } from './generateMonthsData';
 import {
   useGetAcademicNotices,
   useGetDodreamNotices,
@@ -20,6 +18,7 @@ import {
 
 export interface PreviewEvent {
   date: string;
+  year: number;
   day: number;
   month: number;
   title: string;
@@ -44,7 +43,9 @@ export default function CalendarPreview({
   selectedServices,
 }: CalendarPreviewProps) {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
-  const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0);
+  const now = new Date();
+  const [currentYear, setCurrentYear] = useState(now.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1);
   const [selectedDayEvents, setSelectedDayEvents] = useState<PreviewEvent[]>(
     [],
   );
@@ -71,6 +72,7 @@ export default function CalendarPreview({
         const startDate = new Date(notice.startAt);
         events.push({
           date: notice.startAt,
+          year: startDate.getFullYear(),
           day: startDate.getDate(),
           month: startDate.getMonth() + 1,
           title: notice.title,
@@ -95,6 +97,7 @@ export default function CalendarPreview({
         )?.name;
         events.push({
           date: notice.operatingStartAt,
+          year: startDate.getFullYear(),
           day: startDate.getDate(),
           month: startDate.getMonth() + 1,
           title: notice.title,
@@ -107,6 +110,7 @@ export default function CalendarPreview({
 
     // 날짜순 정렬
     return events.sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
       if (a.month !== b.month) return a.month - b.month;
       return a.day - b.day;
     });
@@ -120,10 +124,30 @@ export default function CalendarPreview({
     selectedInterests,
     selectedServices,
   ]);
-  const monthsData: MonthData[] = generateMonthsData();
+  const currentMonthData = getMonthData(currentYear, currentMonth);
 
-  const getEventsForDay = (month: number, day: number) => {
-    return previewEvents.filter((e) => e.month === month && e.day === day);
+  const goToPrevMonth = () => {
+    if (currentMonth === 1) {
+      setCurrentYear(currentYear - 1);
+      setCurrentMonth(12);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+  };
+
+  const goToNextMonth = () => {
+    if (currentMonth === 12) {
+      setCurrentYear(currentYear + 1);
+      setCurrentMonth(1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+  };
+
+  const getEventsForDay = (year: number, month: number, day: number) => {
+    return previewEvents.filter(
+      (e) => e.year === year && e.month === month && e.day === day,
+    );
   };
 
   return (
@@ -138,9 +162,9 @@ export default function CalendarPreview({
         {viewMode === 'list' ? (
           <ResultListView
             previewEvents={previewEvents}
-            monthsData={monthsData}
-            currentMonthIndex={currentMonthIndex}
-            onMonthChange={setCurrentMonthIndex}
+            currentMonthData={currentMonthData}
+            onPrevMonth={goToPrevMonth}
+            onNextMonth={goToNextMonth}
             onEventClick={(events) => {
               setSelectedDayEvents(events);
               setIsDialogOpen(true);

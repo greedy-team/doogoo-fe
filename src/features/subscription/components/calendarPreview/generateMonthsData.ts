@@ -1,6 +1,7 @@
 export interface MonthData {
   name: string;
   number: number;
+  year: number;
   days: number;
   startDay: number;
 }
@@ -21,37 +22,32 @@ const monthNames = [
 ];
 const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-export const generateMonthsData = (): MonthData[] => {
-  const today = new Date();
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
+export const getMonthData = (year: number, month: number): MonthData => {
+  const monthIndex = month - 1;
 
-  const months: MonthData[] = [];
-
-  for (let i = 0; i < 3; i++) {
-    const monthIndex = (currentMonth + i) % 12;
-    const year = currentYear + Math.floor((currentMonth + i) / 12);
-
-    // Calculate days in month (account for leap years)
-    let days = monthDays[monthIndex];
-    if (monthIndex === 1) {
-      // February
-      days = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
-    }
-
-    // Calculate what day of the week the month starts on
-    const firstDay = new Date(year, monthIndex, 1);
-    const startDay = firstDay.getDay();
-
-    months.push({
-      name: monthNames[monthIndex],
-      number: monthIndex + 1,
-      days: days,
-      startDay: startDay,
-    });
+  let days = monthDays[monthIndex];
+  if (monthIndex === 1) {
+    days =
+      (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
   }
 
-  return months;
+  const firstDay = new Date(year, monthIndex, 1);
+  const startDay = firstDay.getDay();
+
+  return {
+    name: monthNames[monthIndex],
+    number: month,
+    year,
+    days,
+    startDay,
+  };
+};
+
+export const generateMonthsData = (): MonthData[] => {
+  const currentYear = new Date().getFullYear();
+  return Array.from({ length: 12 }, (_, i) =>
+    getMonthData(currentYear, i + 1),
+  );
 };
 
 export default generateMonthsData;

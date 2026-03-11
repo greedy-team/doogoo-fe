@@ -5,7 +5,7 @@ import type { PreviewEvent } from './CalendarPreview';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ResultMonthViewProps {
-  getEventsForDay: (month: number, day: number) => PreviewEvent[];
+  getEventsForDay: (year: number, month: number, day: number) => PreviewEvent[];
 }
 
 export default function ResultMonthView({
