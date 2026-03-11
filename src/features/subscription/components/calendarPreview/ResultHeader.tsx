@@ -46,7 +46,6 @@ export default function ResultHeader({
             <GraduationCap className="mr-1 h-3 w-3" />
             {academicCount}개 학사
           </Badge>
-          {doodreamCount > 0 && (
             <Badge
               variant="secondary"
               className="border-purple-200 bg-purple-100 text-purple-700"
@@ -54,7 +53,6 @@ export default function ResultHeader({
               <Sparkles className="mr-1 h-3 w-3" />
               {doodreamCount}개 두드림
             </Badge>
-          )}
         </div>
 
         <Tabs
