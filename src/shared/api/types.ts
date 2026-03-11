@@ -1,7 +1,7 @@
 export type CollegeResponse = {
   id: string;
   name: string;
-  Department: {
+  departments: {
     id: string;
     name: string;
   }[];
@@ -11,6 +11,7 @@ export type Keyword = {
   id: string;
   name: string;
   description?: string;
+  icon: string;
 };
 
 export type Grade = {
@@ -51,6 +52,8 @@ export type DoDreamNotice = {
   applicationEndAt: string | null;
   operatingStartAt: string;
   operatingEndAt: string | null;
+  location: string | null;
+  description: string;
   keywordIds: string[];
   detailUrl?: string;
 };
