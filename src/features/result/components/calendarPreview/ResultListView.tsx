@@ -68,14 +68,13 @@ export default function ResultListView({
           </div>
 
           {/* Events for current month */}
-          <div className="space-y-2">
+          <div className="max-h-[60vh] space-y-2 overflow-y-auto lg:max-h-[70vh]">
             {previewEvents
               .filter((e) => e.month === currentMonth.number)
               .map((event, index) => {
                 const dayEvents = getEventsForDay(event.month, event.day);
                 return (
                   <EventItem
-                    isListView={true}
                     key={index}
                     event={event}
                     onClick={() => {

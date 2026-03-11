@@ -35,6 +35,7 @@ export default function ResultHeader({
             </p>
           </div>
         </div>
+        <Sparkles className="text-primary h-5 w-5" />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2">

@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import Navigation from '@/components/layout/Navigation';
+import { Hero } from '@/components/layout/Hero';
 import Landing from './pages/Landing';
 import AcademicNotice from './pages/AcademicNotice';
 import DooDreamNotice from './pages/DooDreamNotice';
 import DooDreamCategoryDetail from './pages/DooDreamCategoryDetail';
-import ServiceSubscription from './pages/ServiceSubscription';
 import Result from './pages/Result';
+import { StepIndicator } from '@/shared/components/StepIndicator';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
 import {
@@ -19,12 +20,20 @@ export default function App() {
   useGetDodreamNotices(); // 두드림 공지 데이터 캐싱
   //일단 tanstackQuery로 데이터 캐싱하기로 하였음
 
-  const { handleNext, handleBack } = useStepNavigation();
+  const { currentStep, totalSteps, handleNext, handleBack } =
+    useStepNavigation();
 
   return (
     <div className="min-h-screen">
       <Navigation />
-      <div className="container mx-auto px-2 py-8 sm:px-6">
+      <div className="container mx-auto px-4 pb-24 sm:px-6">
+        <Hero />
+        <StepIndicator
+          currentStep={currentStep}
+          totalSteps={totalSteps}
+          onBack={handleBack}
+        />
+
         <Routes>
           <Route path="/" element={<Landing onContinue={handleNext} />} />
           <Route
@@ -38,10 +47,6 @@ export default function App() {
           <Route
             path="/dooDreamNotice/:categoryId"
             element={<DooDreamCategoryDetail />}
-          />
-          <Route
-            path="/subscription"
-            element={<ServiceSubscription onBack={handleBack} />}
           />
           <Route path="/result" element={<Result onBack={handleBack} />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />

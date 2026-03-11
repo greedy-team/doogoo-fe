@@ -9,7 +9,7 @@ export function NextButton({ onClick, disabled = false }: NextButtonProps) {
   return (
     <Button
       size="lg"
-      className="h-14 w-full rounded-lg text-base font-semibold shadow-md"
+      className="h-14 w-full rounded-2xl text-base font-semibold shadow-md"
       onClick={onClick}
       disabled={disabled}
     >
@@ -25,7 +25,7 @@ export function BackButton({ onClick, disabled = false }: NextButtonProps) {
       size="lg"
       onClick={onClick}
       disabled={disabled}
-      className="hover:bg-accent/50 h-12 w-full rounded-lg border font-semibold"
+      className="hover:bg-accent/50 h-12 w-full border-2 font-semibold"
     >
       이전
     </Button>
@@ -36,7 +36,7 @@ export function SubscribeButton({ onClick }: NextButtonProps) {
   return (
     <Button
       size="lg"
-      className="h-14 w-full rounded-lg text-base font-semibold shadow-md"
+      className="h-14 w-full rounded-2xl text-base font-semibold shadow-md"
       onClick={onClick}
     >
       캘린더 구독하기

@@ -1,7 +1,6 @@
 import { GraduationCap, Sparkles } from 'lucide-react';
 import ServiceCard from '@/features/landing/components/ServiceCard';
 import { NextButton } from '@/shared/components/RouteButton';
-import { Hero } from '@/components/layout/Hero';
 import { useServiceStore } from '@/shared/stores/useServiceStore';
 
 interface LandingProps {
@@ -9,14 +8,17 @@ interface LandingProps {
 }
 
 export default function Landing({ onContinue }: LandingProps) {
-  const { selectedServices, toggleServiceSelection, canProceedToNextStep } =
-    useServiceStore();
+  const {
+    selectedServices,
+    toggleServiceSelection,
+    canProceedToNextStep,
+  } = useServiceStore();
 
   const services = [
     {
       id: 'academic' as const,
-      title: '학사일정',
-      description: '수강 신청, 시험 기간을 알림 받고 싶어요.',
+      title: '학사공지',
+      description: '학사 일정 및 공지사항',
       icon: GraduationCap,
       color: 'primary',
       bgColor: 'bg-primary/10',
@@ -26,7 +28,7 @@ export default function Landing({ onContinue }: LandingProps) {
     {
       id: 'doodream' as const,
       title: '두드림',
-      description: '교내 대회, 학과 행사 등 소식을 받고 싶어요',
+      description: '교내 활동 및 프로그램',
       icon: Sparkles,
       color: 'purple',
       bgColor: 'bg-purple-100',
@@ -42,40 +44,34 @@ export default function Landing({ onContinue }: LandingProps) {
   };
 
   return (
-    <>
-      <Hero />
-      <div className="mx-auto max-w-2xl space-y-6">
-        <div className="space-y-2 text-center">
-          <h2 className="text-foreground text-2xl font-bold">
-            어느 공지를 알림 받고 싶나요?
-          </h2>
-          <p className="text-muted-foreground">
-            알림 받을 공지를 선택해주세요. (중복 선택 가능)
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {services.map((service) => {
-            const isSelected = selectedServices.has(service.id);
-
-            return (
-              <ServiceCard
-                key={service.id}
-                service={{
-                  ...service,
-                  isSelected,
-                  onToggle: toggleServiceSelection,
-                }}
-              />
-            );
-          })}
-        </div>
-
-        <NextButton
-          onClick={handleContinueIfValid}
-          disabled={!canProceedToNextStep()}
-        />
+    <div className="mx-auto max-w-2xl space-y-6">
+      <div className="space-y-2 text-center">
+        <h2 className="text-foreground text-2xl font-bold">
+          무엇을 구독하시겠습니까?
+        </h2>
+        <p className="text-muted-foreground">
+          원하는 캘린더를 선택하세요 (중복 선택 가능)
+        </p>
       </div>
-    </>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {services.map((service) => {
+          const isSelected = selectedServices.has(service.id);
+
+          return (
+            <ServiceCard
+              key={service.id}
+              service={{
+                ...service,
+                isSelected,
+                onToggle: toggleServiceSelection,
+              }}
+            />
+          );
+        })}
+      </div>
+
+      <NextButton onClick={handleContinueIfValid} disabled={!canProceedToNextStep()} />
+    </div>
   );
 }
