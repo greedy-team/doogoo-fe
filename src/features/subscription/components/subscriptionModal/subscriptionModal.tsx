@@ -59,11 +59,13 @@ export function SubscriptionModal({
 
   const callDodreamApi = async () => {
     const response = await createDodreamIcs.mutateAsync({
-      selectedDepartmentId: !selectedMajor || selectedMajor === 'all' ? null : selectedMajor,//백앤드에서  "null"은 전체로 처리,
+      selectedDepartmentId:
+        !selectedMajor || selectedMajor === 'all' ? null : selectedMajor, //백앤드에서  "null"은 전체로 처리,
       // 모든 키워드 선택 시 빈 배열 → 백엔드에서 "전체"로 처리(백앤드 요구사항)
-      selectedKeywordId: selectedInterests.size === keywords.length
-        ? []
-        : Array.from(selectedInterests),
+      selectedKeywordId:
+        selectedInterests.size === keywords.length
+          ? []
+          : Array.from(selectedInterests),
     });
     return response;
   };
@@ -268,11 +270,11 @@ export function SubscriptionModal({
                   className="bg-primary h-2.5 w-2.5 rounded-full"
                   aria-hidden="true"
                 />
-                학사공지
+                학사일정
               </TabsTrigger>
               <TabsTrigger value="doodream" className="gap-2">
                 <span
-                  className="h-2.5 w-2.5 rounded-full bg-purple-500"
+                  className="bg-purple h-2.5 w-2.5 rounded-full"
                   aria-hidden="true"
                 />
                 두드림

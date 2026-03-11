@@ -48,7 +48,7 @@ export default function ResultHeader({
           </Badge>
             <Badge
               variant="secondary"
-              className="border-purple-200 bg-purple-100 text-purple-700"
+              className="bg-purple/10 text-purple border-purple"
             >
               <Sparkles className="mr-1 h-3 w-3" />
               {doodreamCount}개 두드림

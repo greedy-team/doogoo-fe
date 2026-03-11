@@ -39,14 +39,14 @@ export default function EventItem({
           className={`text-xs ${
             event.serviceType === 'academic'
               ? 'border-primary/30 text-primary'
-              : 'border-purple-300 text-purple-600'
+              : 'border-purple/30 text-purple'
           }`}
         >
           {event.category ?? event.serviceType}
         </Badge>
       </div>
 
-      {event.serviceType === 'doodream' && event.link && (
+      {/* {event.serviceType === 'doodream' && event.link && (
         <Button
           variant="ghost"
           size="icon"
@@ -55,7 +55,7 @@ export default function EventItem({
         >
           <ExternalLink />
         </Button>
-      )}
+      )} */}
     </Card>
   );
 }

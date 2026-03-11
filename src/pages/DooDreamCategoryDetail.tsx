@@ -83,8 +83,8 @@ export default function DooDreamCategoryDetailPage() {
               <span className="sr-only">뒤로 가기</span>
             </Button>
             <div className="flex items-center gap-2">
-              <div className="rounded-lg bg-purple-100 p-2">
-                <Icon className="h-5 w-5 text-purple-600" />
+              <div className="bg-purple/10 rounded-lg p-2">
+                <Icon className="text-purple h-5 w-5" />
               </div>
               <h1 className="text-xl font-semibold">{category.name}</h1>
             </div>
@@ -145,7 +145,9 @@ export default function DooDreamCategoryDetailPage() {
                     {notice.location && (
                       <div className="flex items-center gap-2 text-sm">
                         <MapPin className="text-muted-foreground h-4 w-4" />
-                        <span className="text-foreground">{notice.location}</span>
+                        <span className="text-foreground">
+                          {notice.location}
+                        </span>
                       </div>
                     )}
                     {notice.description && (

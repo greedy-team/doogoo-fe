@@ -68,7 +68,7 @@ export default function EventDetailsDialog({
                           className={`text-xs ${
                             event.serviceType === 'academic'
                               ? 'border-primary/30 text-primary bg-primary/5'
-                              : 'border-purple-300 bg-purple-50 text-purple-600'
+                              : 'border-purple/30 bg-purple/5 text-purple'
                           }`}
                         >
                           {event.category ||
