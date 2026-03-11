@@ -10,8 +10,7 @@ interface ResultListViewProps {
   currentMonthData: MonthData;
   onPrevMonth: () => void;
   onNextMonth: () => void;
-  onEventClick: (events: PreviewEvent[]) => void;
-  getEventsForDay: (year: number, month: number, day: number) => PreviewEvent[];
+  onEventClick: (event: PreviewEvent) => void;
 }
 
 export default function ResultListView({
@@ -20,7 +19,6 @@ export default function ResultListView({
   onPrevMonth,
   onNextMonth,
   onEventClick,
-  getEventsForDay,
 }: ResultListViewProps) {
   return (
     <div className="pt-2">
@@ -63,18 +61,13 @@ export default function ResultListView({
                 </div>
               ) : (
                 monthEvents.map((event, index) => {
-                  const dayEvents = getEventsForDay(
-                    event.year,
-                    event.month,
-                    event.day,
-                  );
                   return (
                     <EventItem
                       isListView={true}
                       key={index}
                       event={event}
                       onClick={() => {
-                        onEventClick(dayEvents);
+                        onEventClick(event);
                       }}
                     />
                   );
