@@ -1,6 +1,13 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, MapPin, ExternalLink, Building2 } from 'lucide-react';
+import {
+  ArrowLeft,
+  Calendar,
+  ClipboardList,
+  MapPin,
+  ExternalLink,
+  Building2,
+} from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CATEGORY_ICON_MAP } from '@/features/dooDreamNotice/constants/categoryIcons';
 import { useGetKeywords } from '@/shared/hooks/useCommonData';
@@ -18,7 +25,7 @@ export default function DooDreamCategoryDetailPage() {
     useGetDodreamNotices();
 
   const category = keywords.find((k) => k.id === categoryIdParam);
-  const Icon = CATEGORY_ICON_MAP[categoryIdParam || ''] ?? Building2;
+  const Icon = CATEGORY_ICON_MAP[category?.icon || ''] ?? Building2;
 
   // 해당 카테고리의 공지 필터링 (키워드 && 학과)
   const notices = allNotices.filter((notice) => {
@@ -62,9 +69,9 @@ export default function DooDreamCategoryDetailPage() {
 
   return (
     <div className="bg-background min-h-screen">
-      {/* Header */}
-      <div className="bg-background sticky top-0 z-10 border-b">
-        <div className="mx-auto max-w-6xl px-4 py-4">
+      <Card className="mb-4 p-6">
+        {/* Header */}
+        <div className="bg-background border-b pb-4">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
@@ -83,77 +90,87 @@ export default function DooDreamCategoryDetailPage() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        <div className="mb-4">
-          <h2 className="text-foreground mb-1 text-lg font-semibold">
-            이 카테고리에 포함되는 행사
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            최근 두드림에 등록된 {category.name} 관련 행사 예시입니다
-          </p>
-        </div>
+        {/* Content */}
+        <div>
+          <div className="mb-4">
+            <h2 className="text-foreground mb-1 text-lg font-semibold">
+              이 카테고리에 포함되는 행사
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              최근 두드림에 등록된 {category.name} 관련 행사 예시입니다
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {notices.length === 0 ? (
-            <div className="col-span-full py-12 text-center">
-              <p className="text-muted-foreground">
-                현재 등록된 {category.name} 행사가 없습니다.
-              </p>
-            </div>
-          ) : (
-            notices.map((notice) => (
-              <Card
-                key={notice.noticeId}
-                className="p-4 transition-shadow hover:shadow-md"
-              >
-                <h3 className="mb-2 text-base font-semibold">{notice.title}</h3>
-                {notice.departmentName && (
-                  <p className="text-muted-foreground mb-3 text-sm">
-                    {notice.departmentName}
-                  </p>
-                )}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="text-muted-foreground h-4 w-4" />
-                    <span className="text-foreground">
-                      {formatDate(notice.operatingStartAt)}
-                      {notice.operatingEndAt &&
-                        ` - ${formatDate(notice.operatingEndAt)}`}
-                    </span>
-                  </div>
-                  {notice.applicationStartAt && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {notices.length === 0 ? (
+              <div className="col-span-full flex min-h-96 items-center justify-center py-12 text-center">
+                <p className="text-muted-foreground">
+                  현재 등록된 {category.name} 행사가 없습니다.
+                </p>
+              </div>
+            ) : (
+              notices.map((notice) => (
+                <Card
+                  key={notice.noticeId}
+                  className="p-4 shadow-none transition-shadow"
+                >
+                  <h3 className="mb-2 text-base font-semibold">
+                    {notice.title}
+                  </h3>
+                  {notice.departmentName && (
+                    <p className="text-muted-foreground mb-3 text-sm">
+                      {notice.departmentName}
+                    </p>
+                  )}
+                  <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
-                      <MapPin className="text-muted-foreground h-4 w-4" />
+                      <Calendar className="text-muted-foreground h-4 w-4" />
                       <span className="text-foreground">
-                        신청: {formatDate(notice.applicationStartAt)}
-                        {notice.applicationEndAt &&
-                          ` - ${formatDate(notice.applicationEndAt)}`}
+                        {formatDate(notice.operatingStartAt)}
+                        {notice.operatingEndAt &&
+                          ` - ${formatDate(notice.operatingEndAt)}`}
                       </span>
                     </div>
-                  )}
-                  {notice.detailUrl && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2 w-full"
-                      onClick={() => window.open(notice.detailUrl, '_blank')}
-                    >
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      자세히 보기
-                    </Button>
-                  )}
-                </div>
-              </Card>
-            ))
-          )}
+                    {notice.applicationStartAt && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <ClipboardList className="text-muted-foreground h-4 w-4" />
+                        <span className="text-foreground">
+                          신청: {formatDate(notice.applicationStartAt)}
+                          {notice.applicationEndAt &&
+                            ` - ${formatDate(notice.applicationEndAt)}`}
+                        </span>
+                      </div>
+                    )}
+                    {notice.location && (
+                      <div className="flex items-center gap-2 text-sm">
+                        <MapPin className="text-muted-foreground h-4 w-4" />
+                        <span className="text-foreground">{notice.location}</span>
+                      </div>
+                    )}
+                    {notice.description && (
+                      <p className="text-muted-foreground line-clamp-2 text-sm">
+                        {notice.description}
+                      </p>
+                    )}
+                    {notice.detailUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 w-full shadow-none"
+                        onClick={() => window.open(notice.detailUrl, '_blank')}
+                      >
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        자세히 보기
+                      </Button>
+                    )}
+                  </div>
+                </Card>
+              ))
+            )}
+          </div>
         </div>
-
-        {/* Bottom spacing for mobile */}
-        <div className="h-20" />
-      </div>
+      </Card>
     </div>
   );
 }
