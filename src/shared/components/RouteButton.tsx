@@ -32,12 +32,16 @@ export function BackButton({ onClick, disabled = false }: NextButtonProps) {
   );
 }
 
-export function SubscribeButton({ onClick }: NextButtonProps) {
+export function SubscribeButton({
+  onClick,
+  disabled = false,
+}: NextButtonProps) {
   return (
     <Button
       size="lg"
       className="h-14 w-full rounded-lg text-base font-semibold shadow-md"
       onClick={onClick}
+      disabled={disabled}
     >
       캘린더 구독하기
     </Button>
