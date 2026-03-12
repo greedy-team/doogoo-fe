@@ -1,7 +1,5 @@
-import { ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { PreviewEvent } from './CalendarPreview';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 interface EventItemProps {
