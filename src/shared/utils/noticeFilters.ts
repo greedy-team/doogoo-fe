@@ -5,21 +5,24 @@ export type YearFilterType = 'my-year' | 'all';
 export const filterAcademicNotices = (
   notices: AcademicNotice[],
   selectedYear: number,
-  yearFilterType: YearFilterType
+  yearFilterType: YearFilterType,
 ): AcademicNotice[] => {
   if (yearFilterType === 'all') {
     return notices;
   }
   const selectedYearId = selectedYear.toString();
   return notices.filter(
-    (notice) => notice.gradeId === selectedYearId || notice.gradeId === 'all'
+    (notice) =>
+      notice.gradeId === selectedYearId ||
+      notice.gradeId === 'all' ||
+      notice.gradeId === null,
   );
 };
 
 export const filterDodreamNotices = (
   notices: DoDreamNotice[],
   selectedMajor: string,
-  selectedInterests: Set<string>
+  selectedInterests: Set<string>,
 ): DoDreamNotice[] => {
   let filtered = notices;
 
@@ -28,7 +31,7 @@ export const filterDodreamNotices = (
       (notice) =>
         notice.departmentId === selectedMajor ||
         notice.departmentId === 'all' ||
-        notice.departmentId === null
+        notice.departmentId === null,
     );
   }
 
@@ -38,7 +41,7 @@ export const filterDodreamNotices = (
   }
 
   filtered = filtered.filter((notice) =>
-    notice.keywordIds.some((keywordId) => selectedInterests.has(keywordId))
+    notice.keywordIds.some((keywordId) => selectedInterests.has(keywordId)),
   );
 
   return filtered;

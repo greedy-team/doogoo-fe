@@ -25,6 +25,7 @@ export interface PreviewEvent {
   month: number;
   title: string;
   description?: string;
+  descriptionSummary?: string;
   serviceType: 'academic' | 'doodream';
   category?: string;
   link?: string;
@@ -108,6 +109,7 @@ export default function CalendarPreview({
           month: startDate.getMonth() + 1,
           title: notice.title,
           description: notice.description,
+          descriptionSummary: notice.descriptionSummary,
           serviceType: 'doodream',
           category: keywordName,
           link: notice.detailUrl,

@@ -38,6 +38,8 @@ export default function EventDetailsDialog({
   const eventTypeLabel =
     selectedEvent?.serviceType === 'academic' ? '학사 일정' : '두드림 일정';
 
+  console.log('Selected Event in Dialog:', selectedEvent); // 디버깅용 로그
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="p-5 sm:max-w-120">
@@ -59,9 +61,15 @@ export default function EventDetailsDialog({
               >
                 {selectedEvent.category ?? eventTypeLabel}
               </Badge>
-              <p className="text-muted-foreground line-clamp-2 text-sm leading-6">
-                {selectedEvent.description || '상세 내용이 없습니다.'}
-              </p>
+              {selectedEvent.descriptionSummary ? (
+                <p className="text-muted-foreground line-clamp text-sm leading-6">
+                  {selectedEvent.descriptionSummary}
+                </p>
+              ) : (
+                <p className="text-muted-foreground line-clamp-3 text-sm leading-6">
+                  {selectedEvent.description || '상세 내용이 없습니다.'}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center gap-2 text-sm">
