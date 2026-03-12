@@ -32,11 +32,14 @@ export const filterDodreamNotices = (
     );
   }
 
-  if (selectedInterests.size > 0) {
-    filtered = filtered.filter((notice) =>
-      notice.keywordIds.some((keywordId) => selectedInterests.has(keywordId))
-    );
+  // 아무 키워드도 선택하지 않으면 공지 없음
+  if (selectedInterests.size === 0) {
+    return [];
   }
+
+  filtered = filtered.filter((notice) =>
+    notice.keywordIds.some((keywordId) => selectedInterests.has(keywordId))
+  );
 
   return filtered;
 };

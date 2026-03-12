@@ -1,7 +1,5 @@
-import { ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { PreviewEvent } from './CalendarPreview';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 interface EventItemProps {
@@ -39,15 +37,14 @@ export default function EventItem({
           className={`text-xs ${
             event.serviceType === 'academic'
               ? 'border-primary/30 text-primary'
-              : 'border-purple-300 text-purple-600'
+              : 'border-purple/30 text-purple'
           }`}
         >
-          {event.category ||
-            (event.serviceType === 'academic' ? '학사' : '두드림')}
+          {event.category ?? event.serviceType}
         </Badge>
       </div>
 
-      {event.serviceType === 'doodream' && event.link && (
+      {/* {event.serviceType === 'doodream' && event.link && (
         <Button
           variant="ghost"
           size="icon"
@@ -56,7 +53,7 @@ export default function EventItem({
         >
           <ExternalLink />
         </Button>
-      )}
+      )} */}
     </Card>
   );
 }

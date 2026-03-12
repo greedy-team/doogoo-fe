@@ -15,6 +15,7 @@ import {
   useCreateAcademicIcs,
   useCreateDodreamIcs,
 } from '@/features/subscription/hooks/useIcsLink';
+import { useGetKeywords } from '@/shared/hooks/useCommonData';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -43,6 +44,7 @@ export function SubscriptionModal({
 
   const createAcademicIcs = useCreateAcademicIcs();
   const createDodreamIcs = useCreateDodreamIcs();
+  const { data: keywords = [] } = useGetKeywords();
 
   const hasBothServices =
     selectedServices.has('academic') && selectedServices.has('doodream');
@@ -57,8 +59,13 @@ export function SubscriptionModal({
 
   const callDodreamApi = async () => {
     const response = await createDodreamIcs.mutateAsync({
-      selectedDepartmentId: !selectedMajor || selectedMajor === 'all' ? null : selectedMajor,//백앤드에서  "null"은 전체로 처리,
-      selectedKeywordId: Array.from(selectedInterests),
+      selectedDepartmentId:
+        !selectedMajor || selectedMajor === 'all' ? null : selectedMajor, //백앤드에서  "null"은 전체로 처리,
+      // 모든 키워드 선택 시 빈 배열 → 백엔드에서 "전체"로 처리(백앤드 요구사항)
+      selectedKeywordId:
+        selectedInterests.size === keywords.length
+          ? []
+          : Array.from(selectedInterests),
     });
     return response;
   };
@@ -197,8 +204,9 @@ export function SubscriptionModal({
               )
             }
             variant={'outline'}
+            size={null}
             disabled={isProcessing}
-            className="flex h-full flex-row justify-between p-4"
+            className="flex h-auto w-full flex-row justify-between p-4"
           >
             <div className="flex flex-row items-center gap-4">
               <div className="shrink-0">
@@ -217,14 +225,14 @@ export function SubscriptionModal({
       })}
 
       {/* Divider */}
-      {/* <div className="relative py-2">
+      <div className="relative py-2">
         <div className="absolute inset-0 flex items-center">
           <div className="border-border w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs">
           <span className="bg-card text-muted-foreground px-2">또는</span>
         </div>
-      </div> */}
+      </div>
 
       {/* Download ICS */}
       <Button
@@ -263,11 +271,11 @@ export function SubscriptionModal({
                   className="bg-primary h-2.5 w-2.5 rounded-full"
                   aria-hidden="true"
                 />
-                학사공지
+                학사일정
               </TabsTrigger>
               <TabsTrigger value="doodream" className="gap-2">
                 <span
-                  className="h-2.5 w-2.5 rounded-full bg-purple-500"
+                  className="bg-purple h-2.5 w-2.5 rounded-full"
                   aria-hidden="true"
                 />
                 두드림

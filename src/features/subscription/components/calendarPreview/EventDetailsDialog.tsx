@@ -1,10 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Calendar, ExternalLink } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -13,87 +12,86 @@ import type { PreviewEvent } from './CalendarPreview';
 interface EventDetailsDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  selectedDayEvents: PreviewEvent[];
+  selectedEvent: PreviewEvent | null;
 }
 
 export default function EventDetailsDialog({
   isOpen,
   onOpenChange,
-  selectedDayEvents,
+  selectedEvent,
 }: EventDetailsDialogProps) {
-  // ISO 8601 형식을 "월 일" 형식으로 변환하는 헬퍼 함수 - api명세로 통일하기 위하여
-  const formatDate = (isoDate: string) => {
+  const formatDate = (isoDate?: string | null) => {
+    if (!isoDate) {
+      return '-';
+    }
+
     const dateObj = new Date(isoDate);
+    if (Number.isNaN(dateObj.getTime())) {
+      return '-';
+    }
+
     const month = dateObj.getMonth() + 1;
     const day = dateObj.getDate();
     return `${month}월 ${day}일`;
   };
 
+  const eventTypeLabel =
+    selectedEvent?.serviceType === 'academic' ? '학사 일정' : '두드림 일정';
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>행사 상세 정보</DialogTitle>
-          <DialogDescription>
-            {selectedDayEvents.length > 1
-              ? `${formatDate(selectedDayEvents[0]?.date)}에 ${selectedDayEvents.length}개의 행사가 있습니다.`
-              : `${formatDate(selectedDayEvents[0]?.date)}에 열리는 행사입니다.`}
-          </DialogDescription>
+      <DialogContent className="p-5 sm:max-w-120">
+        <DialogHeader className="pr-8">
+          <DialogTitle className="text-lg leading-tight wrap-break-word">
+            {selectedEvent?.title ?? '행사 상세 정보'}
+          </DialogTitle>
         </DialogHeader>
-        {selectedDayEvents.length > 0 && (
-          <div className="space-y-3 py-2">
-            {selectedDayEvents.map((event, index) => {
-              const dateObj = new Date(event.date);
-              const month = dateObj.getMonth() + 1;
-              const day = dateObj.getDate();
+        {selectedEvent && (
+          <div className="space-y-4 py-1">
+            <div className="space-y-2">
+              <Badge
+                variant="outline"
+                className={
+                  selectedEvent.serviceType === 'academic'
+                    ? 'border-primary/30 bg-primary/5 text-primary'
+                    : 'border-purple/30 bg-purple/5 text-purple'
+                }
+              >
+                {selectedEvent.category ?? eventTypeLabel}
+              </Badge>
+              <p className="text-muted-foreground line-clamp-2 text-sm leading-6">
+                {selectedEvent.description || '상세 내용이 없습니다.'}
+              </p>
+            </div>
 
-              return (
-                <Card key={index} className="p-4 shadow-sm">
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <div className="min-w-[48px] text-center">
-                        <div className="text-muted-foreground text-xs font-medium">
-                          {month}월
-                        </div>
-                        <div className="text-primary text-2xl font-bold">
-                          {day}
-                        </div>
-                      </div>
-                      <div className="min-w-0 flex-1 pt-1">
-                        <h4 className="text-foreground mb-2 text-base font-semibold">
-                          {event.title}
-                        </h4>
-                        <Badge
-                          variant="outline"
-                          className={`text-xs ${
-                            event.serviceType === 'academic'
-                              ? 'border-primary/30 text-primary bg-primary/5'
-                              : 'border-purple-300 bg-purple-50 text-purple-600'
-                          }`}
-                        >
-                          {event.category ||
-                            (event.serviceType === 'academic'
-                              ? '학사'
-                              : '두드림')}
-                        </Badge>
-                      </div>
-                    </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="text-muted-foreground h-4 w-4" />
+              <span className="text-foreground">
+                {formatDate(selectedEvent.startAt)}
+                {' - '}
+                {formatDate(selectedEvent.endAt ?? selectedEvent.startAt)}
+              </span>
+            </div>
 
-                    {event.link && (
-                      <Button
-                        size="sm"
-                        className="w-full"
-                        onClick={() => {
-                          window.open(event.link, '_blank');
-                        }}
-                      >
-                        자세히 보기
-                      </Button>
-                    )}
-                  </div>
-                </Card>
-              );
-            })}
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-1 w-full bg-white text-black shadow-none hover:bg-white/90"
+              onClick={() => {
+                if (selectedEvent.link) {
+                  const url = selectedEvent.link.startsWith('http')
+                    ? selectedEvent.link
+                    : `https://${selectedEvent.link}`;
+                  window.open(url, '_blank');
+                }
+              }}
+              disabled={!selectedEvent.link}
+            >
+              <ExternalLink className="mr-2 h-4 w-4" />
+              {selectedEvent.link
+                ? '이벤트 페이지로 이동'
+                : '이벤트 페이지 링크 없음'}
+            </Button>
           </div>
         )}
       </DialogContent>

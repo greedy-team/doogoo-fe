@@ -28,10 +28,10 @@ export default function Landing({ onContinue }: LandingProps) {
       title: '두드림',
       description: '교내 대회, 학과 행사 등 소식을 받고 싶어요',
       icon: Sparkles,
-      color: 'purple',
-      bgColor: 'bg-purple-100',
-      borderColor: 'border-purple-300',
-      textColor: 'text-purple-600',
+      color: '--purple',
+      bgColor: 'bg-purple/10',
+      borderColor: 'border-purple',
+      textColor: 'text-purple',
     },
   ];
 

@@ -14,8 +14,8 @@ export default function SelectedServiceTypeHeader({
   return (
     <div className="flex items-center gap-2">
       {type === 'doodream' ? (
-        <div className="rounded-lg bg-purple-100 p-2">
-          <Sparkles className="h-6 w-6 text-purple-600" />
+        <div className="bg-purple/10 rounded-lg p-2">
+          <Sparkles className="text-purple h-6 w-6" />
         </div>
       ) : (
         <div className="bg-primary/10 rounded-lg p-2">

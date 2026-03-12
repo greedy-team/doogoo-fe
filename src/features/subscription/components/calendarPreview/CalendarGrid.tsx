@@ -4,7 +4,7 @@ import type { PreviewEvent } from './CalendarPreview';
 
 interface CalendarGridProps {
   onDayClick: (date: Date, events: PreviewEvent[]) => void;
-  getEventsForDay: (month: number, day: number) => PreviewEvent[];
+  getEventsForDay: (year: number, month: number, day: number) => PreviewEvent[];
   initialMonth?: Date;
   onMonthChange?: (month: Date) => void;
 }
@@ -29,6 +29,7 @@ export default function CalendarGrid({
       onDayClick={(date) => {
         if (date) {
           const dayEvents = getEventsForDay(
+            date.getFullYear(),
             date.getMonth() + 1,
             date.getDate(),
           );
@@ -45,6 +46,7 @@ export default function CalendarGrid({
           const dayDate = new Date(day.date);
           dayDate.setHours(0, 0, 0, 0);
           const dayEvents = getEventsForDay(
+            day.date.getFullYear(),
             day.date.getMonth() + 1,
             day.date.getDate(),
           );
@@ -54,11 +56,11 @@ export default function CalendarGrid({
           return (
             <button
               {...props}
-              className={`relative m-0.5 flex h-full w-full flex-col items-center justify-center rounded-lg p-1 text-xs transition-all lg:text-sm xl:p-2 ${
+              className={`relative m-0.5 flex h-full w-full flex-col items-center justify-center rounded-lg p-1 text-xs transition-all md:text-lg lg:text-sm xl:p-2 ${
                 isPastEventDay
-                  ? 'text-muted-foreground border-muted bg-muted/30 cursor-pointer border'
+                  ? 'text-muted-foreground border-muted bg-muted cursor-pointer border'
                   : hasEvents
-                    ? 'bg-primary/10 border-primary/20 hover:bg-primary/20 cursor-pointer border font-medium active:scale-95'
+                    ? 'hover:bg-muted cursor-pointer border font-medium'
                     : 'cursor-default'
               }`}
               onClick={(e) => {
@@ -80,7 +82,7 @@ export default function CalendarGrid({
                           ? 'bg-muted-foreground/60'
                           : event.serviceType === 'academic'
                             ? 'bg-primary'
-                            : 'bg-purple-500'
+                            : 'bg-purple'
                       }`}
                     />
                   ))}

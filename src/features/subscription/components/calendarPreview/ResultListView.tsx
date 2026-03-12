@@ -7,25 +7,19 @@ import type { MonthData } from './generateMonthsData';
 
 interface ResultListViewProps {
   previewEvents: PreviewEvent[];
-  monthsData: MonthData[];
-  currentMonthIndex: number;
-  onMonthChange: (index: number) => void;
-  onEventClick: (events: PreviewEvent[]) => void;
-  getEventsForDay: (month: number, day: number) => PreviewEvent[];
+  currentMonthData: MonthData;
+  onPrevMonth: () => void;
+  onNextMonth: () => void;
+  onEventClick: (event: PreviewEvent) => void;
 }
 
 export default function ResultListView({
   previewEvents,
-  monthsData,
-  currentMonthIndex,
-  onMonthChange,
+  currentMonthData,
+  onPrevMonth,
+  onNextMonth,
   onEventClick,
-  getEventsForDay,
 }: ResultListViewProps) {
-  const currentMonth = monthsData[currentMonthIndex];
-  const canGoPrev = currentMonthIndex > 0;
-  const canGoNext = currentMonthIndex < monthsData.length - 1;
-
   return (
     <div className="pt-2">
       {previewEvents.length === 0 ? (
@@ -38,30 +32,16 @@ export default function ResultListView({
         <>
           {/* Month navigation for list view */}
           <div className="mb-4 flex items-center justify-between border-b pb-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onMonthChange(Math.max(0, currentMonthIndex - 1))}
-              disabled={!canGoPrev}
-            >
+            <Button variant="ghost" size="sm" onClick={onPrevMonth}>
               <ChevronLeft className="mr-1 h-4 w-4" />
               이전
             </Button>
 
             <h3 className="text-foreground text-base font-semibold">
-              {currentMonth.name} 2026
+              {currentMonthData.name} {currentMonthData.year}
             </h3>
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                onMonthChange(
-                  Math.min(monthsData.length - 1, currentMonthIndex + 1),
-                )
-              }
-              disabled={!canGoNext}
-            >
+            <Button variant="ghost" size="sm" onClick={onNextMonth}>
               다음 달
               <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
@@ -69,21 +49,42 @@ export default function ResultListView({
 
           {/* Events for current month */}
           <div className="space-y-2">
-            {previewEvents
-              .filter((e) => e.month === currentMonth.number)
-              .map((event, index) => {
-                const dayEvents = getEventsForDay(event.month, event.day);
-                return (
-                  <EventItem
-                    isListView={true}
-                    key={index}
-                    event={event}
-                    onClick={() => {
-                      onEventClick(dayEvents);
-                    }}
-                  />
-                );
-              })}
+            {(() => {
+              const monthEvents = previewEvents.filter(
+                (e) =>
+                  e.year === currentMonthData.year &&
+                  e.month === currentMonthData.number,
+              );
+
+              const shouldScroll = monthEvents.length > 8;
+
+              return monthEvents.length === 0 ? (
+                <div className="text-muted-foreground py-8 text-center text-sm">
+                  <p>일정이 없습니다</p>
+                </div>
+              ) : (
+                <div
+                  className={
+                    shouldScroll ? 'max-h-112 overflow-y-auto pr-1' : ''
+                  }
+                >
+                  <div className="space-y-2">
+                    {monthEvents.map((event, index) => {
+                      return (
+                        <EventItem
+                          isListView={true}
+                          key={index}
+                          event={event}
+                          onClick={() => {
+                            onEventClick(event);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </>
       )}
