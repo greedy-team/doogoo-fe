@@ -173,6 +173,7 @@ export default function CalendarPreview({
       <div className="space-y-4">
         <ResultHeader
           previewEvents={upcomingEvents}
+          selectedServices={selectedServices}
           viewMode={viewMode}
           onViewModeChange={(mode) => setViewMode(mode)}
         />

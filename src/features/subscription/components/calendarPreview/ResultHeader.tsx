@@ -5,12 +5,14 @@ import type { PreviewEvent } from './CalendarPreview';
 
 interface ResultHeaderProps {
   previewEvents: PreviewEvent[];
+  selectedServices: Set<'academic' | 'doodream'>;
   viewMode: 'list' | 'month';
   onViewModeChange: (mode: 'list' | 'month') => void;
 }
 
 export default function ResultHeader({
   previewEvents,
+  selectedServices,
   viewMode,
   onViewModeChange,
 }: ResultHeaderProps) {
@@ -39,13 +41,16 @@ export default function ResultHeader({
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-2">
-          <Badge
-            variant="secondary"
-            className="bg-primary/10 text-primary border-primary/20"
-          >
-            <GraduationCap className="mr-1 h-3 w-3" />
-            {academicCount}개 학사
-          </Badge>
+          {selectedServices.has('academic') && (
+            <Badge
+              variant="secondary"
+              className="bg-primary/10 text-primary border-primary/20"
+            >
+              <GraduationCap className="mr-1 h-3 w-3" />
+              {academicCount}개 학사
+            </Badge>
+          )}
+          {selectedServices.has('doodream') && (
             <Badge
               variant="secondary"
               className="bg-purple/10 text-purple border-purple"
@@ -53,6 +58,7 @@ export default function ResultHeader({
               <Sparkles className="mr-1 h-3 w-3" />
               {doodreamCount}개 두드림
             </Badge>
+          )}
         </div>
 
         <Tabs
