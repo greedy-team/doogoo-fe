@@ -58,6 +58,11 @@ export default function ServiceSubscription({
     closeSubscriptionModal,
   } = useUIStore();
 
+  const isAcademicSelected = selectedServices.has('academic');
+  const isDoDreamSelected = selectedServices.has('doodream');
+  const hasSelectedDoDreamInterest = selectedInterestKeywordIds.size > 0;
+  const isSubscribeDisabled = isDoDreamSelected && !hasSelectedDoDreamInterest;
+
   // Collapsible state for both mobile and desktop
   const [isAcademicExpanded, setIsAcademicExpanded] = useState(true);
   const [isDoDreamExpanded, setIsDoDreamExpanded] = useState(true);
@@ -79,82 +84,86 @@ export default function ServiceSubscription({
         {/* Left Column: Academic & DooDream Notices (Collapsible on all devices) */}
         <div className="col-span-2 space-y-6">
           {/* Academic Notice Card - Collapsible */}
-          <Collapsible
-            open={isAcademicExpanded}
-            onOpenChange={setIsAcademicExpanded}
-          >
-            <Card className="gap-0 overflow-hidden p-0">
-              <CollapsibleTrigger className="flex w-full items-center justify-between bg-white p-4 hover:bg-gray-50">
-                <div className="text-left">
-                  <SelectedServiceTypeHeader
-                    type="academic"
-                    title="학사일정"
-                    description="수강 신청, 시험기간 등"
-                  />
-                </div>
-                <ChevronDown
-                  className={`ml-4 h-5 w-5 shrink-0 transition-transform duration-200 ${
-                    isAcademicExpanded ? 'rotate-0' : '-rotate-90'
-                  }`}
-                  aria-hidden="true"
-                />
-              </CollapsibleTrigger>
-
-              <CollapsibleContent>
-                <div className="p-4">
-                  <div className="space-y-5">
-                    {gradeFilterScope === 'my-year' && (
-                      <YearSelectionLayout
-                        selectedYear={selectedGradeYear}
-                        onYearChange={setSelectedGradeYear}
-                      />
-                    )}
-                    <YearTypeSelection
-                      yearFilterType={gradeFilterScope}
-                      onYearFilterTypeChange={setGradeFilterScope}
+          {isAcademicSelected && (
+            <Collapsible
+              open={isAcademicExpanded}
+              onOpenChange={setIsAcademicExpanded}
+            >
+              <Card className="gap-0 overflow-hidden p-0">
+                <CollapsibleTrigger className="flex w-full items-center justify-between bg-white p-4 hover:bg-gray-50">
+                  <div className="text-left">
+                    <SelectedServiceTypeHeader
+                      type="academic"
+                      title="학사일정"
+                      description="수강 신청, 시험기간 등"
                     />
                   </div>
-                </div>
-              </CollapsibleContent>
-            </Card>
-          </Collapsible>
+                  <ChevronDown
+                    className={`ml-4 h-5 w-5 shrink-0 transition-transform duration-200 ${
+                      isAcademicExpanded ? 'rotate-0' : '-rotate-90'
+                    }`}
+                    aria-hidden="true"
+                  />
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <div className="p-4">
+                    <div className="space-y-5">
+                      {gradeFilterScope === 'my-year' && (
+                        <YearSelectionLayout
+                          selectedYear={selectedGradeYear}
+                          onYearChange={setSelectedGradeYear}
+                        />
+                      )}
+                      <YearTypeSelection
+                        yearFilterType={gradeFilterScope}
+                        onYearFilterTypeChange={setGradeFilterScope}
+                      />
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          )}
 
           {/* DooDream Notice Card - Collapsible */}
-          <Collapsible
-            open={isDoDreamExpanded}
-            onOpenChange={setIsDoDreamExpanded}
-          >
-            <Card className="gap-0 overflow-hidden p-0">
-              <CollapsibleTrigger className="flex w-full items-center justify-between bg-white p-4 hover:bg-gray-50">
-                <div className="text-left">
-                  <SelectedServiceTypeHeader
-                    type="doodream"
-                    title="두드림 관심사"
-                    description="교내 대회, 학과 행사 등"
-                  />
-                </div>
-                <ChevronDown
-                  className={`ml-4 h-5 w-5 shrink-0 transition-transform duration-200 ${
-                    isDoDreamExpanded ? 'rotate-0' : '-rotate-90'
-                  }`}
-                  aria-hidden="true"
-                />
-              </CollapsibleTrigger>
-
-              <CollapsibleContent>
-                <div className="p-4">
-                  <div className="space-y-5">
-                    <Categories
-                      selectedInterests={selectedInterestKeywordIds}
-                      onInterestToggle={toggleInterestKeyword}
-                      selectedMajor={selectedDepartmentId}
-                      onMajorChange={setSelectedDepartmentId}
+          {isDoDreamSelected && (
+            <Collapsible
+              open={isDoDreamExpanded}
+              onOpenChange={setIsDoDreamExpanded}
+            >
+              <Card className="gap-0 overflow-hidden p-0">
+                <CollapsibleTrigger className="flex w-full items-center justify-between bg-white p-4 hover:bg-gray-50">
+                  <div className="text-left">
+                    <SelectedServiceTypeHeader
+                      type="doodream"
+                      title="두드림 관심사"
+                      description="교내 대회, 학과 행사 등"
                     />
                   </div>
-                </div>
-              </CollapsibleContent>
-            </Card>
-          </Collapsible>
+                  <ChevronDown
+                    className={`ml-4 h-5 w-5 shrink-0 transition-transform duration-200 ${
+                      isDoDreamExpanded ? 'rotate-0' : '-rotate-90'
+                    }`}
+                    aria-hidden="true"
+                  />
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <div className="p-4">
+                    <div className="space-y-5">
+                      <Categories
+                        selectedInterests={selectedInterestKeywordIds}
+                        onInterestToggle={toggleInterestKeyword}
+                        selectedMajor={selectedDepartmentId}
+                        onMajorChange={setSelectedDepartmentId}
+                      />
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          )}
         </div>
 
         {/* Right Column: Result Preview (Sticky on desktop, stacked on mobile) */}
@@ -173,7 +182,10 @@ export default function ServiceSubscription({
 
       {/* Navigation Buttons - Always at bottom */}
       <div className="space-y-3 py-6">
-        <SubscribeButton onClick={openSubscriptionModal} />
+        <SubscribeButton
+          onClick={openSubscriptionModal}
+          disabled={isSubscribeDisabled}
+        />
         <BackButton onClick={onBack} />
       </div>
     </div>

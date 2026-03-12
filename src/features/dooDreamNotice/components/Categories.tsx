@@ -51,14 +51,14 @@ export default function Categories({
           return (
             <Card
               key={interest.id}
-              className={`cursor-pointer p-4 shadow-none transition-all duration-200 ${isSelected ? 'border-purple-300 bg-purple-50' : 'hover:bg-accent/50'} `}
+              className={`cursor-pointer p-4 shadow-none transition-all duration-200 ${isSelected ? 'border-purple bg-purple/10' : 'hover:bg-accent/50'} `}
               onClick={() => handleCategoryClick(interest.id)}
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   {/* Icon and text */}
                   <div
-                    className={`shrink-0 rounded-xl p-2 transition-colors ${isSelected ? 'bg-purple-600 text-white' : 'bg-accent text-foreground'} `}
+                    className={`shrink-0 rounded-xl p-2 transition-colors ${isSelected ? 'bg-purple text-white' : 'bg-accent text-foreground'} `}
                   >
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </div>
@@ -78,7 +78,7 @@ export default function Categories({
                       }}
                       onClick={(e) => e.stopPropagation()}
                       aria-label={`${interest.name} 카테고리 ${isSelected ? '구독 취소' : '구독'}`}
-                      className="data-[state=checked]:bg-purple-600"
+                      className="data-[state=checked]:bg-purple"
                     />
                   </div>
                 </div>

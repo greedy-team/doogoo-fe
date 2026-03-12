@@ -18,10 +18,13 @@ import {
 
 export interface PreviewEvent {
   date: string;
+  startAt: string;
+  endAt?: string | null;
   year: number;
   day: number;
   month: number;
   title: string;
+  description?: string;
   serviceType: 'academic' | 'doodream';
   category?: string;
   link?: string;
@@ -46,9 +49,7 @@ export default function CalendarPreview({
   const now = new Date();
   const [currentYear, setCurrentYear] = useState(now.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1);
-  const [selectedDayEvents, setSelectedDayEvents] = useState<PreviewEvent[]>(
-    [],
-  );
+  const [selectedEvent, setSelectedEvent] = useState<PreviewEvent | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // API 데이터 가져오기
@@ -72,10 +73,13 @@ export default function CalendarPreview({
         const startDate = new Date(notice.startAt);
         events.push({
           date: notice.startAt,
+          startAt: notice.startAt,
+          endAt: notice.endAt,
           year: startDate.getFullYear(),
           day: startDate.getDate(),
           month: startDate.getMonth() + 1,
           title: notice.title,
+          description: '학사 일정 안내입니다.',
           serviceType: 'academic',
           category: '학사',
         });
@@ -92,15 +96,18 @@ export default function CalendarPreview({
 
       filteredDodreamNotices.forEach((notice) => {
         const startDate = new Date(notice.operatingStartAt);
-        const keywordName = keywords.find(
-          (k) => notice.keywordIds.includes(k.id),
+        const keywordName = keywords.find((k) =>
+          notice.keywordIds.includes(k.id),
         )?.name;
         events.push({
           date: notice.operatingStartAt,
+          startAt: notice.operatingStartAt,
+          endAt: notice.operatingEndAt,
           year: startDate.getFullYear(),
           day: startDate.getDate(),
           month: startDate.getMonth() + 1,
           title: notice.title,
+          description: notice.description,
           serviceType: 'doodream',
           category: keywordName,
           link: notice.detailUrl,
@@ -166,6 +173,7 @@ export default function CalendarPreview({
       <div className="space-y-4">
         <ResultHeader
           previewEvents={upcomingEvents}
+          selectedServices={selectedServices}
           viewMode={viewMode}
           onViewModeChange={(mode) => setViewMode(mode)}
         />
@@ -176,23 +184,25 @@ export default function CalendarPreview({
             currentMonthData={currentMonthData}
             onPrevMonth={goToPrevMonth}
             onNextMonth={goToNextMonth}
-            onEventClick={(events) => {
-              setSelectedDayEvents(events);
+            onEventClick={(event) => {
+              setSelectedEvent(event);
               setIsDialogOpen(true);
             }}
-            getEventsForDay={getEventsForDay}
           />
         ) : (
-          <ResultMonthView
-            getEventsForDay={getEventsForDay}
-          />
+          <ResultMonthView getEventsForDay={getEventsForDay} />
         )}
       </div>
 
       <EventDetailsDialog
         isOpen={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        selectedDayEvents={selectedDayEvents}
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) {
+            setSelectedEvent(null);
+          }
+        }}
+        selectedEvent={selectedEvent}
       />
     </Card>
   );
