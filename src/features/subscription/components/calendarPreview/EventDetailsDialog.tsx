@@ -46,7 +46,6 @@ export default function EventDetailsDialog({
           <DialogTitle className="text-lg leading-tight wrap-break-word">
             {selectedEvent?.title ?? '행사 상세 정보'}
           </DialogTitle>
-          <DialogDescription>선택한 일정의 상세 정보입니다.</DialogDescription>
         </DialogHeader>
         {selectedEvent && (
           <div className="space-y-4 py-1">
@@ -62,7 +61,7 @@ export default function EventDetailsDialog({
                 {selectedEvent.category ?? eventTypeLabel}
               </Badge>
               <p className="text-muted-foreground line-clamp-2 text-sm leading-6">
-                {selectedEvent.description || '설명이 없습니다.'}
+                {selectedEvent.description || '상세 내용이 없습니다.'}
               </p>
             </div>
 

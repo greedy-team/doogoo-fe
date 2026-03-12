@@ -55,23 +55,34 @@ export default function ResultListView({
                   e.year === currentMonthData.year &&
                   e.month === currentMonthData.number,
               );
+
+              const shouldScroll = monthEvents.length > 8;
+
               return monthEvents.length === 0 ? (
                 <div className="text-muted-foreground py-8 text-center text-sm">
                   <p>일정이 없습니다</p>
                 </div>
               ) : (
-                monthEvents.map((event, index) => {
-                  return (
-                    <EventItem
-                      isListView={true}
-                      key={index}
-                      event={event}
-                      onClick={() => {
-                        onEventClick(event);
-                      }}
-                    />
-                  );
-                })
+                <div
+                  className={
+                    shouldScroll ? 'max-h-112 overflow-y-auto pr-1' : ''
+                  }
+                >
+                  <div className="space-y-2">
+                    {monthEvents.map((event, index) => {
+                      return (
+                        <EventItem
+                          isListView={true}
+                          key={index}
+                          event={event}
+                          onClick={() => {
+                            onEventClick(event);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })()}
           </div>

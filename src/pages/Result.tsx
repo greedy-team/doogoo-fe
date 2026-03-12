@@ -37,6 +37,13 @@ export default function ResultPage({ onBack }: ResultProps) {
         <p className="text-muted-foreground">
           선택하신 캘린더가 성공적으로 추가되었습니다.
         </p>
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-muted-foreground mt-2 text-xs underline underline-offset-4"
+        >
+          캘린더 추가가 잘 안 되셨나요? 이전 페이지로 돌아가 다시 시도해보세요.
+        </button>
       </Card>
 
       <Card className="p-6">
