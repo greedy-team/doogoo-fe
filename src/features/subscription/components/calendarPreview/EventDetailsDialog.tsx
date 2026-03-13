@@ -38,7 +38,7 @@ export default function EventDetailsDialog({
   const eventTypeLabel =
     selectedEvent?.serviceType === 'academic' ? '학사 일정' : '두드림 일정';
 
-  console.log('Selected Event in Dialog:', selectedEvent); // 디버깅용 로그
+  console.log('selectedEvent in dialog:', selectedEvent);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -81,25 +81,27 @@ export default function EventDetailsDialog({
               </span>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-1 w-full bg-white text-black shadow-none hover:bg-white/90"
-              onClick={() => {
-                if (selectedEvent.link) {
-                  const url = selectedEvent.link.startsWith('http')
-                    ? selectedEvent.link
-                    : `https://${selectedEvent.link}`;
-                  window.open(url, '_blank');
-                }
-              }}
-              disabled={!selectedEvent.link}
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              {selectedEvent.link
-                ? '이벤트 페이지로 이동'
-                : '이벤트 페이지 링크 없음'}
-            </Button>
+            {selectedEvent.serviceType === 'doodream' && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-1 w-full bg-white text-black shadow-none hover:bg-white/90"
+                onClick={() => {
+                  if (selectedEvent.link) {
+                    const url = selectedEvent.link.startsWith('http')
+                      ? selectedEvent.link
+                      : `https://${selectedEvent.link}`;
+                    window.open(url, '_blank');
+                  }
+                }}
+                disabled={!selectedEvent.link}
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                {selectedEvent.link
+                  ? '이벤트 페이지로 이동'
+                  : '이벤트 페이지 링크 없음'}
+              </Button>
+            )}
           </div>
         )}
       </DialogContent>
