@@ -194,7 +194,13 @@ export default function CalendarPreview({
             }}
           />
         ) : (
-          <ResultMonthView getEventsForDay={getEventsForDay} />
+          <ResultMonthView
+            getEventsForDay={getEventsForDay}
+            onEventClick={(event) => {
+              setSelectedEvent(event);
+              setIsDialogOpen(true);
+            }}
+          />
         )}
       </div>
 
