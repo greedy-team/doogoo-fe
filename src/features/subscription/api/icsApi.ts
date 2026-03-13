@@ -9,7 +9,7 @@ import type {
  * ICS API 전용 클라이언트 ics는 실제 백엔드 API 사용하기위하여 별도설정
  */
 const icsApiClient = axios.create({
-  baseURL: 'https://www.sejongdoogoo-api.com',
+  baseURL: 'http://www.sejongdoogoo-api.com:50018',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -21,9 +21,12 @@ const icsApiClient = axios.create({
  * POST /api/academic/ics
  */
 export const createAcademicIcsLink = async (
-  data: AcademicIcsRequest
+  data: AcademicIcsRequest,
 ): Promise<IcsResponse> => {
-  const response = await icsApiClient.post<IcsResponse>('/api/academic/ics', data);
+  const response = await icsApiClient.post<IcsResponse>(
+    '/api/academic/ics',
+    data,
+  );
   return response.data;
 };
 
@@ -32,8 +35,11 @@ export const createAcademicIcsLink = async (
  * POST /api/dodream/ics
  */
 export const createDodreamIcsLink = async (
-  data: DoDreamIcsRequest
+  data: DoDreamIcsRequest,
 ): Promise<IcsResponse> => {
-  const response = await icsApiClient.post<IcsResponse>('/api/dodream/ics', data);
+  const response = await icsApiClient.post<IcsResponse>(
+    '/api/dodream/ics',
+    data,
+  );
   return response.data;
 };

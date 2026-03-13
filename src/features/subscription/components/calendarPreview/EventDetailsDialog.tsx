@@ -38,17 +38,19 @@ export default function EventDetailsDialog({
   const eventTypeLabel =
     selectedEvent?.serviceType === 'academic' ? '학사 일정' : '두드림 일정';
 
+  console.log('selectedEvent in dialog:', selectedEvent);
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="p-5 sm:max-w-120">
+      <DialogContent className="overflow-x-hidden p-5 sm:max-w-120">
         <DialogHeader className="pr-8">
           <DialogTitle className="text-lg leading-tight wrap-break-word">
             {selectedEvent?.title ?? '행사 상세 정보'}
           </DialogTitle>
         </DialogHeader>
         {selectedEvent && (
-          <div className="space-y-4 py-1">
-            <div className="space-y-2">
+          <div className="min-w-0 space-y-4 py-1">
+            <div className="w-full space-y-2">
               <Badge
                 variant="outline"
                 className={
@@ -59,9 +61,15 @@ export default function EventDetailsDialog({
               >
                 {selectedEvent.category ?? eventTypeLabel}
               </Badge>
-              <p className="text-muted-foreground line-clamp-2 text-sm leading-6">
-                {selectedEvent.description || '상세 내용이 없습니다.'}
-              </p>
+              {selectedEvent.descriptionSummary ? (
+                <p className="text-muted-foreground line-clamp text-sm leading-6">
+                  {selectedEvent.descriptionSummary}
+                </p>
+              ) : (
+                <p className="text-muted-foreground line-clamp-3 text-sm leading-6">
+                  {selectedEvent.description || '상세 내용이 없습니다.'}
+                </p>
+              )}
             </div>
 
             <div className="flex items-center gap-2 text-sm">
@@ -73,25 +81,27 @@ export default function EventDetailsDialog({
               </span>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-1 w-full bg-white text-black shadow-none hover:bg-white/90"
-              onClick={() => {
-                if (selectedEvent.link) {
-                  const url = selectedEvent.link.startsWith('http')
-                    ? selectedEvent.link
-                    : `https://${selectedEvent.link}`;
-                  window.open(url, '_blank');
-                }
-              }}
-              disabled={!selectedEvent.link}
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              {selectedEvent.link
-                ? '이벤트 페이지로 이동'
-                : '이벤트 페이지 링크 없음'}
-            </Button>
+            {selectedEvent.serviceType === 'doodream' && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-1 w-full bg-white text-black shadow-none hover:bg-white/90"
+                onClick={() => {
+                  if (selectedEvent.link) {
+                    const url = selectedEvent.link.startsWith('http')
+                      ? selectedEvent.link
+                      : `https://${selectedEvent.link}`;
+                    window.open(url, '_blank');
+                  }
+                }}
+                disabled={!selectedEvent.link}
+              >
+                <ExternalLink className="mr-2 h-4 w-4" />
+                {selectedEvent.link
+                  ? '이벤트 페이지로 이동'
+                  : '이벤트 페이지 링크 없음'}
+              </Button>
+            )}
           </div>
         )}
       </DialogContent>

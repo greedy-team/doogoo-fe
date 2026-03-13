@@ -50,6 +50,9 @@ export default function CalendarGrid({
             day.date.getMonth() + 1,
             day.date.getDate(),
           );
+          const uniqueEventTypes = Array.from(
+            new Set(dayEvents.map((event) => event.serviceType)),
+          );
           const hasEvents = dayEvents.length > 0;
           const isPastEventDay = hasEvents && dayDate < today;
 
@@ -74,13 +77,13 @@ export default function CalendarGrid({
               <div>{day.date.getDate()}</div>
               {hasEvents && (
                 <div className="mt-0.5 flex justify-center gap-0.5 xl:mt-1">
-                  {dayEvents.slice(0, 3).map((event, idx) => (
+                  {uniqueEventTypes.map((serviceType) => (
                     <div
-                      key={idx}
+                      key={serviceType}
                       className={`h-1 w-1 rounded-full lg:h-1.5 lg:w-1.5 ${
                         isPastEventDay
                           ? 'bg-muted-foreground/60'
-                          : event.serviceType === 'academic'
+                          : serviceType === 'academic'
                             ? 'bg-primary'
                             : 'bg-purple'
                       }`}

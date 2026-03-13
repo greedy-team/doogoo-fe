@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CATEGORY_ICON_MAP } from '@/features/dooDreamNotice/constants/categoryIcons';
+import { MajorSelection } from '@/features/dooDreamNotice/components/Selection';
 import { useGetKeywords } from '@/shared/hooks/useCommonData';
 import { useGetDodreamNotices } from '@/shared/hooks/useNotices';
 import { useDodreamStore } from '@/shared/stores/useDodreamStore';
@@ -17,6 +18,9 @@ import { useDodreamStore } from '@/shared/stores/useDodreamStore';
 export default function DooDreamCategoryDetailPage() {
   const selectedDepartmentId = useDodreamStore(
     (state) => state.selectedDepartmentId,
+  );
+  const setSelectedDepartmentId = useDodreamStore(
+    (state) => state.setSelectedDepartmentId,
   );
   const { categoryId: categoryIdParam } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
@@ -26,16 +30,20 @@ export default function DooDreamCategoryDetailPage() {
 
   const category = keywords.find((k) => k.id === categoryIdParam);
   const Icon = CATEGORY_ICON_MAP[category?.icon || ''] ?? Building2;
+  const isDepartmentFilteredCategory = categoryIdParam === 'k_0';
 
-  // 해당 카테고리의 공지 필터링 (키워드 && 학과)
+  // k_0 카테고리만 학과 필터를 사용하고, 나머지는 카테고리만으로 필터링
   const notices = allNotices.filter((notice) => {
     const matchesKeyword = notice.keywordIds.includes(categoryIdParam || '');
-    const matchesMajor =
-      selectedDepartmentId === 'all' ||
-      notice.departmentId === selectedDepartmentId ||
-      notice.departmentId === 'all' ||
-      notice.departmentId === null; // 학과 미지정 공지는 보수적으로 모든 학과에 표시
-    return matchesKeyword && matchesMajor;
+    if (!matchesKeyword) {
+      return false;
+    }
+
+    if (!isDepartmentFilteredCategory) {
+      return true;
+    }
+
+    return notice.departmentId === selectedDepartmentId;
   });
 
   // ISO 8601 형식을 "월 일" 형식으로 변환하는 헬퍼 함수 - api명세로 통일하기 위하여
@@ -67,6 +75,10 @@ export default function DooDreamCategoryDetailPage() {
     );
   }
 
+  notices.map((notice) => {
+    console.log('notice description:', notice);
+  });
+
   return (
     <div className="bg-background min-h-screen">
       <Card className="mb-4 p-6">
@@ -89,6 +101,16 @@ export default function DooDreamCategoryDetailPage() {
               <h1 className="text-xl font-semibold">{category.name}</h1>
             </div>
           </div>
+
+          {isDepartmentFilteredCategory && (
+            <div className="mt-4">
+              <MajorSelection
+                selectedMajor={selectedDepartmentId}
+                onMajorChange={setSelectedDepartmentId}
+                targetKeywordId={categoryIdParam}
+              />
+            </div>
+          )}
         </div>
 
         {/* Content */}

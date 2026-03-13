@@ -25,6 +25,7 @@ export interface PreviewEvent {
   month: number;
   title: string;
   description?: string;
+  descriptionSummary?: string;
   serviceType: 'academic' | 'doodream';
   category?: string;
   link?: string;
@@ -56,6 +57,8 @@ export default function CalendarPreview({
   const { data: academicNotices = [] } = useGetAcademicNotices();
   const { data: dodreamNotices = [] } = useGetDodreamNotices();
   const { data: keywords = [] } = useGetKeywords();
+
+  console.log('selected majors :', selectedMajor);
 
   // 필터링된 공지 데이터
   const previewEvents = useMemo((): PreviewEvent[] => {
@@ -108,6 +111,7 @@ export default function CalendarPreview({
           month: startDate.getMonth() + 1,
           title: notice.title,
           description: notice.description,
+          descriptionSummary: notice.descriptionSummary,
           serviceType: 'doodream',
           category: keywordName,
           link: notice.detailUrl,
@@ -190,7 +194,13 @@ export default function CalendarPreview({
             }}
           />
         ) : (
-          <ResultMonthView getEventsForDay={getEventsForDay} />
+          <ResultMonthView
+            getEventsForDay={getEventsForDay}
+            onEventClick={(event) => {
+              setSelectedEvent(event);
+              setIsDialogOpen(true);
+            }}
+          />
         )}
       </div>
 

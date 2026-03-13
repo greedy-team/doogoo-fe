@@ -54,6 +54,7 @@ export type DoDreamNotice = {
   operatingEndAt: string | null;
   location: string | null;
   description: string;
+  descriptionSummary?: string;
   keywordIds: string[];
   detailUrl?: string;
 };

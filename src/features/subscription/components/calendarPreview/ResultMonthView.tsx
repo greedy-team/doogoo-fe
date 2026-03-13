@@ -6,10 +6,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ResultMonthViewProps {
   getEventsForDay: (year: number, month: number, day: number) => PreviewEvent[];
+  onEventClick: (event: PreviewEvent) => void;
 }
 
 export default function ResultMonthView({
   getEventsForDay,
+  onEventClick,
 }: ResultMonthViewProps) {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -50,9 +52,7 @@ export default function ResultMonthView({
                   isListView={false}
                   key={index}
                   event={event}
-                  onClick={() => {
-                    // No modal in month view. Keep inline list focused.
-                  }}
+                  onClick={() => onEventClick(event)}
                 />
               ))
             )}
