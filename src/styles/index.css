@@ -3,6 +3,46 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@keyframes wave {
+  0%   { transform: translateY(0); }
+  5%   { transform: translateY(-7px); }
+  8%   { transform: translateY(0); }
+  12%  { transform: translateY(-3px); }
+  15%  { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes wave-last {
+  0%   { transform: translateY(0) rotate(0deg); }
+  5%   { transform: translateY(-10px) rotate(-8deg); }
+  9%   { transform: translateY(0) rotate(0deg); }
+  13%  { transform: translateY(-5px) rotate(6deg); }
+  17%  { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.logo-wave {
+  will-change: transform;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wave 10s ease-in-out infinite;
+}
+
+.logo-wave-last {
+  will-change: transform;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wave-last 10s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-wave,
+  .logo-wave-last {
+    animation: none;
+    will-change: auto;
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
