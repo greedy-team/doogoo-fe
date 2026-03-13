@@ -2,9 +2,11 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Calendar, Download, Smartphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { SubscriptionModal } from '@/features/subscription/components/subscriptionModal/subscriptionModal';
 import { useServiceStore } from '@/shared/stores/useServiceStore';
 import { useAcademicStore } from '@/shared/stores/useAcademicStore';
 import { useDodreamStore } from '@/shared/stores/useDodreamStore';
+import { useUIStore } from '@/shared/stores/useUIStore';
 import { useGetKeywords } from '@/shared/hooks/useCommonData';
 
 interface ResultProps {
@@ -17,6 +19,11 @@ export default function ResultPage({ onBack }: ResultProps) {
   const { selectedGradeYear, gradeFilterScope } = useAcademicStore();
   const { selectedDepartmentId, selectedInterestKeywordIds } =
     useDodreamStore();
+  const {
+    isSubscriptionModalOpen,
+    openSubscriptionModal,
+    closeSubscriptionModal,
+  } = useUIStore();
   const { data: keywords = [] } = useGetKeywords();
 
   const selectedInterestLabels = Array.from(selectedInterestKeywordIds)
@@ -25,6 +32,16 @@ export default function ResultPage({ onBack }: ResultProps) {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
+      <SubscriptionModal
+        isOpen={isSubscriptionModalOpen}
+        onClose={closeSubscriptionModal}
+        selectedYear={selectedGradeYear}
+        yearFilterType={gradeFilterScope}
+        selectedMajor={selectedDepartmentId}
+        selectedInterests={selectedInterestKeywordIds}
+        selectedServices={selectedServices}
+      />
+
       <Card className="p-8 text-center">
         <div className="mb-4 flex justify-center">
           <div className="rounded-full bg-green-100 p-4">
@@ -37,13 +54,14 @@ export default function ResultPage({ onBack }: ResultProps) {
         <p className="text-muted-foreground">
           선택하신 캘린더가 성공적으로 추가되었습니다.
         </p>
-        <button
+        <Button
           type="button"
-          onClick={onBack}
-          className="text-muted-foreground mt-2 text-xs underline underline-offset-4"
+          variant="link"
+          onClick={openSubscriptionModal}
+          className="text-muted-foreground mt-2 h-auto p-0 text-xs"
         >
-          캘린더 추가가 잘 안 되셨나요? 이전 페이지로 돌아가 다시 시도해보세요.
-        </button>
+          캘린더 추가가 잘 안 되셨나요? 여기에서 다시 선택해보세요.
+        </Button>
       </Card>
 
       <Card className="p-6">
