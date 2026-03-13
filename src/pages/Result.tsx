@@ -7,7 +7,7 @@ import { useServiceStore } from '@/shared/stores/useServiceStore';
 import { useAcademicStore } from '@/shared/stores/useAcademicStore';
 import { useDodreamStore } from '@/shared/stores/useDodreamStore';
 import { useUIStore } from '@/shared/stores/useUIStore';
-import { useGetKeywords } from '@/shared/hooks/useCommonData';
+import { useGetColleges, useGetKeywords } from '@/shared/hooks/useCommonData';
 
 interface ResultProps {
   onBack: () => void;
@@ -24,7 +24,14 @@ export default function ResultPage({ onBack }: ResultProps) {
     openSubscriptionModal,
     closeSubscriptionModal,
   } = useUIStore();
+  const { data: colleges = [] } = useGetColleges();
   const { data: keywords = [] } = useGetKeywords();
+
+  const selectedDepartmentName = selectedDepartmentId
+    ? colleges
+        .flatMap((college) => college.departments)
+        .find((department) => department.id === selectedDepartmentId)?.name
+    : null;
 
   const selectedInterestLabels = Array.from(selectedInterestKeywordIds)
     .map((id) => keywords.find((keyword) => keyword.id === id)?.name || id)
@@ -104,7 +111,7 @@ export default function ResultPage({ onBack }: ResultProps) {
                 <div className="flex-1">
                   <h4 className="text-foreground mb-1 font-semibold">두드림</h4>
                   <div className="text-muted-foreground space-y-1 text-sm">
-                    <p>• {selectedDepartmentId || '선택된 학과 없음'}</p>
+                    <p>• {selectedDepartmentName || '선택된 학과 없음'}</p>
                     {selectedInterestLabels.length > 0 && (
                       <p>• {selectedInterestLabels.join(', ')}</p>
                     )}
