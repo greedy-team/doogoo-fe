@@ -23,7 +23,7 @@ import axios from 'axios';
 export const API_BASE_URL =
   import.meta.env.VITE_USE_MSW === 'true'
     ? '' // MSW가 intercept (상대 경로)
-    : 'https://www.sejongdoogoo-api.com'; // 실제 백엔드 (절대 경로)
+    : 'http://sejongdoogoo-api.com:50018'; // 실제 백엔드 (절대 경로)
 
 
 export const apiClient = axios.create({
