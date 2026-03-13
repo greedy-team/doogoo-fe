@@ -67,6 +67,8 @@ export default function ServiceSubscription({
   const [isAcademicExpanded, setIsAcademicExpanded] = useState(true);
   const [isDoDreamExpanded, setIsDoDreamExpanded] = useState(true);
 
+  console.log('Selected Department ID:', selectedDepartmentId);
+
   return (
     <div className="mx-auto max-w-7xl">
       <SubscriptionModal

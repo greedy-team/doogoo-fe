@@ -28,10 +28,9 @@ export const filterDodreamNotices = (
 
   if (selectedMajor !== 'all') {
     filtered = filtered.filter(
-      (notice) =>
-        notice.departmentId === selectedMajor ||
-        notice.departmentId === 'all' ||
-        notice.departmentId === null,
+      (notice) => notice.departmentId === selectedMajor,
+      // notice.departmentId === 'all' ||
+      // notice.departmentId === null,
     );
   }
 

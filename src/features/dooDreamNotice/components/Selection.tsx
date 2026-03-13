@@ -10,21 +10,39 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useGetColleges } from '@/shared/hooks/useCommonData';
+import { useGetDodreamNotices } from '@/shared/hooks/useNotices';
 
 interface MajorSelectionProps {
   selectedMajor: string;
   onMajorChange: (major: string) => void;
+  targetKeywordId?: string;
 }
 
 export function MajorSelection({
   selectedMajor,
   onMajorChange,
+  targetKeywordId,
 }: MajorSelectionProps) {
   const { data: colleges = [], isLoading } = useGetColleges();
+  const { data: notices = [] } = useGetDodreamNotices();
+
+  const departmentEventCount = notices.reduce<Record<string, number>>(
+    (acc, notice) => {
+      if (!notice.departmentId) {
+        return acc;
+      }
+      if (targetKeywordId && !notice.keywordIds.includes(targetKeywordId)) {
+        return acc;
+      }
+      acc[notice.departmentId] = (acc[notice.departmentId] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
 
   return (
     <div className="space-y-3">
-      <Label className="text-foreground text-sm font-medium">전공 선택</Label>
+      <Label className="text-foreground text-sm font-medium">추가할 전공</Label>
       <Select
         value={selectedMajor}
         onValueChange={onMajorChange}
@@ -44,7 +62,11 @@ export function MajorSelection({
                   {college.name}
                 </SelectLabel>
                 {college.departments.map((dept) => (
-                  <SelectItem key={dept.id} value={dept.id}>
+                  <SelectItem
+                    key={dept.id}
+                    value={dept.id}
+                    indicatorContent={departmentEventCount[dept.id] ?? '0'}
+                  >
                     {dept.name}
                   </SelectItem>
                 ))}
