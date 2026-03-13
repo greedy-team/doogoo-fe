@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import {
   useCreateAcademicIcs,
   useCreateDodreamIcs,
+  getWebcalUrl,
 } from '@/features/subscription/hooks/useIcsLink';
 import { useGetKeywords } from '@/shared/hooks/useCommonData';
 
@@ -96,8 +97,8 @@ export function SubscriptionModal({
       // API 호출
       const response = await callApiForActiveService(currentService);
 
-      // icsUrl을 webcal 프로토콜로 변환
-      const webcalUrl = response.icsUrl.replace(/^https?:\/\//, 'webcal://');
+      // token으로 webcal URL 생성 (API_BASE_URL 기반으로 포트 포함)
+      const webcalUrl = getWebcalUrl(response.token);
       let finalUrl = webcalUrl;
 
       switch (platform) {
