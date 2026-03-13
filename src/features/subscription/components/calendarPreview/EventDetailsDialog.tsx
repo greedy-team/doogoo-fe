@@ -42,15 +42,15 @@ export default function EventDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="p-5 sm:max-w-120">
+      <DialogContent className="overflow-x-hidden p-5 sm:max-w-120">
         <DialogHeader className="pr-8">
           <DialogTitle className="text-lg leading-tight wrap-break-word">
             {selectedEvent?.title ?? '행사 상세 정보'}
           </DialogTitle>
         </DialogHeader>
         {selectedEvent && (
-          <div className="space-y-4 py-1">
-            <div className="space-y-2">
+          <div className="min-w-0 space-y-4 py-1">
+            <div className="w-full space-y-2">
               <Badge
                 variant="outline"
                 className={
