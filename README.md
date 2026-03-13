@@ -1,8 +1,6 @@
-```일단 임시로 작성해 봤습니다. 내용 검토 + 백앤드 문서 업데이트 + 이미지/gif추가필요```
-
 <div align="center">
 
-# 📅 Sejong D-Cal
+#  두구두구 (DoogooDoogoo)
 ### 세종대 맞춤형 두드림 캘린더 구독 서비스 ![최근 30일 방문자](http://152.67.211.137:3000/badge?v=2)
 
 세종대학교 **두드림** 비교과 공지와 **학사일정**를 학과·키워드·학년으로 필터링해<br>
@@ -85,14 +83,12 @@
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite_7-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS_v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)
 ![Zustand](https://img.shields.io/badge/Zustand_v5-433E38?style=for-the-badge)
 ![TanStack Query](https://img.shields.io/badge/TanStack_Query_v5-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
 ![React Router](https://img.shields.io/badge/React_Router_v7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white)
 ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
-![MSW](https://img.shields.io/badge/MSW-FF6A33?style=for-the-badge&logo=mockserviceworker&logoColor=white)
 
 **Backend**
 
