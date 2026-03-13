@@ -58,6 +58,8 @@ export default function CalendarPreview({
   const { data: dodreamNotices = [] } = useGetDodreamNotices();
   const { data: keywords = [] } = useGetKeywords();
 
+  console.log('selected majors :', selectedMajor);
+
   // 필터링된 공지 데이터
   const previewEvents = useMemo((): PreviewEvent[] => {
     const events: PreviewEvent[] = [];

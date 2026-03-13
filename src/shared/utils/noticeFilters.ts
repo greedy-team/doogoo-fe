@@ -24,24 +24,28 @@ export const filterDodreamNotices = (
   selectedMajor: string,
   selectedInterests: Set<string>,
 ): DoDreamNotice[] => {
-  let filtered = notices;
-
-  if (selectedMajor !== 'all') {
-    filtered = filtered.filter(
-      (notice) => notice.departmentId === selectedMajor,
-      // notice.departmentId === 'all' ||
-      // notice.departmentId === null,
-    );
-  }
-
   // 아무 키워드도 선택하지 않으면 공지 없음
   if (selectedInterests.size === 0) {
     return [];
   }
 
-  filtered = filtered.filter((notice) =>
+  const filteredByInterest = notices.filter((notice) =>
     notice.keywordIds.some((keywordId) => selectedInterests.has(keywordId)),
   );
 
-  return filtered;
+  // major가 필요한 카테고리(k_0)에만 학과 필터를 적용하고,
+  // 그 외 카테고리는 선택한 관심사 기준으로 모두 노출한다.
+  if (!selectedMajor) {
+    return filteredByInterest;
+  }
+
+  return filteredByInterest.filter((notice) => {
+    const isMajorRequiredNotice = notice.keywordIds.includes('k_0');
+
+    if (!isMajorRequiredNotice) {
+      return true;
+    }
+
+    return notice.departmentId === selectedMajor;
+  });
 };

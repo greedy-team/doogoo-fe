@@ -74,6 +74,9 @@ export default function Categories({
                     <Switch
                       checked={isSelected}
                       onCheckedChange={() => {
+                        if (interest.id === 'k_0' && isSelected) {
+                          onMajorChange('');
+                        }
                         onInterestToggle(interest.id);
                       }}
                       onClick={(e) => e.stopPropagation()}

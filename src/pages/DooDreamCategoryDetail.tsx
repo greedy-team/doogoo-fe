@@ -75,6 +75,10 @@ export default function DooDreamCategoryDetailPage() {
     );
   }
 
+  notices.map((notice) => {
+    console.log('notice description:', notice);
+  });
+
   return (
     <div className="bg-background min-h-screen">
       <Card className="mb-4 p-6">
