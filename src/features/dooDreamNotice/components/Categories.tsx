@@ -22,6 +22,7 @@ export default function Categories({
 }: CategoriesProps) {
   const navigate = useNavigate();
   const { data: keywords = [], isLoading } = useGetKeywords();
+  const visibleKeywords = keywords.filter((keyword) => keyword.id !== 'k_7');
 
   const handleCategoryClick = (categoryId: string) => {
     navigate(`/dooDreamNotice/${categoryId}`);
@@ -44,7 +45,7 @@ export default function Categories({
         관심 카테고리 선택
       </Label>
       <div className="space-y-2">
-        {keywords.map((interest) => {
+        {visibleKeywords.map((interest) => {
           const Icon = getCategoryIcon(interest.icon);
           const isSelected = selectedInterests.has(interest.id);
 
