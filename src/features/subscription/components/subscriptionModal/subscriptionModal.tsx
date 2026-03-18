@@ -107,8 +107,8 @@ export function SubscriptionModal({
           finalUrl = webcalUrl;
           break;
         case 'google':
-          // Google Calendar subscription URL (webcal:// 프로토콜 유지)=>이렇게 하면 된데,,
-          finalUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcalUrl)}`;
+          // Google Calendar은 webcal:// 미지원 → https:// URL 사용
+          finalUrl = `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(response.icsUrl)}`;
           break;
         case 'outlook':
           // Outlook.com subscription URL (/0/ 제거)=>안됨 ㅜㅜㅜ
