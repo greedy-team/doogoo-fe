@@ -2,7 +2,6 @@ import { useState } from 'react';
 import EventItem from './EventItem';
 import CalendarGrid from './CalendarGrid';
 import type { PreviewEvent } from './CalendarPreview';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ResultMonthViewProps {
   getEventsForDay: (year: number, month: number, day: number) => PreviewEvent[];
@@ -40,7 +39,7 @@ export default function ResultMonthView({
         <h4 className="text-foreground mb-3 text-sm font-semibold">
           {selectedDay !== null ? `${selectedDay}일` : '일별'} 행사 목록
         </h4>
-        <ScrollArea className="max-h-[30vh]">
+        <div className="max-h-[30vh] overflow-y-auto">
           <div className="space-y-2 pr-4">
             {selectedDayEvents.length === 0 ? (
               <p className="text-muted-foreground py-6 text-center text-sm">
@@ -57,7 +56,7 @@ export default function ResultMonthView({
               ))
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </div>
   );
