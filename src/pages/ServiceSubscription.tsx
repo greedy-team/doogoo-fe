@@ -51,12 +51,7 @@ export default function ServiceSubscription({
   const isAcademicSelected = selectedServices.has('academic');
   const isDoDreamSelected = selectedServices.has('doodream');
   const hasAnySelectedService = selectedServices.size > 0;
-  const hasSelectedAcademicYears = selectedGradeIds.length > 0;
-  const hasSelectedDoDreamInterest = selectedInterestKeywordIds.size > 0;
-  const isSubscribeDisabled =
-    !hasAnySelectedService ||
-    (isAcademicSelected && !hasSelectedAcademicYears) ||
-    (isDoDreamSelected && !hasSelectedDoDreamInterest);
+  const isSubscribeDisabled = !hasAnySelectedService;
 
   // Mobile bottom-sheet state
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
