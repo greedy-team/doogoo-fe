@@ -1,4 +1,5 @@
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import YearButton from './YearButton';
 import { useGetGrades } from '@/shared/hooks/useCommonData';
 
@@ -33,12 +34,7 @@ export default function YearSelectionLayout({
       <div className="flex items-center justify-between">
         <Label className="text-foreground text-sm font-medium">학년 선택</Label>
         <label className="text-foreground flex cursor-pointer items-center gap-2 text-xs font-medium">
-          <input
-            type="checkbox"
-            checked={isAllSelected}
-            onChange={handleToggleAll}
-            className="border-border text-primary h-3.5 w-3.5 rounded"
-          />
+          <Checkbox checked={isAllSelected} onCheckedChange={handleToggleAll} />
           전체 선택
         </label>
       </div>
