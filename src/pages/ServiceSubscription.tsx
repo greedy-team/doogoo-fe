@@ -69,7 +69,9 @@ export default function ServiceSubscription({
     return () => mediaQuery.removeEventListener('change', syncMobileState);
   }, []);
 
-  const sheetHeight = !isMobile ? '0px' : isMobilePreviewOpen ? '56vh' : '76px';
+  const sheetStyle = isMobilePreviewOpen
+    ? { maxHeight: '90dvh' }
+    : { height: '76px' };
 
   const handleServiceToggle = (service: 'academic' | 'doodream') => {
     toggleServiceSelection(service);
@@ -193,8 +195,8 @@ export default function ServiceSubscription({
       {/* Mobile bottom-sheet preview */}
       {isMobile && (
         <div
-          className="bg-card/98 border-border fixed inset-x-0 bottom-0 z-40 rounded-t-3xl border shadow-2xl transition-all duration-300 lg:hidden"
-          style={{ height: sheetHeight }}
+          className="bg-card/98 border-border fixed inset-x-0 bottom-0 z-40 overflow-hidden rounded-t-3xl border shadow-2xl transition-all duration-300 lg:hidden"
+          style={sheetStyle}
         >
           <button
             type="button"
@@ -216,7 +218,10 @@ export default function ServiceSubscription({
             </div>
           </button>
 
-          <div className="h-[calc(100%-74px)] overflow-y-auto px-4 pb-6">
+          <div
+            className="overflow-y-auto px-4 pb-6"
+            style={{ maxHeight: 'calc(90dvh - 74px)' }}
+          >
             {isMobilePreviewOpen && (
               <div className="space-y-3">
                 <CalendarPreview
