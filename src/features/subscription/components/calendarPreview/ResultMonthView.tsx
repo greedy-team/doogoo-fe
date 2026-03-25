@@ -40,7 +40,7 @@ export default function ResultMonthView({
           {selectedDay !== null ? `${selectedDay}일` : '일별'} 행사 목록
         </h4>
         <div className="max-h-[30vh] overflow-y-auto">
-          <div className="space-y-2 pr-4">
+          <div className="space-y-2">
             {selectedDayEvents.length === 0 ? (
               <p className="text-muted-foreground py-6 text-center text-sm">
                 날짜를 선택하면 일정을 확인할 수 있습니다

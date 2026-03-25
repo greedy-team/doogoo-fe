@@ -72,7 +72,7 @@ export default function ServiceSubscription({
   }, []);
 
   const sheetStyle = isMobilePreviewOpen
-    ? { maxHeight: '90dvh' }
+    ? { maxHeight: '80dvh' }
     : { height: '76px' };
 
   const handleServiceToggle = (service: 'academic' | 'doodream') => {
@@ -227,7 +227,7 @@ export default function ServiceSubscription({
 
           <div
             className="overflow-y-auto px-4 pb-6"
-            style={{ maxHeight: 'calc(90dvh - 74px)' }}
+            style={{ maxHeight: 'calc(80dvh - 74px)' }}
           >
             {isMobilePreviewOpen && (
               <div className="space-y-3">
