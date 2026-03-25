@@ -1,19 +1,22 @@
 import type { AcademicNotice, DoDreamNotice } from '@/shared/api/types';
 
-export type YearFilterType = 'my-year' | 'all';
-
 export const filterAcademicNotices = (
   notices: AcademicNotice[],
-  selectedYear: number,
-  yearFilterType: YearFilterType,
+  selectedGradeIds: string[],
 ): AcademicNotice[] => {
-  if (yearFilterType === 'all') {
+  if (selectedGradeIds.length === 0) {
+    return [];
+  }
+
+  const selectedGradeIdSet = new Set(selectedGradeIds);
+
+  if (selectedGradeIdSet.has('all')) {
     return notices;
   }
-  const selectedYearId = selectedYear.toString();
+
   return notices.filter(
     (notice) =>
-      notice.gradeId === selectedYearId ||
+      selectedGradeIdSet.has(notice.gradeId) ||
       notice.gradeId === 'all' ||
       notice.gradeId === null,
   );

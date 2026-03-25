@@ -16,7 +16,7 @@ interface ResultProps {
 export default function ResultPage({ onBack }: ResultProps) {
   const navigate = useNavigate();
   const { selectedServices } = useServiceStore();
-  const { selectedGradeYear, gradeFilterScope } = useAcademicStore();
+  const { selectedGradeIds } = useAcademicStore();
   const { selectedDepartmentId, selectedInterestKeywordIds } =
     useDodreamStore();
   const {
@@ -42,8 +42,7 @@ export default function ResultPage({ onBack }: ResultProps) {
       <SubscriptionModal
         isOpen={isSubscriptionModalOpen}
         onClose={closeSubscriptionModal}
-        selectedYear={selectedGradeYear}
-        yearFilterType={gradeFilterScope}
+        selectedGradeIds={selectedGradeIds}
         selectedMajor={selectedDepartmentId}
         selectedInterests={selectedInterestKeywordIds}
         selectedServices={selectedServices}
@@ -88,13 +87,12 @@ export default function ResultPage({ onBack }: ResultProps) {
                     학사공지
                   </h4>
                   <div className="text-muted-foreground space-y-1 text-sm">
-                    <p>• {selectedGradeYear}학년 학사일정</p>
                     <p>
                       •{' '}
-                      {gradeFilterScope === 'my-year'
-                        ? '내 학년만'
-                        : '전체 학년'}{' '}
-                      알림
+                      {selectedGradeIds.length > 0
+                        ? selectedGradeIds.join(', ')
+                        : '선택 없음'}
+                      학년
                     </p>
                   </div>
                 </div>

@@ -32,16 +32,14 @@ export interface PreviewEvent {
 }
 
 interface CalendarPreviewProps {
-  selectedYear: number;
-  yearFilterType: 'my-year' | 'all';
+  selectedGradeIds: string[];
   selectedMajor: string;
   selectedInterests: Set<string>;
   selectedServices: Set<'academic' | 'doodream'>;
 }
 
 export default function CalendarPreview({
-  selectedYear,
-  yearFilterType,
+  selectedGradeIds,
   selectedMajor,
   selectedInterests,
   selectedServices,
@@ -58,8 +56,6 @@ export default function CalendarPreview({
   const { data: dodreamNotices = [] } = useGetDodreamNotices();
   const { data: keywords = [] } = useGetKeywords();
 
-  console.log('selected majors :', selectedMajor);
-
   // 필터링된 공지 데이터
   const previewEvents = useMemo((): PreviewEvent[] => {
     const events: PreviewEvent[] = [];
@@ -68,8 +64,7 @@ export default function CalendarPreview({
     if (selectedServices.has('academic')) {
       const filteredAcademicNotices = filterAcademicNotices(
         academicNotices,
-        selectedYear,
-        yearFilterType,
+        selectedGradeIds,
       );
 
       filteredAcademicNotices.forEach((notice) => {
@@ -129,8 +124,7 @@ export default function CalendarPreview({
     academicNotices,
     dodreamNotices,
     keywords,
-    selectedYear,
-    yearFilterType,
+    selectedGradeIds,
     selectedMajor,
     selectedInterests,
     selectedServices,

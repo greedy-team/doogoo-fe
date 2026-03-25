@@ -38,8 +38,6 @@ export default function EventDetailsDialog({
   const eventTypeLabel =
     selectedEvent?.serviceType === 'academic' ? '학사 일정' : '두드림 일정';
 
-  console.log('selectedEvent in dialog:', selectedEvent);
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-x-hidden p-5 sm:max-w-120">

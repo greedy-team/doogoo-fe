@@ -9,14 +9,7 @@ import {
 } from '@/shared/hooks/useNotices';
 
 const Landing = lazy(() => import('./pages/Landing'));
-const AcademicNotice = lazy(() => import('./pages/AcademicNotice'));
-const DooDreamNotice = lazy(() => import('./pages/DooDreamNotice'));
-const DooDreamCategoryDetail = lazy(
-  () => import('./pages/DooDreamCategoryDetail'),
-);
-const ServiceSubscription = lazy(
-  () => import('./pages/ServiceSubscription'),
-);
+const ServiceSubscription = lazy(() => import('./pages/ServiceSubscription'));
 const Result = lazy(() => import('./pages/Result'));
 
 export default function App() {
@@ -30,35 +23,16 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <Navigation />
-      <div className="container mx-auto px-2 py-8 sm:px-6">
+      <div className="container mx-auto px-2 py-6 sm:px-6">
         <Suspense>
           <Routes>
             <Route path="/" element={<Landing onContinue={handleNext} />} />
-            <Route
-              path="/academicNotice"
-              element={
-                <AcademicNotice onNext={handleNext} onBack={handleBack} />
-              }
-            />
-            <Route
-              path="/dooDreamNotice"
-              element={
-                <DooDreamNotice onNext={handleNext} onBack={handleBack} />
-              }
-            />
-            <Route
-              path="/dooDreamNotice/:categoryId"
-              element={<DooDreamCategoryDetail />}
-            />
             <Route
               path="/subscription"
               element={<ServiceSubscription onBack={handleBack} />}
             />
             <Route path="/result" element={<Result onBack={handleBack} />} />
-            <Route
-              path="*"
-              element={<div>페이지를 찾을 수 없습니다.</div>}
-            />
+            <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
           </Routes>
         </Suspense>
       </div>
