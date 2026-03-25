@@ -11,6 +11,7 @@ import Categories from '@/features/dooDreamNotice/components/Categories';
 
 // Subscription Components
 import CalendarPreview from '@/features/subscription/components/calendarPreview/CalendarPreview';
+import MobileCalendarPreview from '@/features/subscription/components/calendarPreview/MobileCalendarPreview';
 import { SubscriptionModal } from '@/features/subscription/components/subscriptionModal/subscriptionModal';
 
 // Store Hooks
@@ -60,6 +61,7 @@ export default function ServiceSubscription({
   // Mobile bottom-sheet state
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
+  const [mobileUpcomingCount, setMobileUpcomingCount] = useState(0);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 1023px)');
@@ -216,6 +218,11 @@ export default function ServiceSubscription({
                 }`}
               />
             </div>
+            {isMobilePreviewOpen && (
+              <p className="text-muted-foreground mb-2 text-left text-xs">
+                {mobileUpcomingCount}개 행사가 동기화 됩니다
+              </p>
+            )}
           </button>
 
           <div
@@ -224,11 +231,12 @@ export default function ServiceSubscription({
           >
             {isMobilePreviewOpen && (
               <div className="space-y-3">
-                <CalendarPreview
+                <MobileCalendarPreview
                   selectedGradeIds={selectedGradeIds}
                   selectedMajor={selectedDepartmentId}
                   selectedInterests={selectedInterestKeywordIds}
                   selectedServices={selectedServices}
+                  onUpcomingCountChange={setMobileUpcomingCount}
                 />
                 <SubscribeButton
                   onClick={openSubscriptionModal}
