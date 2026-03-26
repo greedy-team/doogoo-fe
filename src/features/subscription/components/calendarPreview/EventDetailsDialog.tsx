@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, ExternalLink } from 'lucide-react';
+import { Calendar, ExternalLink, MapPin, ClipboardList } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -70,13 +70,35 @@ export default function EventDetailsDialog({
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-sm">
-              <Calendar className="text-muted-foreground h-4 w-4" />
-              <span className="text-foreground">
-                {formatDate(selectedEvent.startAt)}
-                {' - '}
-                {formatDate(selectedEvent.endAt ?? selectedEvent.startAt)}
-              </span>
+            <div className="text-muted-foreground space-y-2 text-sm">
+              {selectedEvent.departmentName && (
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <span className="text-foreground">
+                    {selectedEvent.departmentName}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                <span className="text-foreground">
+                  {formatDate(selectedEvent.startAt)}
+                  {' - '}
+                  {formatDate(selectedEvent.endAt ?? selectedEvent.startAt)}
+                </span>
+              </div>
+
+              {selectedEvent.applicationStartAt && (
+                <div className="flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4" />
+                  <span className="text-foreground">
+                    {formatDate(selectedEvent.applicationStartAt)}
+                    {selectedEvent.applicationEndAt &&
+                      ` ~ ${formatDate(selectedEvent.applicationEndAt)}`}
+                  </span>
+                </div>
+              )}
             </div>
 
             {selectedEvent.serviceType === 'doodream' && (

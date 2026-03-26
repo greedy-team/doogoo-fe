@@ -29,6 +29,9 @@ export interface PreviewEvent {
   serviceType: 'academic' | 'doodream';
   category?: string;
   link?: string;
+  departmentName?: string;
+  applicationStartAt?: string | null;
+  applicationEndAt?: string | null;
 }
 
 interface CalendarPreviewProps {
@@ -110,6 +113,9 @@ export default function CalendarPreview({
           serviceType: 'doodream',
           category: keywordName,
           link: notice.detailUrl,
+          departmentName: notice.departmentName,
+          applicationStartAt: notice.applicationStartAt,
+          applicationEndAt: notice.applicationEndAt,
         });
       });
     }
