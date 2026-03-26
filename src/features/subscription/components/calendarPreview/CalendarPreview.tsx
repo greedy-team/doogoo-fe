@@ -29,7 +29,7 @@ export interface PreviewEvent {
   serviceType: 'academic' | 'doodream';
   category?: string;
   link?: string;
-  departmentName?: string;
+  departmentName?: string | null;
   applicationStartAt?: string | null;
   applicationEndAt?: string | null;
 }
