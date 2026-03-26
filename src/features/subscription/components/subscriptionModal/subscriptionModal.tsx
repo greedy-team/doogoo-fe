@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
@@ -8,7 +8,16 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Apple, Chrome, Mail, Download, ExternalLink } from 'lucide-react';
+import {
+  Apple,
+  Check,
+  Chrome,
+  Mail,
+  Download,
+  ExternalLink,
+  GraduationCap,
+  Sparkles,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useCreateAcademicIcs,
@@ -43,7 +52,11 @@ export function SubscriptionModal({
   const [expandedPlatformId, setExpandedPlatformId] = useState<string | null>(
     null,
   );
+  const [expandedDownload, setExpandedDownload] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [completedActions, setCompletedActions] = useState<
+    Record<string, boolean>
+  >({});
 
   const createAcademicIcs = useCreateAcademicIcs();
   const createDodreamIcs = useCreateDodreamIcs();
@@ -51,10 +64,40 @@ export function SubscriptionModal({
   const { data: grades = [] } = useGetGrades();
 
   const selectedServiceList = Array.from(selectedServices);
+  const hasBothServices = selectedServiceList.length === 2;
   const allGradeIds = grades.map((grade) => grade.id);
   const isAllGradesSelected =
     allGradeIds.length > 0 &&
     allGradeIds.every((gradeId) => selectedGradeIds.includes(gradeId));
+
+  // Reset completed actions when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setCompletedActions({});
+    }
+  }, [isOpen]);
+
+  const markActionCompleted = (actionKey: string) => {
+    setCompletedActions((prev) => ({
+      ...prev,
+      [actionKey]: true,
+    }));
+  };
+
+  const isPlatformFullyCompleted = (
+    platform: 'apple' | 'google' | 'outlook',
+    actions: Record<string, boolean>,
+  ) => {
+    return selectedServiceList.every(
+      (serviceType) => actions[`subscribe-${platform}-${serviceType}`],
+    );
+  };
+
+  const isDownloadFullyCompleted = (actions: Record<string, boolean>) => {
+    return selectedServiceList.every(
+      (serviceType) => actions[`download-${serviceType}`],
+    );
+  };
 
   // API 호출 헬퍼 함수들
   const callAcademicApi = async (): Promise<{
@@ -118,8 +161,18 @@ export function SubscriptionModal({
 
       // Open in new window/tab
       window.open(finalUrl, '_blank');
-      onClose();
-      navigate('/result');
+
+      const actionKey = `subscribe-${platform}-${serviceType}`;
+      const nextActions = {
+        ...completedActions,
+        [actionKey]: true,
+      };
+      markActionCompleted(actionKey);
+
+      if (!hasBothServices || isPlatformFullyCompleted(platform, nextActions)) {
+        onClose();
+        navigate('/result');
+      }
 
       toast.success(
         `${serviceType === 'academic' ? '학사일정' : '두드림'} 구독 링크를 열었습니다`,
@@ -146,8 +199,18 @@ export function SubscriptionModal({
 
       // 서버가 Content-Disposition: attachment 헤더를 제공하면 자동 다운로드됨
       window.open(response.downloadUrl, '_blank');
-      onClose();
-      navigate('/result');
+
+      const actionKey = `download-${serviceType}`;
+      const nextActions = {
+        ...completedActions,
+        [actionKey]: true,
+      };
+      markActionCompleted(actionKey);
+
+      if (!hasBothServices || isDownloadFullyCompleted(nextActions)) {
+        onClose();
+        navigate('/result');
+      }
 
       toast.success('캘린더 파일 다운로드를 시작합니다!', {
         description: '캘린더 앱에 .ics 파일을 가져오세요.',
@@ -188,11 +251,50 @@ export function SubscriptionModal({
   const getServiceLabel = (serviceType: 'academic' | 'doodream') =>
     serviceType === 'academic' ? '학사일정' : '두드림';
 
+  const getServiceIcon = (serviceType: 'academic' | 'doodream') =>
+    serviceType === 'academic' ? GraduationCap : Sparkles;
+
   const renderPlatformButtons = () => (
     <div className="flex flex-col space-y-3 py-4">
       {platforms.map((platform) => {
         const Icon = platform.icon;
         const isExpanded = expandedPlatformId === platform.id;
+
+        if (!hasBothServices) {
+          const onlyService = selectedServiceList[0] ?? 'academic';
+          const actionKey = `subscribe-${platform.id}-${onlyService}`;
+          const isCompleted = completedActions[actionKey];
+
+          return (
+            <Button
+              key={platform.id}
+              variant="outline"
+              disabled={isProcessing}
+              onClick={() =>
+                handleSplitSubscribe(
+                  platform.id as 'apple' | 'google' | 'outlook',
+                  onlyService,
+                )
+              }
+              className={`h-auto w-full justify-between p-4 ${isCompleted ? 'opacity-65' : ''}`}
+            >
+              <div className="flex items-center gap-4">
+                <Icon className="size-8" />
+                <div className="flex flex-col items-start">
+                  <div className="text-base font-semibold">{platform.name}</div>
+                  <div className="text-muted-foreground text-sm">
+                    {platform.description}
+                  </div>
+                </div>
+              </div>
+              {isCompleted ? (
+                <Check className="text-primary h-5 w-5" />
+              ) : (
+                <span className="h-5 w-5" aria-hidden="true" />
+              )}
+            </Button>
+          );
+        }
 
         return (
           <Collapsible
@@ -202,8 +304,8 @@ export function SubscriptionModal({
               setExpandedPlatformId(isOpen ? platform.id : null);
             }}
           >
-            <div className="border-border space-y-3 rounded-xl border p-4">
-              <CollapsibleTrigger className="flex w-full flex-row items-center justify-between gap-4">
+            <div className="border-border rounded-xl border p-4">
+              <CollapsibleTrigger className="flex w-full flex-row items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="shrink-0">
                     <Icon className="size-8" />
@@ -217,33 +319,46 @@ export function SubscriptionModal({
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground text-xs">
-                    플랫폼 선택
-                  </span>
-                  <ExternalLink className="h-5 w-5 opacity-50" />
-                </div>
               </CollapsibleTrigger>
 
               <CollapsibleContent>
                 <div className="space-y-2 pt-3">
-                  {selectedServiceList.map((serviceType) => (
-                    <Button
-                      key={`${platform.id}-${serviceType}`}
-                      onClick={() =>
-                        handleSplitSubscribe(
-                          platform.id as 'apple' | 'google' | 'outlook',
-                          serviceType,
-                        )
-                      }
-                      variant="outline"
-                      disabled={isProcessing}
-                      className="w-full justify-between"
-                    >
-                      <span>{getServiceLabel(serviceType)} 구독하기</span>
-                      <ExternalLink className="h-3.5 w-3.5 opacity-60" />
-                    </Button>
-                  ))}
+                  {selectedServiceList.map((serviceType) => {
+                    const ServiceIcon = getServiceIcon(serviceType);
+                    const actionKey = `subscribe-${platform.id}-${serviceType}`;
+                    const isCompleted = completedActions[actionKey];
+
+                    return (
+                      <Button
+                        key={`${platform.id}-${serviceType}`}
+                        onClick={() =>
+                          handleSplitSubscribe(
+                            platform.id as 'apple' | 'google' | 'outlook',
+                            serviceType,
+                          )
+                        }
+                        variant="outline"
+                        disabled={isProcessing}
+                        className={`grid w-full grid-cols-[1fr_auto_1fr] items-center ${isCompleted ? 'opacity-65' : ''}`}
+                      >
+                        <span className="h-4 w-4" aria-hidden="true" />
+                        <span className="flex items-center justify-center gap-1.5">
+                          <ServiceIcon
+                            className={`h-3.5 w-3.5 ${serviceType === 'doodream' ? 'text-purple' : 'text-primary'}`}
+                          />
+                          <span>{getServiceLabel(serviceType)} 구독하기</span>
+                          <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+                        </span>
+                        <span className="flex justify-end">
+                          {isCompleted ? (
+                            <Check className="text-primary h-4 w-4" />
+                          ) : (
+                            <span className="h-4 w-4" aria-hidden="true" />
+                          )}
+                        </span>
+                      </Button>
+                    );
+                  })}
                 </div>
               </CollapsibleContent>
             </div>
@@ -262,22 +377,65 @@ export function SubscriptionModal({
       </div>
 
       {/* Download ICS */}
-      <Button
-        variant="outline"
-        className="h-14 w-full text-base"
-        onClick={() => handleDownload(selectedServiceList[0] ?? 'academic')}
-        disabled={isProcessing || selectedServiceList.length !== 1}
-      >
-        <Download className="mr-2 h-5 w-5" />
-        {isProcessing
-          ? '처리 중...'
-          : selectedServiceList.length === 1
-            ? `${getServiceLabel(selectedServiceList[0])} .ics 파일 다운로드`
-            : '.ics 파일 다운로드 (서비스별 구독을 이용하세요)'}
-      </Button>
-      <p className="text-muted-foreground text-center text-xs">
-        서비스별로 분리 구독을 지원합니다.
-      </p>
+      {hasBothServices ? (
+        <Collapsible open={expandedDownload} onOpenChange={setExpandedDownload}>
+          <div className="border-border rounded-xl border p-3">
+            <CollapsibleTrigger className="flex w-full items-center justify-center px-2 py-2">
+              <span className="flex items-center text-base font-medium">
+                <Download className="mr-2 h-5 w-5" />
+                .ics 파일 다운로드
+              </span>
+            </CollapsibleTrigger>
+
+            <CollapsibleContent>
+              <div className="space-y-2 pb-1">
+                {selectedServiceList.map((serviceType) => {
+                  const actionKey = `download-${serviceType}`;
+                  const isCompleted = completedActions[actionKey];
+
+                  return (
+                    <Button
+                      key={`download-${serviceType}`}
+                      variant="outline"
+                      className={`grid w-full grid-cols-[1fr_auto_1fr] items-center ${isCompleted ? 'opacity-65' : ''}`}
+                      onClick={() => handleDownload(serviceType)}
+                      disabled={isProcessing}
+                    >
+                      <span className="h-4 w-4" aria-hidden="true" />
+                      <span className="flex items-center justify-center gap-1.5">
+                        <span>{getServiceLabel(serviceType)} 다운로드</span>
+                        <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+                      </span>
+                      <span className="flex justify-end">
+                        {isCompleted ? (
+                          <Check className="text-primary h-4 w-4" />
+                        ) : (
+                          <span className="h-4 w-4" aria-hidden="true" />
+                        )}
+                      </span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </CollapsibleContent>
+          </div>
+        </Collapsible>
+      ) : (
+        <Button
+          variant="outline"
+          className={`h-14 w-full text-base ${completedActions[`download-${selectedServiceList[0] ?? 'academic'}`] ? 'opacity-65' : ''}`}
+          onClick={() => handleDownload(selectedServiceList[0] ?? 'academic')}
+          disabled={isProcessing}
+        >
+          <Download className="mr-2 h-5 w-5" />
+          {isProcessing
+            ? '처리 중...'
+            : `${getServiceLabel(selectedServiceList[0] ?? 'academic')} .ics 파일 다운로드`}
+          {completedActions[
+            `download-${selectedServiceList[0] ?? 'academic'}`
+          ] && <Check className="text-primary ml-2 h-4 w-4" />}
+        </Button>
+      )}
     </div>
   );
 
