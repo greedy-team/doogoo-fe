@@ -14,7 +14,6 @@ import {
   Chrome,
   Mail,
   Download,
-  ExternalLink,
   GraduationCap,
   Sparkles,
 } from 'lucide-react';
@@ -347,7 +346,7 @@ export function SubscriptionModal({
                             className={`h-3.5 w-3.5 ${serviceType === 'doodream' ? 'text-purple' : 'text-primary'}`}
                           />
                           <span>{getServiceLabel(serviceType)} 구독하기</span>
-                          <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+                          <Download className="h-3.5 w-3.5 opacity-60" />
                         </span>
                         <span className="flex justify-end">
                           {isCompleted ? (
@@ -390,6 +389,7 @@ export function SubscriptionModal({
             <CollapsibleContent>
               <div className="space-y-2 pb-1">
                 {selectedServiceList.map((serviceType) => {
+                  const ServiceIcon = getServiceIcon(serviceType);
                   const actionKey = `download-${serviceType}`;
                   const isCompleted = completedActions[actionKey];
 
@@ -403,8 +403,11 @@ export function SubscriptionModal({
                     >
                       <span className="h-4 w-4" aria-hidden="true" />
                       <span className="flex items-center justify-center gap-1.5">
+                        <ServiceIcon
+                          className={`h-3.5 w-3.5 ${serviceType === 'doodream' ? 'text-purple' : 'text-primary'}`}
+                        />
                         <span>{getServiceLabel(serviceType)} 다운로드</span>
-                        <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+                        <Download className="h-3.5 w-3.5 opacity-60" />
                       </span>
                       <span className="flex justify-end">
                         {isCompleted ? (
