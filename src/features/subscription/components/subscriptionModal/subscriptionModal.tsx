@@ -144,7 +144,7 @@ export function SubscriptionModal({
     if (platform === 'google') {
       return `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(sourceUrl)}`;
     }
-    return `https://outlook.live.com/calendar/addfromweb?url=${encodeURIComponent(sourceUrl)}`;
+    return `https://outlook.office.com/calendar/addfromweb?url=${encodeURIComponent(sourceUrl)}`;
   };
 
   const handleSplitSubscribe = async (
