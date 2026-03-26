@@ -14,6 +14,7 @@ import {
   Chrome,
   Mail,
   Download,
+  ExternalLink,
   GraduationCap,
   Sparkles,
 } from 'lucide-react';
@@ -346,7 +347,7 @@ export function SubscriptionModal({
                             className={`h-3.5 w-3.5 ${serviceType === 'doodream' ? 'text-purple' : 'text-primary'}`}
                           />
                           <span>{getServiceLabel(serviceType)} 구독하기</span>
-                          <Download className="h-3.5 w-3.5 opacity-60" />
+                          <ExternalLink className="h-3.5 w-3.5 opacity-60" />
                         </span>
                         <span className="flex justify-end">
                           {isCompleted ? (
