@@ -1,11 +1,13 @@
-import { useMemo, useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { useEffect, useMemo, useState } from 'react';
+import { Grid3x3, GraduationCap, List, Sparkles } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import ResultListView from './ResultListView';
-import ResultHeader from './ResultHeader';
-import ResultMonthView from './ResultMonthView';
 import EventDetailsDialog from './EventDetailsDialog';
+import ResultListView from './ResultListView';
+import ResultMonthView from './ResultMonthView';
 import { getMonthData } from './generateMonthsData';
+import type { PreviewEvent } from './CalendarPreview';
 import {
   useGetAcademicNotices,
   useGetDodreamNotices,
@@ -16,37 +18,21 @@ import {
   filterDodreamNotices,
 } from '@/shared/utils/noticeFilters';
 
-export interface PreviewEvent {
-  date: string;
-  startAt: string;
-  endAt?: string | null;
-  year: number;
-  day: number;
-  month: number;
-  title: string;
-  description?: string;
-  descriptionSummary?: string;
-  serviceType: 'academic' | 'doodream';
-  category?: string;
-  link?: string;
-  departmentName?: string | null;
-  applicationStartAt?: string | null;
-  applicationEndAt?: string | null;
-}
-
-interface CalendarPreviewProps {
+interface MobileCalendarPreviewProps {
   selectedGradeIds: string[];
   selectedMajor: string;
   selectedInterests: Set<string>;
   selectedServices: Set<'academic' | 'doodream'>;
+  onUpcomingCountChange: (count: number) => void;
 }
 
-export default function CalendarPreview({
+export default function MobileCalendarPreview({
   selectedGradeIds,
   selectedMajor,
   selectedInterests,
   selectedServices,
-}: CalendarPreviewProps) {
+  onUpcomingCountChange,
+}: MobileCalendarPreviewProps) {
   const [viewMode, setViewMode] = useState<'list' | 'month'>('list');
   const now = new Date();
   const [currentYear, setCurrentYear] = useState(now.getFullYear());
@@ -54,16 +40,13 @@ export default function CalendarPreview({
   const [selectedEvent, setSelectedEvent] = useState<PreviewEvent | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // API 데이터 가져오기
   const { data: academicNotices = [] } = useGetAcademicNotices();
   const { data: dodreamNotices = [] } = useGetDodreamNotices();
   const { data: keywords = [] } = useGetKeywords();
 
-  // 필터링된 공지 데이터
   const previewEvents = useMemo((): PreviewEvent[] => {
     const events: PreviewEvent[] = [];
 
-    // 학사공지 필터링 및 변환
     if (selectedServices.has('academic')) {
       const filteredAcademicNotices = filterAcademicNotices(
         academicNotices,
@@ -87,7 +70,6 @@ export default function CalendarPreview({
       });
     }
 
-    // 두드림 공지 필터링 및 변환
     if (selectedServices.has('doodream')) {
       const filteredDodreamNotices = filterDodreamNotices(
         dodreamNotices,
@@ -113,14 +95,10 @@ export default function CalendarPreview({
           serviceType: 'doodream',
           category: keywordName,
           link: notice.detailUrl,
-          departmentName: notice.departmentName,
-          applicationStartAt: notice.applicationStartAt,
-          applicationEndAt: notice.applicationEndAt,
         });
       });
     }
 
-    // 날짜순 정렬
     return events.sort((a, b) => {
       if (a.year !== b.year) return a.year - b.year;
       if (a.month !== b.month) return a.month - b.month;
@@ -135,7 +113,7 @@ export default function CalendarPreview({
     selectedInterests,
     selectedServices,
   ]);
-  // 오늘 이후 이벤트만 (헤더 개수, 리스트 뷰용)
+
   const upcomingEvents = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -145,6 +123,17 @@ export default function CalendarPreview({
       return eventDate >= today;
     });
   }, [previewEvents]);
+
+  useEffect(() => {
+    onUpcomingCountChange(upcomingEvents.length);
+  }, [onUpcomingCountChange, upcomingEvents.length]);
+
+  const doodreamCount = upcomingEvents.filter(
+    (e) => e.serviceType === 'doodream',
+  ).length;
+  const academicCount = upcomingEvents.filter(
+    (e) => e.serviceType === 'academic',
+  ).length;
 
   const currentMonthData = getMonthData(currentYear, currentMonth);
 
@@ -173,36 +162,67 @@ export default function CalendarPreview({
   };
 
   return (
-    <Card className="from-card to-accent/20 bg-linear-to-br p-6">
-      <div className="space-y-4">
-        <ResultHeader
-          previewEvents={upcomingEvents}
-          selectedServices={selectedServices}
-          viewMode={viewMode}
-          onViewModeChange={(mode) => setViewMode(mode)}
-        />
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          {selectedServices.has('academic') && (
+            <Badge
+              variant="secondary"
+              className="bg-primary/10 text-primary border-primary/20"
+            >
+              <GraduationCap className="mr-1 h-3 w-3" />
+              {academicCount}개 학사
+            </Badge>
+          )}
+          {selectedServices.has('doodream') && (
+            <Badge
+              variant="secondary"
+              className="bg-purple/10 text-purple border-purple"
+            >
+              <Sparkles className="mr-1 h-3 w-3" />
+              {doodreamCount}개 두드림
+            </Badge>
+          )}
+        </div>
 
-        {viewMode === 'list' ? (
-          <ResultListView
-            previewEvents={upcomingEvents}
-            currentMonthData={currentMonthData}
-            onPrevMonth={goToPrevMonth}
-            onNextMonth={goToNextMonth}
-            onEventClick={(event) => {
-              setSelectedEvent(event);
-              setIsDialogOpen(true);
-            }}
-          />
-        ) : (
-          <ResultMonthView
-            getEventsForDay={getEventsForDay}
-            onEventClick={(event) => {
-              setSelectedEvent(event);
-              setIsDialogOpen(true);
-            }}
-          />
-        )}
+        <Tabs
+          value={viewMode}
+          onValueChange={(value) => setViewMode(value as 'list' | 'month')}
+          className="w-auto"
+        >
+          <TabsList className="grid h-8 w-auto grid-cols-2">
+            <TabsTrigger value="list" className="px-3 text-xs">
+              <List className="mr-1 h-3 w-3" />
+              목록
+            </TabsTrigger>
+            <TabsTrigger value="month" className="px-3 text-xs">
+              <Grid3x3 className="mr-1 h-3 w-3" />
+              월간
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
+
+      {viewMode === 'list' ? (
+        <ResultListView
+          previewEvents={upcomingEvents}
+          currentMonthData={currentMonthData}
+          onPrevMonth={goToPrevMonth}
+          onNextMonth={goToNextMonth}
+          onEventClick={(event) => {
+            setSelectedEvent(event);
+            setIsDialogOpen(true);
+          }}
+        />
+      ) : (
+        <ResultMonthView
+          getEventsForDay={getEventsForDay}
+          onEventClick={(event) => {
+            setSelectedEvent(event);
+            setIsDialogOpen(true);
+          }}
+        />
+      )}
 
       <EventDetailsDialog
         isOpen={isDialogOpen}
@@ -214,6 +234,6 @@ export default function CalendarPreview({
         }}
         selectedEvent={selectedEvent}
       />
-    </Card>
+    </>
   );
 }

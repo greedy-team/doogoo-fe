@@ -1,14 +1,8 @@
-import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
+import { Calendar, ChevronDown } from 'lucide-react';
 
 // Academic Notice Components
-import YearTypeSelection from '@/features/academicNotice/components/YearTypeSelection';
 import YearSelectionLayout from '@/features/academicNotice/components/YearSelectionLayout';
 import SelectedServiceTypeHeader from '@/shared/components/SelectedServiceTypeHeader';
 
@@ -17,6 +11,7 @@ import Categories from '@/features/dooDreamNotice/components/Categories';
 
 // Subscription Components
 import CalendarPreview from '@/features/subscription/components/calendarPreview/CalendarPreview';
+import MobileCalendarPreview from '@/features/subscription/components/calendarPreview/MobileCalendarPreview';
 import { SubscriptionModal } from '@/features/subscription/components/subscriptionModal/subscriptionModal';
 
 // Store Hooks
@@ -36,12 +31,7 @@ export default function ServiceSubscription({
   onBack,
 }: ServiceSubscriptionProps) {
   // Stores
-  const {
-    selectedGradeYear,
-    gradeFilterScope,
-    setSelectedGradeYear,
-    setGradeFilterScope,
-  } = useAcademicStore();
+  const { selectedGradeIds, setSelectedGradeIds } = useAcademicStore();
 
   const {
     selectedDepartmentId,
@@ -50,7 +40,7 @@ export default function ServiceSubscription({
     toggleInterestKeyword,
   } = useDodreamStore();
 
-  const { selectedServices } = useServiceStore();
+  const { selectedServices, toggleServiceSelection } = useServiceStore();
 
   const {
     isSubscriptionModalOpen,
@@ -60,22 +50,36 @@ export default function ServiceSubscription({
 
   const isAcademicSelected = selectedServices.has('academic');
   const isDoDreamSelected = selectedServices.has('doodream');
-  const hasSelectedDoDreamInterest = selectedInterestKeywordIds.size > 0;
-  const isSubscribeDisabled = isDoDreamSelected && !hasSelectedDoDreamInterest;
+  const hasAnySelectedService = selectedServices.size > 0;
+  const isSubscribeDisabled = !hasAnySelectedService;
 
-  // Collapsible state for both mobile and desktop
-  const [isAcademicExpanded, setIsAcademicExpanded] = useState(true);
-  const [isDoDreamExpanded, setIsDoDreamExpanded] = useState(true);
+  // Mobile bottom-sheet state
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
+  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
+  const [mobileUpcomingCount, setMobileUpcomingCount] = useState(0);
 
-  console.log('Selected Interests:', selectedInterestKeywordIds);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 1023px)');
+    const syncMobileState = () => setIsMobile(mediaQuery.matches);
+    syncMobileState();
+    mediaQuery.addEventListener('change', syncMobileState);
+    return () => mediaQuery.removeEventListener('change', syncMobileState);
+  }, []);
+
+  const sheetStyle = isMobilePreviewOpen
+    ? { maxHeight: '80dvh' }
+    : { height: '76px' };
+
+  const handleServiceToggle = (service: 'academic' | 'doodream') => {
+    toggleServiceSelection(service);
+  };
 
   return (
-    <div className="mx-auto max-w-7xl">
+    <div className="mx-auto max-w-7xl pb-24 lg:pb-0">
       <SubscriptionModal
         isOpen={isSubscriptionModalOpen}
         onClose={closeSubscriptionModal}
-        selectedYear={selectedGradeYear}
-        yearFilterType={gradeFilterScope}
+        selectedGradeIds={selectedGradeIds}
         selectedMajor={selectedDepartmentId}
         selectedInterests={selectedInterestKeywordIds}
         selectedServices={selectedServices}
@@ -83,97 +87,91 @@ export default function ServiceSubscription({
 
       {/* Unified Layout: Responsive grid */}
       <div className="gap-6 lg:grid lg:grid-cols-3">
-        {/* Left Column: Academic & DooDream Notices (Collapsible on all devices) */}
-        <div className="col-span-2 space-y-6">
-          {/* Academic Notice Card - Collapsible */}
-          {isAcademicSelected && (
-            <Collapsible
-              open={isAcademicExpanded}
-              onOpenChange={setIsAcademicExpanded}
+        {/* Left Column: Academic & DooDream Notices */}
+        <div className="col-span-2">
+          <div>
+            <div
+              className={`flex w-full cursor-pointer items-center justify-between rounded-xl bg-white p-4 ${isAcademicSelected ? 'hover:bg-gray-50' : ''}`}
+              onClick={() => handleServiceToggle('academic')}
             >
-              <Card className="gap-0 overflow-hidden p-0">
-                <CollapsibleTrigger className="flex w-full items-center justify-between bg-white p-4 hover:bg-gray-50">
-                  <div className="text-left">
-                    <SelectedServiceTypeHeader
-                      type="academic"
-                      title="학사일정"
-                      description="수강 신청, 시험기간 등"
-                    />
-                  </div>
-                  <ChevronDown
-                    className={`ml-4 h-5 w-5 shrink-0 transition-transform duration-200 ${
-                      isAcademicExpanded ? 'rotate-0' : '-rotate-90'
-                    }`}
-                    aria-hidden="true"
-                  />
-                </CollapsibleTrigger>
+              <div className="text-left">
+                <SelectedServiceTypeHeader
+                  type="academic"
+                  title="학사일정"
+                  description="수강 신청, 시험기간 등"
+                />
+              </div>
 
-                <CollapsibleContent>
-                  <div className="p-4">
-                    <div className="space-y-5">
-                      {gradeFilterScope === 'my-year' && (
-                        <YearSelectionLayout
-                          selectedYear={selectedGradeYear}
-                          onYearChange={setSelectedGradeYear}
-                        />
-                      )}
-                      <YearTypeSelection
-                        yearFilterType={gradeFilterScope}
-                        onYearFilterTypeChange={setGradeFilterScope}
-                      />
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-          )}
+              <div className="ml-4 flex items-center gap-3">
+                <Switch
+                  checked={isAcademicSelected}
+                  onCheckedChange={() => handleServiceToggle('academic')}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+            </div>
 
-          {/* DooDream Notice Card - Collapsible */}
-          {isDoDreamSelected && (
-            <Collapsible
-              open={isDoDreamExpanded}
-              onOpenChange={setIsDoDreamExpanded}
+            <div
+              className={`p-4 ${
+                isAcademicSelected
+                  ? ''
+                  : 'pointer-events-none opacity-45 grayscale'
+              }`}
             >
-              <Card className="gap-0 overflow-hidden p-0">
-                <CollapsibleTrigger className="flex w-full items-center justify-between bg-white p-4 hover:bg-gray-50">
-                  <div className="text-left">
-                    <SelectedServiceTypeHeader
-                      type="doodream"
-                      title="두드림 관심사"
-                      description="교내 대회, 학과 행사 등"
-                    />
-                  </div>
-                  <ChevronDown
-                    className={`ml-4 h-5 w-5 shrink-0 transition-transform duration-200 ${
-                      isDoDreamExpanded ? 'rotate-0' : '-rotate-90'
-                    }`}
-                    aria-hidden="true"
-                  />
-                </CollapsibleTrigger>
+              <YearSelectionLayout
+                selectedYears={selectedGradeIds}
+                onYearsChange={setSelectedGradeIds}
+              />
+            </div>
+          </div>
 
-                <CollapsibleContent>
-                  <div className="p-4">
-                    <div className="space-y-5">
-                      <Categories
-                        selectedInterests={selectedInterestKeywordIds}
-                        onInterestToggle={toggleInterestKeyword}
-                        selectedMajor={selectedDepartmentId}
-                        onMajorChange={setSelectedDepartmentId}
-                      />
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
-          )}
+          <div className="border-border my-2 border-t" />
+
+          <div>
+            <div
+              className={`flex w-full cursor-pointer items-center justify-between rounded-xl bg-white p-4 ${isDoDreamSelected ? 'hover:bg-gray-50' : ''}`}
+              onClick={() => handleServiceToggle('doodream')}
+            >
+              <div className="text-left">
+                <SelectedServiceTypeHeader
+                  type="doodream"
+                  title="두드림"
+                  description="교내 대회, 학과 행사 등"
+                />
+              </div>
+
+              <div className="ml-4 flex items-center gap-3">
+                <Switch
+                  checked={isDoDreamSelected}
+                  onCheckedChange={() => handleServiceToggle('doodream')}
+                  onClick={(e) => e.stopPropagation()}
+                  className="data-[state=checked]:bg-purple"
+                />
+              </div>
+            </div>
+
+            <div
+              className={`p-4 ${
+                isDoDreamSelected
+                  ? ''
+                  : 'pointer-events-none opacity-45 grayscale'
+              }`}
+            >
+              <Categories
+                selectedInterests={selectedInterestKeywordIds}
+                onInterestToggle={toggleInterestKeyword}
+                selectedMajor={selectedDepartmentId}
+                onMajorChange={setSelectedDepartmentId}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Right Column: Result Preview (Sticky on desktop, stacked on mobile) */}
-        <div className="col-span-1 mt-6 lg:mt-0">
+        {/* Right Column: Result Preview (desktop only) */}
+        <div className="col-span-1 mt-6 hidden lg:mt-0 lg:block">
           <div className="lg:sticky lg:top-20">
             <CalendarPreview
-              selectedYear={selectedGradeYear}
-              yearFilterType={gradeFilterScope}
+              selectedGradeIds={selectedGradeIds}
               selectedMajor={selectedDepartmentId}
               selectedInterests={selectedInterestKeywordIds}
               selectedServices={selectedServices}
@@ -182,14 +180,68 @@ export default function ServiceSubscription({
         </div>
       </div>
 
-      {/* Navigation Buttons - Always at bottom */}
-      <div className="space-y-3 py-6">
+      {/* Desktop action buttons */}
+      <div className="hidden space-y-3 py-6 lg:block">
         <SubscribeButton
           onClick={openSubscriptionModal}
           disabled={isSubscribeDisabled}
         />
-        <BackButton onClick={onBack} />
+        <BackButton onClick={onBack} text="처음으로" />
       </div>
+
+      {/* Mobile bottom-sheet preview */}
+      {isMobile && (
+        <div
+          className="bg-card/98 border-border fixed inset-x-0 bottom-0 z-40 overflow-hidden rounded-t-3xl border shadow-2xl transition-all duration-300 lg:hidden"
+          style={sheetStyle}
+        >
+          <button
+            type="button"
+            className="w-full px-4 pt-2"
+            onClick={() => setIsMobilePreviewOpen((prev) => !prev)}
+          >
+            <div className="mb-2 flex items-center justify-between py-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="text-primary h-5 w-5" />
+                <span className="text-foreground text-lg font-semibold">
+                  캘린더 미리보기
+                </span>
+              </div>
+              <ChevronDown
+                className={`h-5 w-5 transition-transform ${
+                  isMobilePreviewOpen ? 'rotate-0' : 'rotate-180'
+                }`}
+              />
+            </div>
+            {isMobilePreviewOpen && (
+              <p className="text-muted-foreground mb-2 text-left text-xs">
+                {mobileUpcomingCount}개 행사가 동기화 됩니다
+              </p>
+            )}
+          </button>
+
+          <div
+            className="overflow-y-auto px-4 pb-6"
+            style={{ maxHeight: 'calc(80dvh - 74px)' }}
+          >
+            {isMobilePreviewOpen && (
+              <div className="space-y-3">
+                <MobileCalendarPreview
+                  selectedGradeIds={selectedGradeIds}
+                  selectedMajor={selectedDepartmentId}
+                  selectedInterests={selectedInterestKeywordIds}
+                  selectedServices={selectedServices}
+                  onUpcomingCountChange={setMobileUpcomingCount}
+                />
+                <SubscribeButton
+                  onClick={openSubscriptionModal}
+                  disabled={isSubscribeDisabled}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
