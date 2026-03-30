@@ -1,13 +1,25 @@
+import { useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Calendar, Download, Smartphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { SubscriptionModal } from '@/features/subscription/components/subscriptionModal/subscriptionModal';
 import { useServiceStore } from '@/shared/stores/useServiceStore';
 import { useAcademicStore } from '@/shared/stores/useAcademicStore';
 import { useDodreamStore } from '@/shared/stores/useDodreamStore';
 import { useUIStore } from '@/shared/stores/useUIStore';
-import { useGetColleges, useGetKeywords } from '@/shared/hooks/useCommonData';
+import { useGetColleges, useGetKeywords, useGetGrades } from '@/shared/hooks/useCommonData';
+import {
+  useGetAcademicNotices,
+  useGetDodreamNotices,
+  useGetFilteredAcademicNotices,
+  useGetFilteredDodreamNotices,
+} from '@/shared/hooks/useNotices';
+import {
+  filterAcademicNotices,
+  filterDodreamNotices,
+} from '@/shared/utils/noticeFilters';
 
 interface ResultProps {
   onBack: () => void;
@@ -25,7 +37,93 @@ export default function ResultPage({ onBack }: ResultProps) {
     closeSubscriptionModal,
   } = useUIStore();
   const { data: colleges = [] } = useGetColleges();
-  const { data: keywords = [] } = useGetKeywords();
+  const { data: rawKeywords = [] } = useGetKeywords();
+  const { data: grades = [] } = useGetGrades();
+  const keywords = rawKeywords.filter((k) => k.id !== 'k_7');
+
+  const isAcademicSelected = selectedServices.has('academic');
+  const isDodreamSelected = selectedServices.has('doodream');
+
+  const allGradeIds = grades.map((g) => g.id);
+  const isAllGradesSelected =
+    allGradeIds.length > 0 &&
+    allGradeIds.every((id) => selectedGradeIds.includes(id));
+  const academicFilterGradeIds = isAllGradesSelected ? ['all'] : selectedGradeIds;
+
+  const dodreamFilterBody = {
+    selectedDepartmentId:
+      !selectedDepartmentId || selectedDepartmentId === 'all'
+        ? 'all'
+        : selectedDepartmentId,
+    selectedKeywordId:
+      selectedInterestKeywordIds.size === keywords.length
+        ? ['all']
+        : Array.from(selectedInterestKeywordIds),
+  };
+
+  const { data: allAcademicNotices = [] } = useGetAcademicNotices();
+  const { data: allDodreamNotices = [] } = useGetDodreamNotices();
+  const { data: serverAcademicNotices } = useGetFilteredAcademicNotices(
+    academicFilterGradeIds,
+    isAcademicSelected,
+  );
+  const { data: serverDodreamNotices } = useGetFilteredDodreamNotices(
+    dodreamFilterBody,
+    isDodreamSelected,
+  );
+
+  const verificationStatus = useMemo(() => {
+    if (isAcademicSelected && !serverAcademicNotices) return 'pending';
+    if (isDodreamSelected && !serverDodreamNotices) return 'pending';
+
+    const hasDiff = (clientIds: Set<string>, serverIds: Set<string>) =>
+      [...serverIds].some((id) => !clientIds.has(id)) ||
+      [...clientIds].some((id) => !serverIds.has(id));
+
+    if (isAcademicSelected && serverAcademicNotices) {
+      const clientIds = new Set(
+        filterAcademicNotices(allAcademicNotices, selectedGradeIds).map(
+          (n) => n.noticeId,
+        ),
+      );
+      const serverIds = new Set(serverAcademicNotices.map((n) => n.noticeId));
+      if (hasDiff(clientIds, serverIds)) return 'error';
+    }
+
+    if (isDodreamSelected && serverDodreamNotices) {
+      const clientIds = new Set(
+        filterDodreamNotices(
+          allDodreamNotices,
+          selectedDepartmentId,
+          selectedInterestKeywordIds,
+        ).map((n) => n.noticeId),
+      );
+      const serverIds = new Set(serverDodreamNotices.map((n) => n.noticeId));
+      if (hasDiff(clientIds, serverIds)) return 'error';
+    }
+
+    return 'ok';
+  }, [
+    serverAcademicNotices,
+    serverDodreamNotices,
+    allAcademicNotices,
+    allDodreamNotices,
+    isAcademicSelected,
+    isDodreamSelected,
+    selectedGradeIds,
+    selectedDepartmentId,
+    selectedInterestKeywordIds,
+  ]);
+
+  const isVerified = verificationStatus === 'ok';
+
+  useEffect(() => {
+    if (verificationStatus === 'error') {
+      toast.error(
+        '예상하지 못한 ics가 추가되었습니다. sejong.doogoo@gmail.com으로 연락주시기 바랍니다',
+      );
+    }
+  }, [verificationStatus]);
 
   const selectedDepartmentName = selectedDepartmentId
     ? colleges
@@ -54,12 +152,18 @@ export default function ResultPage({ onBack }: ResultProps) {
             <CheckCircle2 className="h-16 w-16 text-green-600" />
           </div>
         </div>
-        <h2 className="text-foreground mb-2 text-2xl font-bold">
-          구독이 완료되었습니다!
-        </h2>
-        <p className="text-muted-foreground">
-          선택하신 캘린더가 성공적으로 추가되었습니다.
-        </p>
+        {isVerified ? (
+          <>
+            <h2 className="text-foreground mb-2 text-2xl font-bold">
+              구독이 완료되었습니다!
+            </h2>
+            <p className="text-muted-foreground">
+              선택하신 캘린더가 성공적으로 추가되었습니다.
+            </p>
+          </>
+        ) : (
+          <p className="text-muted-foreground text-sm">구독 내용을 확인하는 중입니다...</p>
+        )}
         <Button
           type="button"
           variant="link"
