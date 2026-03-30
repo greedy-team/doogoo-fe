@@ -78,12 +78,13 @@ export default function MobileCalendarPreview({
       );
 
       filteredDodreamNotices.forEach((notice) => {
-        const startDate = new Date(notice.operatingStartAt);
+        const displayDateString = notice.applicationStartAt || notice.operatingStartAt;
+        const startDate = new Date(displayDateString);
         const keywordName = keywords.find((k) =>
           notice.keywordIds.includes(k.id),
         )?.name;
         events.push({
-          date: notice.operatingStartAt,
+          date: displayDateString,
           startAt: notice.operatingStartAt,
           endAt: notice.operatingEndAt,
           year: startDate.getFullYear(),
@@ -120,7 +121,17 @@ export default function MobileCalendarPreview({
     return previewEvents.filter((e) => {
       const eventDate = new Date(e.year, e.month - 1, e.day);
       eventDate.setHours(0, 0, 0, 0);
-      return eventDate >= today;
+
+      let isOngoingApplication = false;
+      if (e.applicationStartAt && e.applicationEndAt) {
+        const appStart = new Date(e.applicationStartAt);
+        appStart.setHours(0, 0, 0, 0);
+        const appEnd = new Date(e.applicationEndAt);
+        appEnd.setHours(23, 59, 59, 999);
+        isOngoingApplication = today >= appStart && today <= appEnd;
+      }
+
+      return eventDate >= today || isOngoingApplication;
     });
   }, [previewEvents]);
 
