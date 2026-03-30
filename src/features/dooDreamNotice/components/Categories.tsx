@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -25,6 +26,7 @@ import { MajorSelection } from './Selection';
 export interface CategoriesProps {
   selectedInterests: Set<string>;
   onInterestToggle: (id: string) => void;
+  onSetInterests: (ids: Set<string>) => void;
   selectedMajor: string;
   onMajorChange: (major: string) => void;
 }
@@ -32,6 +34,7 @@ export interface CategoriesProps {
 export default function Categories({
   selectedInterests,
   onInterestToggle,
+  onSetInterests,
   selectedMajor,
   onMajorChange,
 }: CategoriesProps) {
@@ -96,9 +99,25 @@ export default function Categories({
 
   return (
     <div className="space-y-3">
-      <Label className="text-foreground text-sm font-medium">
-        관심 카테고리 선택
-      </Label>
+      <div className="flex items-center justify-between">
+        <Label className="text-foreground text-sm font-medium">
+          관심 카테고리 선택
+        </Label>
+        <label className="text-foreground flex cursor-pointer items-center gap-2 text-xs font-medium">
+          <Checkbox
+            className="data-[state=checked]:bg-purple data-[state=checked]:border-purple"
+            checked={selectedInterests.size === visibleKeywords.length}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                onSetInterests(new Set(visibleKeywords.map(k => k.id)));
+              } else {
+                onSetInterests(new Set());
+              }
+            }}
+          />
+          전체 선택
+        </label>
+      </div>
       <Accordion type="single" collapsible className="space-y-2">
         {visibleKeywords.map((interest) => {
           const Icon = getCategoryIcon(interest.icon);

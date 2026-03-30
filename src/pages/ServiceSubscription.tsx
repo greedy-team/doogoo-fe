@@ -38,6 +38,7 @@ export default function ServiceSubscription({
     selectedInterestKeywordIds,
     setSelectedDepartmentId,
     toggleInterestKeyword,
+    setInterestKeywordIds,
   } = useDodreamStore();
 
   const { selectedServices, toggleServiceSelection } = useServiceStore();
@@ -50,7 +51,13 @@ export default function ServiceSubscription({
 
   const isAcademicSelected = selectedServices.has('academic');
   const isDoDreamSelected = selectedServices.has('doodream');
-  const hasAnySelectedService = selectedServices.size > 0;
+
+  const validSelectedServices = new Set(selectedServices);
+  if (selectedServices.has('doodream') && selectedInterestKeywordIds.size === 0) {
+    validSelectedServices.delete('doodream');
+  }
+
+  const hasAnySelectedService = validSelectedServices.size > 0;
   const isSubscribeDisabled = !hasAnySelectedService;
 
   // Mobile bottom-sheet state
@@ -82,7 +89,7 @@ export default function ServiceSubscription({
         selectedGradeIds={selectedGradeIds}
         selectedMajor={selectedDepartmentId}
         selectedInterests={selectedInterestKeywordIds}
-        selectedServices={selectedServices}
+        selectedServices={validSelectedServices}
       />
 
       {/* Unified Layout: Responsive grid */}
@@ -160,6 +167,7 @@ export default function ServiceSubscription({
               <Categories
                 selectedInterests={selectedInterestKeywordIds}
                 onInterestToggle={toggleInterestKeyword}
+                onSetInterests={setInterestKeywordIds}
                 selectedMajor={selectedDepartmentId}
                 onMajorChange={setSelectedDepartmentId}
               />
