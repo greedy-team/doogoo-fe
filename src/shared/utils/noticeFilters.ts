@@ -17,8 +17,7 @@ export const filterAcademicNotices = (
   return notices.filter(
     (notice) =>
       selectedGradeIdSet.has(notice.gradeId) ||
-      notice.gradeId === 'all' ||
-      notice.gradeId === null,
+      notice.gradeId === 'all',
   );
 };
 

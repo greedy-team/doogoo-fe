@@ -46,7 +46,7 @@ export type AcademicNoticesResponse = {
 export type DoDreamNotice = {
   noticeId: string;
   title: string;
-  departmentId: string | null;
+  departmentId: string;
   departmentName: string | null;
   applicationStartAt: string;
   applicationEndAt: string | null;

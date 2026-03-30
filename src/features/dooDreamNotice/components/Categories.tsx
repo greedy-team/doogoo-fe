@@ -41,12 +41,12 @@ export default function Categories({
   const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>(
     {},
   );
-  const { data: keywords = [], isLoading } = useGetKeywords();
+  const { data: rawKeywords = [], isLoading } = useGetKeywords();
   const { data: notices = [] } = useGetDodreamNotices();
-  const visibleKeywords = keywords.filter((keyword) => keyword.id !== 'k_7');
+  const keywords = rawKeywords.filter((k) => k.id !== 'k_7');
 
   const noticesByKeyword = useMemo(() => {
-    return visibleKeywords.reduce<Record<string, typeof notices>>(
+    return keywords.reduce<Record<string, typeof notices>>(
       (acc, keyword) => {
         const keywordNotices = notices.filter((notice) => {
           if (!notice.keywordIds.includes(keyword.id)) {
@@ -69,7 +69,7 @@ export default function Categories({
       },
       {},
     );
-  }, [notices, selectedMajor, visibleKeywords]);
+  }, [notices, selectedMajor, keywords]);
 
   const showMore = (categoryId: string) => {
     setVisibleCounts((prev) => ({
@@ -106,10 +106,10 @@ export default function Categories({
         <label className="text-foreground flex cursor-pointer items-center gap-2 text-xs font-medium">
           <Checkbox
             className="data-[state=checked]:bg-purple data-[state=checked]:border-purple"
-            checked={selectedInterests.size === visibleKeywords.length}
+            checked={selectedInterests.size === keywords.length}
             onCheckedChange={(checked) => {
               if (checked) {
-                onSetInterests(new Set(visibleKeywords.map(k => k.id)));
+                onSetInterests(new Set(keywords.map(k => k.id)));
               } else {
                 onSetInterests(new Set());
               }
@@ -119,7 +119,7 @@ export default function Categories({
         </label>
       </div>
       <Accordion type="single" collapsible className="space-y-2">
-        {visibleKeywords.map((interest) => {
+        {keywords.map((interest) => {
           const Icon = getCategoryIcon(interest.icon);
           const isSelected = selectedInterests.has(interest.id);
           const allNotices = noticesByKeyword[interest.id] ?? [];

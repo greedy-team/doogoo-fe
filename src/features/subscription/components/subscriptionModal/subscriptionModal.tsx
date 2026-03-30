@@ -60,9 +60,9 @@ export function SubscriptionModal({
 
   const createAcademicIcs = useCreateAcademicIcs();
   const createDodreamIcs = useCreateDodreamIcs();
-  const { data: keywords = [] } = useGetKeywords();
+  const { data: rawKeywords = [] } = useGetKeywords();
+  const keywords = rawKeywords.filter((k) => k.id !== 'k_7');
   const { data: grades = [] } = useGetGrades();
-
   const selectedServiceList = Array.from(selectedServices);
   const hasBothServices = selectedServiceList.length === 2;
   const allGradeIds = grades.map((grade) => grade.id);
@@ -105,7 +105,7 @@ export function SubscriptionModal({
     downloadUrl: string;
   }> => {
     const response = await createAcademicIcs.mutateAsync({
-      selectedGradeIds: isAllGradesSelected ? null : selectedGradeIds,
+      selectedGradeIds: isAllGradesSelected ? ['all'] : selectedGradeIds,
     });
     return response;
   };
@@ -116,7 +116,7 @@ export function SubscriptionModal({
   }> => {
     const response = await createDodreamIcs.mutateAsync({
       selectedDepartmentId:
-        !selectedMajor || selectedMajor === 'all' ? null : selectedMajor, //백앤드에서  "null"은 전체로 처리,
+        !selectedMajor || selectedMajor === 'all' ? 'all' : selectedMajor,
       selectedKeywordId:
         selectedInterests.size === keywords.length
           ? ['all']
