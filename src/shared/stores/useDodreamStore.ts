@@ -6,6 +6,7 @@ interface DodreamFilterState {
 
     setSelectedDepartmentId: (departmentId: string) => void;
     toggleInterestKeyword: (keywordId: string) => void;
+    setInterestKeywordIds: (keywordIds: Set<string>) => void;
     resetDodreamFilter: () => void;
 
     isDepartmentSelected: () => boolean;
@@ -28,6 +29,9 @@ export const useDodreamStore = create<DodreamFilterState>((set, get) => ({
             }//토글 구현
             return { selectedInterestKeywordIds: updatedKeywords };
         }),
+
+    setInterestKeywordIds: (keywordIds) => 
+        set({ selectedInterestKeywordIds: new Set(keywordIds) }),
 
     resetDodreamFilter: () =>
         set({

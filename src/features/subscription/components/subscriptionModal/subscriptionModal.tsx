@@ -117,10 +117,9 @@ export function SubscriptionModal({
     const response = await createDodreamIcs.mutateAsync({
       selectedDepartmentId:
         !selectedMajor || selectedMajor === 'all' ? null : selectedMajor, //백앤드에서  "null"은 전체로 처리,
-      // 모든 키워드 선택 시 빈 배열 → 백엔드에서 "전체"로 처리(백앤드 요구사항)
       selectedKeywordId:
         selectedInterests.size === keywords.length
-          ? []
+          ? ['all']
           : Array.from(selectedInterests),
     });
     return response;
