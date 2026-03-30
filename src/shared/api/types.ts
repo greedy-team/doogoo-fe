@@ -34,7 +34,7 @@ export type GradesResponse = {
 export type AcademicNotice = {
   noticeId: string;
   title: string;
-  gradeId: string;
+  gradeIds: string[];
   startAt: string;
   endAt: string | null;
 };
