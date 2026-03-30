@@ -1,23 +1,26 @@
 import { create } from 'zustand';
 
-type GradeFilterScope = 'my-year' | 'all';
-//백앤드 응답에 따라 달라져야합니다.
 interface AcademicFilterState {
-    selectedGradeYear: number;
-    gradeFilterScope: GradeFilterScope;
-    setSelectedGradeYear: (year: number) => void;
-    setGradeFilterScope: (scope: GradeFilterScope) => void;
-    resetAcademicFilter: () => void;
+  selectedGradeIds: string[];
+  setSelectedGradeIds: (gradeIds: string[]) => void;
+  toggleSelectedGradeId: (gradeId: string) => void;
+  resetAcademicFilter: () => void;
 }
 
 export const useAcademicStore = create<AcademicFilterState>((set) => ({
-    selectedGradeYear: 1,
-    gradeFilterScope: 'my-year',
+  selectedGradeIds: ['1'],
 
-    setSelectedGradeYear: (year) => set({ selectedGradeYear: year }),
+  setSelectedGradeIds: (gradeIds) => set({ selectedGradeIds: gradeIds }),
 
-    setGradeFilterScope: (scope) => set({ gradeFilterScope: scope }),
+  toggleSelectedGradeId: (gradeId) =>
+    set((state) => {
+      const hasGrade = state.selectedGradeIds.includes(gradeId);
+      return {
+        selectedGradeIds: hasGrade
+          ? state.selectedGradeIds.filter((id) => id !== gradeId)
+          : [...state.selectedGradeIds, gradeId],
+      };
+    }),
 
-    resetAcademicFilter: () =>
-        set({ selectedGradeYear: 1, gradeFilterScope: 'my-year' }),
+  resetAcademicFilter: () => set({ selectedGradeIds: ['1'] }),
 }));

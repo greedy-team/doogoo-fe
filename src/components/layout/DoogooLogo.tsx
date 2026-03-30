@@ -6,6 +6,7 @@ export default function DoogooLogo({ className }: { className?: string }) {
       height="22"
       viewBox="0 0 67 22"
       fill="none"
+      overflow="visible"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-label="두구두구"

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 interface NextButtonProps {
   onClick: () => void;
   disabled?: boolean;
+  text?: string;
 }
 
 export function NextButton({ onClick, disabled = false }: NextButtonProps) {
@@ -18,7 +19,11 @@ export function NextButton({ onClick, disabled = false }: NextButtonProps) {
   );
 }
 
-export function BackButton({ onClick, disabled = false }: NextButtonProps) {
+export function BackButton({
+  onClick,
+  disabled = false,
+  text,
+}: NextButtonProps) {
   return (
     <Button
       variant="outline"
@@ -27,7 +32,7 @@ export function BackButton({ onClick, disabled = false }: NextButtonProps) {
       disabled={disabled}
       className="hover:bg-accent/50 h-12 w-full rounded-lg border font-semibold"
     >
-      이전
+      {text || '이전'}
     </Button>
   );
 }

@@ -6,14 +6,14 @@
  * 학사공지 ICS 생성 요청
  */
 export type AcademicIcsRequest = {
-  selectedGradeId: string | null; // 학년 ID , null 시 백엔드에서 "전체"로 처리
+  selectedGradeIds: string[];
 };
 
 /**
  * 두드림 ICS 생성 요청
  */
 export type DoDreamIcsRequest = {
-  selectedDepartmentId?: string | null; // null 시 백엔드에서 "전체"로 처리
+  selectedDepartmentId: string;
   selectedMinorDepartmentId?: string;
   selectedKeywordId: string[];
 };
