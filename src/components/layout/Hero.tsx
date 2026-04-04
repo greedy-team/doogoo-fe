@@ -7,7 +7,7 @@ export function Hero() {
         <span className="text-primary">내 캘린더로.</span>
       </h1>
       <p className="text-muted-foreground mx-auto max-w-md text-base sm:text-lg">
-        세종대 주요 일정을 한눈에 모아보세요.
+        {/* 세종대 주요 일정을 한눈에 모아보세요. */}
       </p>
     </section>
   );
