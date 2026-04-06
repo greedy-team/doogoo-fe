@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { Headset } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 // import HowToInfo from './HowToInfo';
 import DoogooLogo from './DoogooLogo';
 export default function Navigation() {
@@ -8,7 +10,16 @@ export default function Navigation() {
         <Link to="/" className="flex items-center gap-2">
           <DoogooLogo className="h-8 w-auto" />
         </Link>
-        {/* <HowToInfo /> */}
+        <Button asChild variant="ghost" size="icon" className="rounded-full">
+          <a
+            href="https://forms.gle/AaJTwG1GsDShJopz8"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Headset className="size-4" aria-hidden="true" />
+            <span className="sr-only">버그 제보</span>
+          </a>
+        </Button>
       </div>
     </header>
   );
