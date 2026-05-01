@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Calendar, Download, Smartphone } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Calendar, Download, Smartphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { SubscriptionModal } from '@/features/subscription/components/subscriptionModal/subscriptionModal';
 import { useServiceStore } from '@/shared/stores/useServiceStore';
@@ -55,8 +55,8 @@ export default function ResultPage({ onBack }: ResultProps) {
     [selectedDepartmentId, selectedInterestKeywordIds],
   );
 
-  const { data: allAcademicNotices = [] } = useGetAcademicNotices();
-  const { data: allDodreamNotices = [] } = useGetDodreamNotices();
+  const { data: allAcademicNotices = [], isLoading: isAllAcademicLoading } = useGetAcademicNotices();
+  const { data: allDodreamNotices = [], isLoading: isAllDodreamLoading } = useGetDodreamNotices();
   const {
     data: serverAcademicNotices,
     isLoading: isAcademicLoading,
@@ -67,8 +67,8 @@ export default function ResultPage({ onBack }: ResultProps) {
   } = useGetFilteredDodreamNotices(dodreamFilterBody, isDodreamSelected);
 
   const isVerifying =
-    (isAcademicSelected && isAcademicLoading) ||
-    (isDodreamSelected && isDodreamLoading);
+    (isAcademicSelected && (isAcademicLoading || isAllAcademicLoading)) ||
+    (isDodreamSelected && (isDodreamLoading || isAllDodreamLoading));
 
   const hasMismatch = useMemo(() => {
     if (isVerifying) return false;
@@ -137,12 +137,22 @@ export default function ResultPage({ onBack }: ResultProps) {
 
       <Card className="p-8 text-center">
         <div className="mb-4 flex justify-center">
-          <div className="rounded-full bg-green-100 p-4">
-            <CheckCircle2 className="h-16 w-16 text-green-600" />
-          </div>
+          {hasMismatch ? (
+            <div className="rounded-full bg-red-100 p-4">
+              <AlertCircle className="h-16 w-16 text-red-500" />
+            </div>
+          ) : (
+            <div className="rounded-full bg-green-100 p-4">
+              <CheckCircle2 className="h-16 w-16 text-green-600" />
+            </div>
+          )}
         </div>
         {isVerifying ? (
           <p className="text-muted-foreground text-sm">구독 내용을 확인하는 중입니다...</p>
+        ) : hasMismatch ? (
+          <p className="text-muted-foreground text-sm">
+            예상하지 못한 ICS가 추가되었습니다. sejong.doogoo@gmail.com으로 연락주세요.
+          </p>
         ) : (
           <>
             <h2 className="text-foreground mb-2 text-2xl font-bold">
