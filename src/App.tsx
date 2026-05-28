@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navigation from '@/components/layout/Navigation';
+import Landing from './pages/Landing';
 import { useStepNavigation } from '@/shared/hooks/useStepNavigation';
 import { useGetAllFilterOptions } from '@/shared/hooks/useCommonData';
 import {
@@ -8,7 +9,6 @@ import {
   useGetDodreamNotices,
 } from '@/shared/hooks/useNotices';
 
-const Landing = lazy(() => import('./pages/Landing'));
 const ServiceSubscription = lazy(() => import('./pages/ServiceSubscription'));
 const Result = lazy(() => import('./pages/Result'));
 

@@ -1,6 +1,5 @@
 import { NextButton } from '@/shared/components/RouteButton';
 import { Hero } from '@/components/layout/Hero';
-import schoolBackground from '@/assets/School.jpg';
 
 interface LandingProps {
   onContinue: () => void;
@@ -9,8 +8,9 @@ interface LandingProps {
 export default function Landing({ onContinue }: LandingProps) {
   return (
     <>
+      <div className="fixed inset-0 -z-20 bg-gradient-to-b from-sky-300 via-sky-200 to-stone-400" />
       <img
-        src={schoolBackground}
+        src="/School.jpg"
         alt=""
         aria-hidden="true"
         decoding="async"
