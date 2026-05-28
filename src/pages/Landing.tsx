@@ -9,9 +9,13 @@ interface LandingProps {
 export default function Landing({ onContinue }: LandingProps) {
   return (
     <>
-      <div 
-        className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${schoolBackground})` }}
+      <img
+        src={schoolBackground}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+        fetchPriority="high"
+        className="fixed inset-0 -z-10 h-full w-full object-cover"
       />
       <Hero />
       <div className="mx-auto max-w-2xl space-y-6 pt-12">
