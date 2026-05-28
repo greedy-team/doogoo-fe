@@ -6,7 +6,11 @@ interface NextButtonProps {
   text?: string;
 }
 
-export function NextButton({ onClick, disabled = false }: NextButtonProps) {
+export function NextButton({
+  onClick,
+  disabled = false,
+  text,
+}: NextButtonProps) {
   return (
     <Button
       size="lg"
@@ -14,7 +18,7 @@ export function NextButton({ onClick, disabled = false }: NextButtonProps) {
       onClick={onClick}
       disabled={disabled}
     >
-      다음 단계로
+      {text || '다음 단계로'}
     </Button>
   );
 }
