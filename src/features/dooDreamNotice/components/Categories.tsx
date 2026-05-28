@@ -149,7 +149,15 @@ export default function Categories({
                   </div>
                 </AccordionTrigger>
 
-                <div className="shrink-0">
+                <div 
+                  className="shrink-0 cursor-pointer p-3 -mr-3 flex items-center justify-center"
+                  onClick={() => {
+                    if (interest.id === 'k_0' && isSelected) {
+                      onMajorChange('');
+                    }
+                    onInterestToggle(interest.id);
+                  }}
+                >
                   <Switch
                     checked={isSelected}
                     onCheckedChange={() => {
@@ -158,8 +166,9 @@ export default function Categories({
                       }
                       onInterestToggle(interest.id);
                     }}
+                    onClick={(e) => e.stopPropagation()}
                     aria-label={`${interest.name} 카테고리 ${isSelected ? '구독 취소' : '구독'}`}
-                    className="data-[state=checked]:bg-purple"
+                    className="data-[state=checked]:bg-purple pointer-events-none"
                   />
                 </div>
               </div>
